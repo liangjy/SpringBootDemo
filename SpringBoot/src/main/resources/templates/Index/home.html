@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>广东电信网络数据智慧运营平台</title>
+    <link rel="stylesheet" href="/css/home.css"/>
+    <link rel="stylesheet" href="/jquery-treeview/jquery.treeview.css" />
+<!--    <link rel="stylesheet" href="http://static.runoob.com/assets/js/jquery-treeview/screen.css" />-->
+    <script src="/js/jquery-1.12.3.js"></script>
+    <script src="/js/jquery.cookie.js"></script>
+    <script src="/jquery-treeview/jquery.treeview.js" type="text/javascript"></script>
+    <script src="/js/home/home.js"></script>
+</head>
+
+<body>
+<div class="top" th:include="Index/top::top"></div>
+<div class="middle">
+    <div class="left" th:include="Index/left::left"></div>
+    <div class="content" th:include="Index/content::content"></div>
+</div>
+<div class="footer" th:include="Index/footer::copy"></div>
+</body>
+</html>

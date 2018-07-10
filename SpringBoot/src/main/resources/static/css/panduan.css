@@ -1,0 +1,16 @@
+/*2015-03-23   monny strart*/
+.bwTipBox{ width:90%; background:#f8f8f8; padding:15px;border:1px #dedede solid; border-bottom:0; border-radius:6px 6px 0 0; box-shadow:0 0 15px rgba(0,0,0,0.3); position:fixed; bottom:50%; left:4%;}
+.bwBtnClose{ text-align:right; }
+.bwBtnClose .aCloseBtn{ display:inline-block; width:18px;height:18px;border:none;cursor:pointer;background:url(../images/icon_close.gif) no-repeat 0px 0px;}
+.bwCont{ text-align:center; line-height:30px; font-size:14px;}
+.bwCont .iconWran{ display:inline-block; width:16px; height:14px; background:url(../images/icon_warn.png) 0 0 no-repeat; vertical-align:middle; margin-right:10px; }
+.dwLoadLink{display:inline-block; vertical-align:middle; background-color:#659324;background-repeat:repeat-x;background-image:-khtml-gradient(linear,left top,left bottom,from(#81bc2e),to(#659324));background-image:-moz-linear-gradient(#81bc2e,#659324);background-image:-ms-linear-gradient(#81bc2e,#659324);background-image:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#81bc2e),color-stop(100%,#659324));background-image:-webkit-linear-gradient(#81bc2e,#659324);background-image:-o-linear-gradient(#81bc2e,#659324);-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr='#81bc2e', endColorstr='#659324', GradientType=0)";background-image:linear-gradient(#81bc2e,#659324);cursor:pointer;padding:0;margin-left:65px;width:130px;/* text-align:left; */font-weight:normal;line-height:20px;-moz-border-radius:6px;border-radius:6px; margin-right:25px; color:#fff;}
+.dwLoadLink:hover{-webkit-box-shadow:0 1px 0 0 rgba(0,0,0,0.2),inset 0 -1px 0 0 rgba(0,0,0,0.3),inset 0 12px 24px 2px #83c822;-moz-box-shadow:0 1px 0 0 rgba(0,0,0,0.2),inset 0 -1px 0 0 rgba(0,0,0,0.3),inset 0 12px 24px 2px #83c822;box-shadow:0 1px 0 0 rgba(0,0,0,0.2),inset 0 -1px 0 0 rgba(0,0,0,0.3),inset 0 12px 24px 2px #83c822;color:#fff;text-decoration:none;-webkit-transition:all linear .25s;-moz-transition:all linear .25s;-o-transition:all linear .25s;-ms-transition:all linear .25s;transition:all linear .25s}
+.downFf{ display:inline-block; /* width:80px; */ height:49px; /* margin-left:-25px; */ margin-bottom:-6px; background:url(../images/firefox-large.png) 0 0 no-repeat; /* padding-left:60px; */ position:relative;}
+.downFf strong,.downFf span{ display:block;}
+.downFf strong{ font-weight:bold;font-size:14px;  text-align: center;}
+.downFf span{ font-size:12px;text-align: center;  text-align: center;}
+.bwCont label{ position: relative; top: -6px; margin-right: 418px;}
+.bwCont label input{ vertical-align:middle; margin:3px 3px 0 0;}
+.bwCont label.label span{ line-height:20px;}
+/*end*/
