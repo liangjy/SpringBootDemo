@@ -8,18 +8,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@Qualifier("alarmDataTest")
-public class AlarmDataTest {
+@Qualifier("alarmDataQuery")
+public class AlarmDataQuery {
 	
 	@Resource
     protected JdbcTemplate alarmJdbcTemplate;

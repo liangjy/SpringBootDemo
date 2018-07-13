@@ -22,6 +22,14 @@ public class DataSourceConfig {
         return DataSourceBuilder.create().build();
     }
 	
+	@Bean(name = "NOCEJdbcTemplate")
+	@Qualifier("NOCEJdbcTemplate")
+	public JdbcTemplate NOCEJdbcTemplate(@Qualifier("noceDataSource") DataSource dataSource) {
+		System.out.println("初始化NOCEJdbcTemplate");
+	    return new JdbcTemplate(dataSource);
+	}
+	
+	
 	@Bean(name = "alarmDataSource")
     @Qualifier("alarmDataSource")
     @ConfigurationProperties(prefix="spring.datasource.alarm")
@@ -32,8 +40,7 @@ public class DataSourceConfig {
 	
 	@Bean(name = "alarmJdbcTemplate")
 	@Qualifier("alarmJdbcTemplate")
-	public JdbcTemplate alarmJdbcTemplate(
-	        @Qualifier("alarmDataSource") DataSource dataSource) {
+	public JdbcTemplate alarmJdbcTemplate(@Qualifier("alarmDataSource") DataSource dataSource) {
 		System.out.println("初始化alarmJdbcTemplate");
 	    return new JdbcTemplate(dataSource);
 	}

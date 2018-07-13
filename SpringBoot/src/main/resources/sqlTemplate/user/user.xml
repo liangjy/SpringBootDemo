@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml-body>
+<sqlTemplate id="Common_04_city_area_mkt_NameAndId" description="取全部营服的id和名称进行缓存">
+	<![CDATA[
+SELECT d.*,c.CITY_DISPLAY_ORDER FROM (SELECT a.*,b.DIS_ORDER FROM (select DISTINCT city_name,DISTRICT_ID
+       ,DISTRICT_NAME
+       ,MKTCEN_ID,MKTCEN_NAME,BAIDU_MAX_LONGITUDE as max_lng,
+BAIDU_MIN_LONGITUDE as min_lng,
+BAIDU_MAXLATITUDE as max_lat,
+BAIDU_MINLATITUDE as min_lat
+from noce.dim_mktcenter_gis_data
+where day = (select max(day) from noce.dim_mktcenter_gis_data)
+and DISTRICT_NAME is not null
+and TRIM(DISTRICT_NAME)<> ''
+#{CITY}
+AND BAIDU_MAX_LONGITUDE IS NOT NULL) a
+LEFT JOIN (SELECT * FROM dim_district_gis_data WHERE DAY = (SELECT MAX(DAY) FROM dim_district_gis_data)) b
+ON a.DISTRICT_ID= b.DISTRICT_ID) d LEFT JOIN dim_tele_city c ON
+d.city_name=c.CITY_NAME
+ORDER BY c.CITY_DISPLAY_ORDER,d.DIS_ORDER,d.DISTRICT_ID
+	]]>
+</sqlTemplate>
+</xml-body>

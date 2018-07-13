@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.spring.common.dao.UserDao;
-import com.spring.common.dataSource.AlarmDataTest;
+import com.spring.common.dataSource.AlarmDataQuery;
 import com.spring.common.pojo.user.User;
 import org.springframework.web.bind.annotation.ResponseBody;
 
