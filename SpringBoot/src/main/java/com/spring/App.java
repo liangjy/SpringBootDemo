@@ -23,4 +23,9 @@ public class App {
     public String home(){
         return "/Index/home";
     }
+
+    @RequestMapping("/tianyi")
+    public String index(){
+        return "/IntelligentRoadTestV3/IntelligentRoadTestAnalysisV3";
+    }
 }

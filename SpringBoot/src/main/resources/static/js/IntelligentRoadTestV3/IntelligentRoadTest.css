@@ -1,0 +1,579 @@
+select,input {
+	border-radius: 0px;
+	padding: 0;
+}
+.pc_listb {
+	height: 100%;
+}
+.main-content{
+	height:100%;
+	position: relative;
+	overflow: hidden;
+	padding: 10px;
+	box-sizing: border-box;
+	/* background: #f1f1f1; */
+}
+.topContent{
+	height: 0;
+	line-height: 40px;
+	padding: 0 10px;
+	width: 100%;
+	box-sizing: border-box;
+	position: absolute;
+	top: 20px;
+	left: 10px;
+	z-index: 1000;
+}
+.topDiv{
+}
+.topDiv .dateDiv{
+	float: left;
+	cursor: pointer;
+	height: 20px;
+	line-height: 20px;
+	background-color: #fff;
+	padding-left: 20px;
+	padding-right: 10px;
+	margin: 10px 0;
+	/* border-left: 1px solid #ccc; */
+}
+.topDiv .sureDiv{
+	float: left;
+	/* height: 40px; */
+	/* line-height: 40px; */
+	/* display: flex; */
+	/* align-items: center; */
+	background: #fff;
+}
+.sureDiv2{
+	float: left;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	margin-right: 20px;
+}
+.startTime,.dateBox {
+	width: 66px;
+	/* height: 100%; */
+	text-align: center;
+	border: 0;
+	cursor: pointer;
+	color: #272727;
+	background: #fff;
+}
+.startTime{
+	padding-left: 18px;
+	background: #fff url(../IntelligentRoadTest/images/calendar_nor.png) no-repeat left;
+}
+.dateBox{
+	margin-left: -5px;
+}
+.btn-entry {
+	/* background: #0072BA; */
+	height: 25px;
+	line-height: 25px;
+	padding: 0 10px;
+	border-radius: 4px;
+	color: #272727;
+}
+.btn-close{
+	background: #EE5859;
+	width: 80px;
+	height: 25px;
+	line-height: 25px;
+	padding: 0 10px;
+	border-radius: 2px;
+	color: #ffffff;
+}
+
+.contentDiv{
+	height: 100%;
+	clear: both;
+	/* padding: 10px; */
+	box-sizing: border-box;
+	position: relative;
+	/* overflow: hidden; */
+}
+.mapWrap{
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
+.box-shadow{
+	height: 100%;
+	border: 1px solid #e6eaeb;
+	box-shadow: 0px 0px 8px #d9d7d6;
+	box-sizing: border-box;
+	/* position: relative; */
+}
+.tableWrap{
+	float: left;
+	width: 26%;
+	height: 416px;
+	padding: 10px;
+	position: absolute;
+	top: 92px;
+	right: 10px;
+	z-index: 999;
+	background-color: #fff;
+	box-sizing: border-box;
+}
+.chartDiv-top{
+	/* margin-bottom: 10px; */
+}
+.chartDiv-top,.chartDiv-bottom{
+	width: 100%;
+	height: 50%;
+	box-sizing: border-box;
+	background-color: #fff;
+}
+.chartWrap{
+	float: left;
+	width: 45%;
+	height: 416px;
+	position: absolute;
+	top: 92px;
+	left: 10px;
+	z-index: 999;
+	box-sizing: border-box;
+	background-color: #fff;
+}
+.chartDiv-top .box-shadow{
+	padding-bottom: 10px;
+}
+.chartTitle {
+	text-align: center;
+	font-size: 14px;
+	color: #272727;
+	height: 40px;
+	border-bottom: 1px solid #E6E7E9;
+	margin: 0 10px;
+	/* display: flex; */
+	justify-content: center;
+	align-items: center;
+	clear: both;
+}
+.chartDiv-bottom .chartTitle{
+	padding-top: 10px;
+}
+.chartDiv{
+	height: 165px;
+}
+.chartDiv-top .chartDiv{
+	padding-bottom: 10px;
+	box-sizing: border-box;
+}
+.tableTitle {
+	background: #56B9FD;
+	color: #fff;
+	margin-bottom: 10px;
+	padding: 5px 10px;
+	position: relative;
+	height: 53px;
+	box-sizing: border-box;
+	display: none;
+}
+/* .tableTitle:hover{
+	 background: #389FEA !important;
+} */
+.areaName{
+	font-size: 18px
+}
+.areaText{
+	/* font-size: 14px; */
+}
+.mapIcon{
+	position: absolute;
+	left: 18px;
+	top: -5px;
+	height: 30px;
+}
+.tableDiv{
+	max-height: 100%;
+	overflow: auto;
+	border-bottom: 1px solid #ddd;
+	border-top: 1px solid #ddd;
+}
+.table {
+	border-right: 1px solid #ddd;
+}
+.table tr td.clickCell {
+	color: #338dcd;
+
+}
+.table tr td.clickAddress {
+	color: #707dd2;
+}
+.alltd {
+	height: 35px;
+	line-height: 35px;
+}
+.table tr:first-child td .alltd {
+	border-top: 0;
+}
+.mapDiv{
+	width: 100%;
+	height: 100%;
+}
+.closeDiv{
+	position: absolute;
+	top: 10px;
+	right: 20px;
+}
+.triangle {
+	display: inline-block;
+	vertical-align: middle;
+	width: 0px;
+	height: 0px;
+	border-width: 4px 4px 0px 4px;
+	border-style: solid;
+	border-color: #797979 transparent transparent transparent;
+	margin: -2px 5px 0 0;
+}
+
+.clickAddress .alltd {
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+.coefficient .alltd {
+	color: #7d8bd3;
+}
+.table tr td.clickAddress {
+	color: #707dd2;
+	max-width: 100px;
+}
+.clickAddress .alltd {
+	width: 100%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	box-sizing: border-box;
+}
+.ratioTD {
+	position: relative;
+	cursor: pointer;
+}
+.select-infos{
+	position: absolute;
+	width: 150px;
+	line-height: 30px;
+	background: #FFFFFF;
+	box-shadow: 0px 2px 5px 2px rgba(0,0,0,.2);
+	z-index: 999;
+	margin-top: 2px;
+	text-align: left;
+}
+.radioDiv input[type=radio]{
+	vertical-align: middle;
+	outline:  0;
+	border:  0;
+}
+.radioGroup{
+	padding: 0 20px;
+}
+.radioGroup1{
+	border-bottom: 1px solid #ccc;
+}
+.sureDiv{
+	text-align: center;
+	padding: 0px 10px;
+	box-sizing: border-box;
+}
+.btn-bg {
+	height: 25px;
+	line-height: 25px;
+}
+.btn-sure{
+	background: #65c16a;
+}
+.ratioTD .triangle{
+	margin: -2px 0px 0 5px;
+}
+.progressBox{
+	display: none;
+	background: rgba(0,0,0,0.7);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+}
+.progressDiv {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.progressLoading{
+	width: 300px;
+	height: 120px;
+	background: #fff;
+	text-align: center;
+	border-radius: 10px;
+	position: relative;
+}
+.load-imgText img{
+	width: 80px;
+}
+.closeProgress{
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+.addLine{
+	color: #f2655e;
+	text-decoration:underline;
+}
+.hou{
+	cursor: pointer;
+}
+.packWrap{
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
+.mainInfo-leftTop .packWrap{
+	height: 120px;
+}
+.pack {
+	cursor: pointer;
+	text-align: center;
+	position: absolute;
+	top: 46%;
+	right: -12px;
+	z-index: 9999;
+	background: rgba(9, 35, 66, 0.64);
+	width: 12px;
+	height: 40px;
+}
+.tableWrap .pack{
+	left: -12px;
+}
+.pack img {margin: 7px 0;width: 8px;/* display: none; */}
+.mainInfo-right .pack {
+	position: absolute;
+	left: 42%;
+	left: -13px;
+	top: 50%;
+}
+.rotateImg{
+	transform: rotate(180deg);
+}
+
+.BMap_noprint .BMap-btn{
+	display: inline-block;
+	box-shadow: rgba(0, 0, 0, 0.35) 2px 2px 3px;
+	border: 1px solid rgb(139, 164, 220);
+	padding: 2px 6px;
+	font-weight: bold;
+	font-size: 12px;
+	line-height: 1.3em;
+	font-family: arial, sans-serif;
+	text-align: center;
+	cursor: pointer;
+}
+.BMap_noprint .div1{
+	color: #fff;
+	background: rgb(142, 168, 224);
+	border-radius: 3px 0px 0px 3px;
+}
+.BMap_noprint .div2{
+	color: #000;
+	background: rgb(255, 255, 255);
+	border-radius: 0px 3px 3px 0px;
+}
+.btn2 {
+	min-width: 90px;
+	height: 30px;
+	line-height: 25px;
+	padding: 0 10px;
+	border-radius: 4px;
+	color: #ffffff;
+	margin-left: 10px;
+	display: inline-block;
+}
+.btn-b{
+	background: #EFA25E;
+	margin-top: 13px;
+}
+.btnPackImg{
+	float: left;
+	width: 78px;
+	height: 20px;
+	text-align: center;
+	background: #fff;
+	cursor: pointer;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	margin: 10px 0;
+	position: relative;
+}
+
+.select-city .city-info{
+	position: absolute;
+	left: -10px;
+	width: 326px;
+	background: #FFFFFF;
+	box-shadow: 0px 0px 3px 1px rgba(0,0,0,.2);
+	z-index: 99999;
+	overflow-x: hidden;
+}
+
+.select-city ul li{
+	/* padding: 5px 12px; */
+	/* float: left; */
+	/* line-height: 20px; */
+	cursor: pointer;
+}
+.select-name{
+	cursor: pointer;
+	display: inline-block;
+	min-width: 120px;
+	box-sizing: border-box;
+	text-align: center;
+	/* border: 1px solid #ccc; */
+	/* height: 35px; */
+	/* line-height: 35px; */
+}
+.triangle{
+	/* position: absolute; */
+	/* top: 12px; */
+	/* right: 0; */
+}
+
+.selectCity{
+	float: left;
+	background: #fff;
+	padding-left: 10px;
+	height: 20px;
+	/* display: flex; */
+	/* align-items: center; */
+	/* border-right: 1px solid #ccc; */
+	/* margin: 10px 0; */
+}
+.select-info > a {
+	display: block;
+	cursor: pointer;
+	text-align: center;
+	line-height: 30px;
+}
+.select-info > a:hover,.tabSelect-info > div:hover{
+	background-color: #71cbf2;
+	color: #fff;
+}
+.selectDiv{
+	display: inline-block;
+	position: relative;
+	margin-right: 10px;
+}
+.selectA{
+	color: #272727;
+}
+.selectName{
+	/* background: #f7f7f7; */
+}
+.triangle {
+	display: inline-block;
+	vertical-align: middle;
+	width: 0px;
+	height: 0px;
+	border-width: 4px 4px 0px 4px;
+	border-style: solid;
+	border-color: #797979 transparent transparent transparent;
+	margin: -2px 5px 0 0;
+}
+.current-city{
+	background: #F0F0F0;
+	line-height: 35px;
+	text-align: left;
+	padding-left: 10px;
+}
+.city-list .current a{
+	color: #4CAAF4;
+}
+.city-list{
+	padding: 10px 0;
+}
+.select-info{
+	position: absolute;
+	width: 80px;
+	background: #FFFFFF;
+	box-shadow: 0px 0px 4px 1px rgba(0,0,0,.2);
+	z-index: 999;
+	max-height: 300px;
+	overflow: auto;
+}
+
+/*Ã¥Â°â€ Ã¦â€°â‚¬Ã¦Å“â€°Ã¥â€¦Æ’Ã§Â´Â Ã§Å¡â€žÃ©Â»ËœÃ¨Â®Â¤Ã©â€”Â´Ã¨Â·ÂÃ¦Â¸â€¦Ã©â„¢Â¤Ã¯Â¼Å’Ã¦â€“Â¹Ã¤Â¾Â¿Ã¨â€¡ÂªÃ¥Â·Â±Ã¨Â®Â¾Ã§Â½Â®Ã¯Â¼Å’Ã¥Â¹Â¶Ã¤Â¸â€Ã¥ÂÂ¯Ã¤Â»Â¥Ã¦Â¶Ë†Ã©â„¢Â¤ulÃ¥â€™Å’liÃ§Å¡â€žÃ¥Å“â€ Ã§â€šÂ¹*/
+* {
+	margin:0px;
+	padding:0px;
+}
+ul,li{
+	list-style: none;
+}
+.cityName {
+	background:#fff;
+	box-shadow:0 0 10px rgba(0,0,0,0.2);
+	/*xÃ¥ÂÂÃ¦Â â€¡Ã¯Â¼Å’yÃ¥ÂÂÃ¦Â â€¡Ã¯Â¼Å’Ã¦Â¨Â¡Ã§Â³Å Ã§Â¨â€¹Ã¥ÂºÂ¦Ã¯Â¼Å’Ã©Â¢Å“Ã¨â€°Â²*/
+
+	/*Ã©ÂÂ¿Ã¥â€¦ÂÃ¦â€“â€¡Ã¥Â­â€”Ã¦ÂÂ¢Ã¨Â¡Å’*/
+	display: inline-block;
+	padding-bottom: 60px;
+}
+.cityName li {
+	position:relative;
+	line-height: 30px;
+	padding: 0 10px;
+}
+.cityName li a {
+	text-decoration:none;
+	color:#777;
+}
+.cityName > li {
+	background: url(../IntelligentRoadTest/images/selectCity.png) no-repeat right;
+	padding-right: 30px;
+}
+.cityName > li > a{
+	display:block;
+}
+.cityName > li:hover,.cityName .selectedCity {
+	background: #71cbf2 url(../IntelligentRoadTest/images/selectCity.png) no-repeat right;
+}
+.cityName > li:hover > a,.cityName .selectedCity > a {
+	color:#fff
+}
+.districtName li:hover > a,.cityName .selected > a {
+	color:#71cbf2;
+}
+.cityName li:hover > ul {
+	display:block !important;/* Ã©Â¼Â Ã¦Â â€¡Ã¨Â¿â€ºÃ¥â€¦Â¥Ã¦Â¯ÂÃ©â‚¬â€°Ã¥Ââ€¢Ã¥Â¾Å’Ã¯Â¼Å’Ã¦ËœÂ¾Ã§Â¤ÂºÃ¥Â­ÂÃ©â‚¬â€°Ã¥Ââ€¢ */
+}
+.cityName ul {
+	position:absolute;
+	top: 0;
+	left: 100%;
+	width: 224px;
+	padding: 0 10px;
+	background:#fff;
+	/* box-shadow:0 3px 3px rgba(0,0,0,0.2); */
+	display:none;
+}
+.cityName ul li {
+	display: inline-block;
+}
+.rightBar{
+	float: right;
+	margin-right: 20px;
+	background: #fff;
+	box-shadow: 0px 0px 8px rgba(0,0,0,.2);
+	height:  40px;
+	line-height:  40px;
+}
+.leftBar{
+	float: left;
+	background: #fff;
+	height: 40px;
+	box-shadow: 0px 0px 8px rgba(0,0,0,.2);
+}

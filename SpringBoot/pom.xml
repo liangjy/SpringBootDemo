@@ -95,6 +95,13 @@
 			<version>0.9.3</version>
 		</dependency>
 
+		<!--修改静态资源无需重启-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>

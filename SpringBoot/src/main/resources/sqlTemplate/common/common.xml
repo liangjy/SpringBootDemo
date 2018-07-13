@@ -21,4 +21,58 @@ ORDER BY c.CITY_DISPLAY_ORDER,d.DIS_ORDER,d.DISTRICT_ID
 	]]>
 </sqlTemplate>
 
+<sqlTemplate id="AuditList_04_getUserCity" description="根据用户名查询分权分域" db="mysql">
+	<![CDATA[
+SELECT
+USER_ID,name,FLAG,node_id,city,node_name,level,parent_id
+from
+dm_user a LEFT JOIN t_permission_div_department b
+on(a.PERMISSION_GROUP_ID=b.node_id) where a.name='#{name}'
+]]>
+</sqlTemplate>
+
+<sqlTemplate id="Common_05_districtJson" description="查询区县轮廓" DB="mysql">
+<![CDATA[
+SELECT a.* FROM (SELECT
+	CITY_NAME,
+	DISTRICT_ID,
+	DISTRICT_NAME,
+	GIS_DATA_BAIDU,
+	BAIDU_MAX_LONGITUDE,
+	BAIDU_MIN_LONGITUDE,
+	BAIDU_MAXLATITUDE,
+	BAIDU_MINLATITUDE,
+DIS_ORDER
+FROM
+	dim_district_gis_data
+WHERE
+	DAY = (SELECT	MAX(DAY) FROM dim_district_gis_data)
+	and CITY_NAME IS NOT NULL
+AND GIS_DATA_BAIDU IS NOT NULL) a LEFT JOIN dim_tele_city b
+ON a.CITY_NAME = b.CITY_NAME
+ORDER BY b.CITY_DISPLAY_ORDER,a.DIS_ORDER
+]]>
+</sqlTemplate>
+
+<sqlTemplate id="Common_04_city_area_mkt_NameAndId" description="取全部营服的id和名称进行缓存">
+<![CDATA[
+SELECT d.*,c.CITY_DISPLAY_ORDER FROM (SELECT a.*,b.DIS_ORDER FROM (select DISTINCT city_name,DISTRICT_ID
+       ,DISTRICT_NAME
+       ,MKTCEN_ID,MKTCEN_NAME,BAIDU_MAX_LONGITUDE as max_lng,
+BAIDU_MIN_LONGITUDE as min_lng,
+BAIDU_MAXLATITUDE as max_lat,
+BAIDU_MINLATITUDE as min_lat
+from noce.dim_mktcenter_gis_data
+where day = (select max(day) from noce.dim_mktcenter_gis_data)
+and DISTRICT_NAME is not null
+and TRIM(DISTRICT_NAME)<> ''
+#{CITY}
+AND BAIDU_MAX_LONGITUDE IS NOT NULL) a
+LEFT JOIN (SELECT * FROM dim_district_gis_data WHERE DAY = (SELECT MAX(DAY) FROM dim_district_gis_data)) b
+ON a.DISTRICT_ID= b.DISTRICT_ID) d LEFT JOIN dim_tele_city c ON
+d.city_name=c.CITY_NAME
+ORDER BY c.CITY_DISPLAY_ORDER,d.DIS_ORDER,d.DISTRICT_ID
+]]>
+</sqlTemplate>
+
 </xml-body>
