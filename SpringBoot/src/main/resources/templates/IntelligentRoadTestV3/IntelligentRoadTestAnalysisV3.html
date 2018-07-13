@@ -1,30 +1,34 @@
-<html xmlns:th="http://www.thymeleaf.org">
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" type="text/css" href="../js/tableTools/tableToolsNewTwo.css"/>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>content</title>
+</head>
+<body>
+<div th:fragment="content">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" type="text/css" href="../css/zTreeStyle.css" />
 <link rel="stylesheet" type="text/css" href="../js/IntelligentRoadTestV3/daterangepicker.css"/>
 <link rel="stylesheet" type="text/css" href="../js/IntelligentRoadTestV3/colorPick.css"/>
 <link rel="stylesheet" type="text/css" href="../js/IntelligentRoadTestV3/IntelligentRoadTestAnalysisV3.css?2017090911" />
 <link rel="stylesheet" type="text/css" href="../js/IntelligentRoadTestV3/ShareObject.css?" />
-<script type="text/javascript" src="../js/jquery-1.12.3.js"></script>
 <script  src="../js/noceUtil.js"></script>
 <script  src="../js/noceAjax.js"></script>
 <script  src="../js/util/BMapUtil.js"></script>
 <script  src="../js/IntelligentRoadTestV3/fastclick.js"></script>
-<script  src="../js/util/uploadData.js" ></script>
-<script  src="../js/util/pingying.js" async="true"></script>
+<!-- <script  src="../js/util/uploadData.js" ></script>
+<script  src="../js/util/pingying.js" async="true"></script> -->
 <!-- <script  src="../js/util/exportExcel.js" async="true"></script> -->
 <!-- 增加progressbarTwo的查询数据同步方法 -->
-<script  src="../js/util/progressbarTwo.js?2017022803" ></script>
-<!-- <script  src="../js/perception/cityJson.js" async="true"></script>
-<script  src="../js/util/areaUtil.js?2017031401" async="true"></script> -->
+<script  src="../js/progressbarTwo.js?2017022803" ></script>
 <script  src="../js/util/GridMapControl.js?201706788566" ></script>
 <script  src="../js/util/GridHelper.js" async="true"></script>
 <!-- <script  src="../js/util/baidumap_offline_v2_20160921.js"></script> -->
-<script  src="http://api.map.baidu.com/getscript?v=3.0&amp;ak=ZUONbpqGBsYGXNIYHicvbAbM&amp;services=&amp;t=20180626110404"></script>
-<!--<script  src="../js/util/baidumap_offline_v3_20180524.js"></script>-->
-<script  src="../js/IntelligentRoadTestV3/myBMapTypeControl.js" ></script>
+<script type="text/javascript" th:src="@{http://api.map.baidu.com/api?v=3.0&amp;ak=9GHKUjkZOzsijtyX179MLRz2lGnfFfHA}"></script> 
+<!-- <script src="http://api.map.baidu.com/api?v=3.0&amp;ak=9GHKUjkZOzsijtyX179MLRz2lGnfFfHA"></script>  -->
+<!-- <script  src="../js/util/baidumap_offline_v3_20180524.js"></script>-->
 <script  src="../js/crossfilter/crossfilter.js?20171204" async="true"></script>
+<script  src="../js/IntelligentRoadTestV3/myBMapTypeControl.js" ></script>
 <script  src="../js/util/BMapUtil-Measure.js" async="true"></script>
 <script  src="../js/util/osmMapUtil-Measure.js" async="true"></script>
 <script  src="../js/util/DrawingManager.js" async="true"></script>
@@ -6411,4 +6415,6 @@
 <script  src="../js/jquery.ztree.all-3.5.min.js" ></script>
 <script  src="../js/AuditList/ztreeUtil.js" ></script>
 
+</div>
+</body>
 </html>

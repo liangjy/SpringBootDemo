@@ -1,8 +1,5 @@
 package com.spring.controller.index;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,12 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.spring.common.dao.UserDao;
-import com.spring.common.dataSource.AlarmDataQuery;
 import com.spring.common.pojo.user.User;
-import com.spring.common.util.AnalysisSqlXmlUtil;
 import com.spring.common.util.MD5;
 
 @Controller
