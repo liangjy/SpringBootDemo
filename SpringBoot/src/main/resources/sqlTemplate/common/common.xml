@@ -20,4 +20,5 @@ d.city_name=c.CITY_NAME
 ORDER BY c.CITY_DISPLAY_ORDER,d.DIS_ORDER,d.DISTRICT_ID
 	]]>
 </sqlTemplate>
+
 </xml-body>

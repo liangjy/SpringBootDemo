@@ -8,13 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 public class WebUtil {
-	@Autowired
-	static HttpServletRequest request; 
-	
-	@Autowired
-	static HttpServletResponse response;
 	
 	public static String getWebRoot() {
 		try {
@@ -28,10 +25,14 @@ public class WebUtil {
 	}
 
 	public static HttpServletRequest getRequest() {
+		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = requestAttributes.getRequest();
 		return request;
 	}
 	
 	public static HttpServletResponse getResponse() {
+		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletResponse response = requestAttributes.getResponse();
 		return response;
 	}
 	

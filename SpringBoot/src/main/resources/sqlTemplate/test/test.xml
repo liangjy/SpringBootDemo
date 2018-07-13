@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml-body>
+<sqlTemplate id="test_hbase_01" description="测试hbase取数">
+<![CDATA[
+getGridsByContour
+NOCE:DSI_MRO_ALL_GRID_TOT_W
+#{GRIDKEYPREFIX}
+#{GRIDLEVEL}
+#{POLYGONCONTOUR}
+#{COLUMNLIST}
+#{PARTITIONMOD}
+rowkey 0
+]]>
+</sqlTemplate>
+</xml-body>

@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.stereotype.Repository;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -24,14 +25,15 @@ import com.spring.common.util.hbaseQuery.HbaseQuery;
 import com.spring.common.util.hbaseQuery.JavaHBaseTool;
 import com.spring.common.vo.TableToolsPara;
 
+@Repository("dataQueryService")
 public class DataQueryServiceImpl implements DataQueryService{
 
 	@Resource(name = "NOCEJdbcTemplate")
    	public JdbcTemplate jdbcTemplate;//mysql数据源jdbc模板
 //    @Resource(name = "MYSQL_BROADBAND")
 //   	public JdbcTemplate MYSQL_BROADBAND;//天翼手机展用到的mysql数据源jdbc模板
-    @Resource(name = "alarmDataSource")
-    public JdbcTemplate alarmDataSource;//告警库mysql数据源jdbc模板
+    @Resource(name = "alarmJdbcTemplate")
+    public JdbcTemplate alarmJdbcTemplate;//告警库mysql数据源jdbc模板
     
 //    @Resource(name = "PostgreSQLJdbcTemplate")
 //   	public JdbcTemplate postgreSQLJdbcTemplate;//postgreSQL数据源jdbc模板
@@ -49,8 +51,8 @@ public class DataQueryServiceImpl implements DataQueryService{
 	    		sql = getSqlByToolsPara(sql,database,tableToolsPara,toolsType); 
 	    	}
     	}
-//    	Map<String, Object> resultMap = queryForDataPublic(database, cmd,sql);
-    	Map<String, Object> resultMap = new HashMap<String, Object>();
+    	Map<String, Object> resultMap = queryForDataPublic(database, cmd,sql);
+//    	Map<String, Object> resultMap = new HashMap<String, Object>();
     	return resultMap;
 	}
 
@@ -60,8 +62,8 @@ public class DataQueryServiceImpl implements DataQueryService{
     	if(database!=8){
 	    	sql = getSqlBySqlparaList(cmd); //获取sql
     	}
-//    	Map<String, Object> resultMap = queryForDataPublic(database, cmd,sql);
-    	Map<String, Object> resultMap = new HashMap<String, Object>();
+    	Map<String, Object> resultMap = queryForDataPublic(database, cmd,sql);
+//    	Map<String, Object> resultMap = new HashMap<String, Object>();
     	return resultMap;
 	}
 
@@ -149,7 +151,7 @@ public class DataQueryServiceImpl implements DataQueryService{
 //			}else
 			if(parameter!=null&&parameter.trim().equals("Alarms")){
 				System.out.println("进来："+parameter);
-				jdbc=alarmDataSource;
+				jdbc=alarmJdbcTemplate;
 			}
 			jdbc.query(sql, new RowCallbackHandler() {
 				

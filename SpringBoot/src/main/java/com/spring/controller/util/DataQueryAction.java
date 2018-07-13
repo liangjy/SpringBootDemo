@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.spring.common.service.dataQuery.DataQueryService;
 import com.spring.common.vo.TableToolsPara;
 
 
@@ -20,20 +22,30 @@ import com.spring.common.vo.TableToolsPara;
 @RequestMapping("/DataQuery")
 public class DataQueryAction {
 	
+	@Resource
+	DataQueryService dataQueryServiceImpl;
+	
+	
 	@RequestMapping("/submitQuery")
 	@ResponseBody
-	public String submitQuery(Integer database,String cmd,TableToolsPara tableToolsPara,Integer toolsType,HttpServletRequest request,HttpServletResponse response) throws IOException{
+	public String submitQuery(String database,String cmd,TableToolsPara tableToolsPara,String toolsType,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		String jsonpCallback=request.getParameter("jsonpCallback");//jsonp查询
 //		Map<String,Object> resultMap = progressbarServiceImpl.queryForData(database, cmd, tableToolsPara, toolsType);
+		int databaseType = 3;
+		int toolsTypeNum = 0;
 		if(database==null){
-			database = 3;
+			databaseType = 3;
+		}else{
+			databaseType = Integer.parseInt(database);
 		}
 		
 		if(toolsType==null){
-			toolsType = 0;
+			toolsTypeNum = 0;
+		}else{
+			toolsTypeNum = Integer.parseInt(toolsType);
 		}
-		Map<String,Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("sql", "select * from user");
+//		Map<String,Object> resultMap = new HashMap<String, Object>();
+		Map<String,Object> resultMap = dataQueryServiceImpl.queryForData(databaseType, cmd, tableToolsPara, toolsTypeNum);
 		String data = JSONObject.fromObject(resultMap).toString();
 		if(jsonpCallback!=null){
 			data = jsonpCallback+"("+data+")";
