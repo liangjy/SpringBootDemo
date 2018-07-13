@@ -898,9 +898,12 @@ $(function() {
 
     });
     showOrHideInputImage(3);//隐藏搜索框中的所有图标
-    IntelligentRoadTest.currentUser = $.trim($("#headerUserForm_a").text());
-    IntelligentRoadTest.cityPermission_common = $('#cityPermission_common').val();
-    IntelligentRoadTest.user_role = $('#user_role_List_string').val();
+//    IntelligentRoadTest.currentUser = $.trim($("#headerUserForm_a").text());
+//    IntelligentRoadTest.cityPermission_common = $('#cityPermission_common').val();
+//    IntelligentRoadTest.user_role = $('#user_role_List_string').val();
+    IntelligentRoadTest.currentUser = 'liangjy';
+    IntelligentRoadTest.cityPermission_common = "全省";
+    IntelligentRoadTest.user_role = "系统监控,性能测试,分公司_全省,系统管理员2,普通用户2,审核员";
     if(IntelligentRoadTest.cityPermission_common=="全省"){
         IntelligentRoadTest.city = noceUtil.GetQueryString("city");
         if(IntelligentRoadTest.city==null){
