@@ -1,170 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>登录</title>
-<link type="text/css" rel="stylesheet" href="/css/login.css" ></link>
-<link type="text/css" rel="stylesheet" href="/css/panduan.css" ></link>
-<script type="text/javascript" src="/js/jquery-1.12.3.js"></script>
-<script type="text/javascript" src="/js/md5/md5.js"></script>
-<script type="text/javascript" src="/js/jquery.cookie.js"></script>
-<script type="text/javascript" src="/js/panduan.js"></script>
-
-<link rel="stylesheet" href="/jQuery-Validation/css/validationEngine.jquery.css" type="text/css"/>
-<script src="/jQuery-Validation/js/jquery.validationEngine.js" type="text/javascript" charset="utf-8"></script>
-<script src="/jQuery-Validation/js/languages/jquery.validationEngine-zh_CN.js" type="text/javascript"
-        charset="utf-8"></script>
-
-<script type="text/javascript" src="/js/vue.js"></script>
-
-</head>
-
-<body>
-	<div class="logon_container">
-		<div class="loginWrap" style="display: none;">
-			<div class="loginBox">
-				<div class="logoDiv">
-					<img src="/images/logo_login.png" />
-				</div>
-				<div class="loginTitle">广东电信网络数据智慧运营平台</div>
-
-				<div class="formWrap">
-
-					<input type="hidden" id="logining" name="logining" value="${logining}" /> <input
-						type="hidden" id="flagregion" name="flagregion" value="${flagregion}" />
-					<form name="loginForm" autocomplete="off" id="loginForm"
-						method="post" action="">
-						<table class="table">
-							<tr id="tr_accOption">
-								<td><span class="ckbTd">账号类型：&nbsp;</span> <input
-									type="radio" name="accType" value="1" checked="checked" />OA账号&nbsp;&nbsp;
-									<input type="radio" name="accType" style="margin-left: 40px;"
-									value="0" />4A账号&nbsp;&nbsp;</td>
-							</tr>
-							<tr id="tr_option">
-								<td><span class="ckbTd">认证模式：&nbsp;</span> <input
-									type="radio" name="loginOption" value="sms" checked="checked"
-									onclick="authentication(0);" />手机短信 <input type="radio"
-									name="loginOption" value="password" style="margin-left: 38px;"
-									onclick="authentication(1);" />静态密码</td>
-							</tr>
-							<tr>
-								<td>
-									<div id="col" class="wranTxt">
-										<img src="/images/icon_warn.png"
-											style="display:inline;" /> <span id="message" th:text="${loginMessage}"></span>
-									</div></td>
-							</tr>
-							<tr id="tr_name">
-								<td><span class="iptTd">账号：</span> <input type="text"
-									class="input_text intLog" name="username" id="username" /></td>
-							</tr>
-							<tr id="tr_pass">
-								<td><span class="iptTd">密码：</span> <input type="password"
-									class="input_text intLog" id="dispasswd" /> <input
-									type="hidden" name="password" id="password" /> <input
-									type="hidden" name="forceFlag" id="forceFlag" /></td>
-							</tr>
-							<tr id="tr_code">
-								<td id="verifyCode"><span class="iptTd">&nbsp;&nbsp;&nbsp;</span>
-									<input type="text" class="input_text intLog_new"
-									name="verification" id="verification" value="请输入验证码"
-									readonly="readonly" onclick="emptyValue(this);" /> <a
-									href="javascript:void(0);" class="btn_blue alogin_new"
-									id="timing" onClick="verifi();">发送短信</a> <input type="hidden"
-									name="usertype" id="usertype" value="0" /></td>
-							</tr>
-							<tr>
-								<td><span class="iptTd">&nbsp;&nbsp;&nbsp;</span> <a
-									href="javascript:void(0);" class="btn_blue alogin" title="登录系统"
-									onClick="login();">登录系统</a></td>
-							</tr>
-							<tr>
-								<td><input style="display: none;" type="submit" />
-								</td>
-							</tr>
-						</table>
-					</form>
-					<div class="editPsdModal">
-						<div class="closeImg">
-							<img src="/images/icon_close.png" />
-						</div>
-						<table class="table modal_table">
-							<tr>
-								<td class="table_title" colspan="2"><img
-									src="/images/icon_editPwd.png" /><span id="TextVal"></span>
-								</td>
-							</tr>
-							<tr>
-								<td><span class="iptTd">原密码：</span></td>
-								<td><input type="password" class="input_text intLog"
-									id="oldPwd" /></td>
-							</tr>
-							<tr>
-								<td><span class="iptTd">新密码：</span></td>
-								<td><input type="password" class="input_text intLog"
-									id="newPwd" /></td>
-							</tr>
-							<tr>
-								<td><span class="iptTd">确认密码：</span></td>
-								<td><input type="password" class="input_text intLog"
-									id="surePwd" /></td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<button class="btn_blue btn_sure" id="submit_1">确定</button>
-									<button class="btn_blue btn_cancel">取消</button></td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-
-
-		<div class="perception_bottom" style="display: none;">
-			<div class="greyText">中国电信广东分公司</div>
-			<div class="ggTipBox">
-				公告：广东电信网络数据智慧运营平台已接入统一认证中心，改用认证中心账号密码进行认证。
-				电信员工请使用OA账号或4A账号登录，厂家人员如果不知道账号，请联系管理员。 首次使用认证中心账号的请点击<a
-					href="http://www.gdoss.com" class="linkA">取回密码</a>获得初始密码，
-				如有问题请联系电话：18022868231，邮箱 18022868231@189.cn。 <a
-					href="http://132.96.187.154:8080/Venus4A/download/GD_OSS_OPERATE_V1.3.doc"
-					class="linkA">操作指引</a>下载。
-			</div>
-		</div>
-
-		<div class="bwTipBox" style="display: none" id="panduan">
-			<div class="bwBtnClose">
-				<span class="aCloseBtn"></span>
-			</div>
-			<div class="bwCont">
-				<div style="float:left; margin-left:35%;">
-					<span class="iconWran"></span>请使用谷歌浏览器访问本系统。<br />不便之处，敬请见谅。
-				</div>
-				<div style="float:left;">
-					<a href="http://w.x.baidu.com/alading/anquan_soft_down_ub/14744"
-						class="dwLoadLink"><span class="downFf"><strong>Google
-								Chrome</strong><span>立即下载</span>
-					</span>
-					</a>
-				</div>
-
-			</div>
-
-		</div>
-	</div>
-</body>
-
-<script th:inline="javascript">
-	var responseCode=[[${responseCode}]];
-    console.log(responseCode);
-    var fromUserName=[[${fromUserName}]];
-    console.log(fromUserName);
+    <meta charset="UTF-8"/>
+    <title>login</title>
+    <link rel="stylesheet" href="/css/login.css"></link>
+    <script src="/js/jquery-1.12.3.js"></script>
+    <script src="/js/md5/md5.js"></script>
+    <script src="/js/login/login.js"></script>
     
-    var isFlag = [[${loginFaile}]];
-</script>
-
-<script type="text/javascript" src="/js/login/login.js"></script>
+</head>
+<body>
+<div class="loginForm">
+<form action="/Index/login" method="post">
+<div th:if="${status != null}"><span th:text="${status}"/></div>
+<div>用户名:<input name= "username"/></div>
+<div>密码:<input type="password" name= "password"/></div>
+<div><input type="submit" value="登录"/></div>
+<!-- <div><input id="submitButton" type="button" value = "登录"/></div> -->
+</form>
+</div>
+</body>
 </html>
