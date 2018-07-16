@@ -71,7 +71,7 @@ select, input {
 }
 
 .searchBox .textBox {
-    width: 200px;
+    width: 290px;
     height: 36px;
     margin: 0px -4px 0 0;
     border: 0;
@@ -80,6 +80,7 @@ select, input {
     border-radius: 0;
     left: 55px;
     outline: 0;
+    box-sizing: border-box;
 }
 
 .btn-search {
