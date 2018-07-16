@@ -15418,8 +15418,8 @@ function searchenter(event) {
 
 function doSubmitAndRemove(){
     setTimeout(function(){
-        uploadData.getChromeData();
-        uploadData.doSubmit();
+        // uploadData.getChromeData();
+        // uploadData.doSubmit();
     },10000);
     IntelligentRoadTest.map.removeEventListener("tilesloaded",doSubmitAndRemove);
 }
