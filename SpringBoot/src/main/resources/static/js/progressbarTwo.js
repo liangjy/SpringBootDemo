@@ -661,7 +661,7 @@ progressbarTwoMultiple.prototype = {
 		var operate_time = new Date().Format("yyyy-MM-dd HH:mm:ss");  //创建操作时间
 		progressbarTwo.req_start_time = new Date(); // 初始时间
         var objectThis = this;
-		var $ajax = noce.ajax("pages_util_ProgressbarTwo_submitCmd.action", "cmd=" + encodeURIComponent(JSON.stringify(sqlParaList)) + "&database=" + dataBase +"&appId="+appId+"&appName="+encodeURIComponent(appName)+paraUrl+"&dbName="+databaseName, function(data) {
+		var $ajax = noce.ajax("/DataQuery/submitQuery", "cmd=" + encodeURIComponent(JSON.stringify(sqlParaList)) + "&database=" + dataBase +"&appId="+appId+"&appName="+encodeURIComponent(appName)+paraUrl+"&dbName="+databaseName, function(data) {
 			progressbarTwo.req_complete_time = new Date(); // 创建请求结束时间
 			var totalReq = progressbarTwo.getReqTime(); // 计算总的加载时间
 			//回调开始 
@@ -717,7 +717,7 @@ progressbarTwoMultiple.prototype = {
 
 		var objectThis = this;
 
-		var $ajax = noce.ajaxAsync("pages_util_ProgressbarTwo_submitCmd.action", "cmd=" + encodeURIComponent(JSON.stringify(sqlParaList)) + "&database=" + dataBase +"&appId="+appId+"&appName="+encodeURIComponent(appName)+paraUrl, function(data) {
+		var $ajax = noce.ajaxAsync("/DataQuery/submitQuery", "cmd=" + encodeURIComponent(JSON.stringify(sqlParaList)) + "&database=" + dataBase +"&appId="+appId+"&appName="+encodeURIComponent(appName)+paraUrl, function(data) {
 			progressbarTwo.req_complete_time = new Date();
 			var totalReq = progressbarTwo.getReqTime();
 			//回调开始 

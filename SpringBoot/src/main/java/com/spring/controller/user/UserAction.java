@@ -1,16 +1,12 @@
 package com.spring.controller.user;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.spring.common.dao.UserDao;
-import com.spring.common.dataSource.AlarmDataQuery;
 import com.spring.common.pojo.user.User;
 import org.springframework.web.bind.annotation.ResponseBody;
 
