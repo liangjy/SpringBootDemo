@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml-body>
+
+	<sqlTemplate id="IntelligentRoadTestV2_09_areaTable" description="取区域明细数据（区县或者营服）V2版本">
+		<![CDATA[
+SELECT
+g.object_id,
+g.type,
+g.longitude_min_baidu,
+g.latitude_min_baidu,
+g.longitude_mid_baidu,
+g.latitude_mid_baidu,
+g.longitude_max_baidu,
+g.latitude_max_baidu,
+g.city,
+g.country,
+g.MKTCENTER_ID,
+g.mktcenter,
+round(g.MIN_USEREX_UPAVGRATE, 2 ) as MIN_USEREX_UPAVGRATE,
+round(g.MIN_USEREX_DWAVGRATE ,  2) as MIN_USEREX_DWAVGRATE,
+g.address,
+g.enodeb_id,
+g.CELL_ID,
+g.POOR_GRID_NUMS,
+g.CELL_NAME,
+g.CELL_STATE,
+g.TOP5_SECTOR_SET,
+g.SECTOR_SET,
+g.ALARM_NUMS,
+g.ALARM_CELLS,
+g.NR_ALARM_CELLS,
+g.PC_TOT_CityNo,
+g.POOR_GRID_NUMS_ORDERNO,
+CASE g.do_type
+ WHEN 1 THEN '工程'
+ WHEN 2 THEN '维护'
+ WHEN 3 THEN '优化'
+ WHEN 4 THEN '规划'
+ELSE '未知' END AS do_type,
+case
+ when f.order_id is null then  0
+ else 1 END  isHasOrder ,
+g.lte_to_3g_tot,
+g.lte_to_3g_orderno,
+round(g.flow_4g_tot,2) flow_4g_tot,
+g.flow_4g_orderno,
+g.user_4g_avg,
+g.user_4g_orderno,
+round(g.CE_GOOD_RATIO_AVG*100,2) CE_GOOD_RATIO_AVG,
+g.ce_good_ratio_orderno,
+g.ALL_GRID_NUMS,
+g.POOR_GRID_NUMS_OrderNo,
+g.POOR_GRID_AREA,
+g.ALL_GRID_AREA,
+g.LONGITUDE_MID_BaiDu,
+g.LATITUDE_MID_BaiDu,
+CASE g.BELONG_AREA_ID
+ WHEN 1 THEN '市区'
+ WHEN 2 THEN '县城'
+ WHEN 3 THEN '乡镇'
+ WHEN 4 THEN '农村'
+ELSE '未知' END AS BELONG_AREA_ID,
+g.GIS_DATA,
+round(g.pc_orderno_tot,2) pc_orderno_tot,
+g.day,
+g.SCENE_TYPE,
+f.order_id,
+g.city_id,
+g.country_id,
+g.TOP5_ALARM_NUMS,
+g.NEW_ADDED_FLAG
+from (
+SELECT
+*
+FROM FRT_AGPS_POOR_COVERAGE_D
+WHERE DAY = #{DAY}
+AND TYPE = #{TYPE}
+AND city='#{CITY}'
+#{COUNTRY}
+#{MKTCENTER_ID}
+#{DO_TYPE}
+AND grid_type = 20
+AND gis_data is not null
+) as g LEFT JOIN ALT_AGPS_POOR_COVERAGE_D as f ON (g.day=f.day and g.OBJECT_ID =f.object_id and  g.grid_type=f.grid_type)
+]]>
+	</sqlTemplate>
+	<sqlTemplate id="IntelligentRoadTestV2_BoneArea" description="查询骨头区域列表V2">
+		<![CDATA[
+	SELECT *,
+	CASE
+	WHEN is_suspend IS NULL THEN  'N'
+	ELSE 'Y' END  IS_SUSPENDSORT
+	FROM frt_agps_poor_area_m
+	where 1=1 and month = #{MONTH}
+	#{CITY}
+	#{COUNTRY}
+	#{MKTCENTER}
+	 order BY IS_SUSPEND DESC
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestV2_08_polygonGis" description="取地市弱区轮廓数据(包含提示信息)">
+		<![CDATA[
+SELECT
+object_id,
+LONGITUDE_MID_BaiDu,
+latitude_mid_baidu,
+gis_data,
+CASE type
+ 	WHEN 0 THEN 'poor'
+ 	WHEN 4 THEN 'upPoorArea'
+	WHEN 5 THEN 'downPoorArea'
+	WHEN 6 THEN 'm3PoorArea'
+	WHEN 7 THEN 'olPoorArea'
+	WHEN 8 THEN 'cbPoorArea'
+ELSE '' END as type
+FROM FRT_AGPS_POOR_COVERAGE_D
+WHERE DAY = #{DAY}
+AND TYPE in (#{TYPE})
+AND city='#{CITY}'
+AND gis_data is not null
+#{POORGRIDNUMS}
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestV2_getPoorAreaByObjectId" description="取单个弱区区域明细数据">
+		<![CDATA[
+SELECT
+g.object_id,
+g.type,
+g.longitude_min_baidu,
+g.latitude_min_baidu,
+g.longitude_mid_baidu,
+g.latitude_mid_baidu,
+g.longitude_max_baidu,
+g.latitude_max_baidu,
+g.city,
+g.country,
+g.MKTCENTER_ID,
+g.mktcenter,
+round(g.MIN_USEREX_UPAVGRATE, 2 ) as MIN_USEREX_UPAVGRATE,
+round(g.MIN_USEREX_DWAVGRATE ,  2) as MIN_USEREX_DWAVGRATE,
+g.address,
+g.enodeb_id,
+g.CELL_ID,
+g.CELL_NAME,
+g.CELL_STATE,
+g.TOP5_SECTOR_SET,
+g.SECTOR_SET,
+g.ALARM_NUMS,
+g.ALARM_CELLS,
+g.NR_ALARM_CELLS,
+g.PC_TOT_CityNo,
+g.POOR_GRID_NUMS_ORDERNO,
+CASE g.do_type
+    WHEN 1 THEN '工程'
+    WHEN 2 THEN '维护'
+    WHEN 3 THEN '优化'
+    WHEN 4 THEN '规划'
+ELSE '未知' END AS do_type,
+case
+when f.order_id is null then  0
+else 1 END  isHasOrder ,
+g.lte_to_3g_tot,
+g.lte_to_3g_orderno,
+round(g.flow_4g_tot,2) flow_4g_tot,
+g.flow_4g_orderno,
+g.user_4g_avg,
+g.user_4g_orderno,
+round(g.CE_GOOD_RATIO_AVG*100,2) CE_GOOD_RATIO_AVG,
+g.ce_good_ratio_orderno,
+g.ALL_GRID_NUMS,
+g.POOR_GRID_NUMS_OrderNo,
+g.POOR_GRID_AREA,
+g.ALL_GRID_AREA,
+g.LONGITUDE_MID_BaiDu,
+g.LATITUDE_MID_BaiDu,
+CASE g.BELONG_AREA_ID
+    WHEN 1 THEN '市区'
+    WHEN 2 THEN '县城'
+    WHEN 3 THEN '乡镇'
+    WHEN 4 THEN '农村'
+ELSE '未知' END AS BELONG_AREA_ID,
+g.GIS_DATA,
+round(g.pc_orderno_tot,2) pc_orderno_tot,
+g.day,
+g.SCENE_TYPE,
+g.city_id,
+g.country_id,
+f.order_id
+from (
+SELECT
+*
+FROM FRT_AGPS_POOR_COVERAGE_D
+WHERE DAY = #{DAY}
+AND TYPE = #{TYPE}
+AND object_id = #{OBJECTID}
+AND grid_type = 20
+AND gis_data is not null
+) as g LEFT JOIN ALT_AGPS_POOR_COVERAGE_D as f ON (g.day=f.day and g.OBJECT_ID =f.object_id and  g.grid_type=f.grid_type)
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestV3_getNearPoorAreaCount" description="根据当前弱区中心经纬度获取附近弱区数" db="mysql">
+		<![CDATA[
+select day , count(*) as npnum from FRT_AGPS_POOR_COVERAGE_D
+WHERE DAY between #{STATRDAY} and #{ENDDAY}
+AND grid_type = 20
+AND gis_data is not null
+AND TYPE =  #{TYPE}
+and LONGITUDE_MID_BAIDU between #{LNGMID} - #{LNGDIFF}  and #{LNGMID} + #{LNGDIFF}
+and LATITUDE_MID_BAIDU BETWEEN #{LATMID} - #{LATDIFF}  and #{LATMID} + #{LATDIFF}
+GROUP BY day
+order BY day ASC
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestV2_18_CityConcernArea" description="查询地市关注区域">
+		<![CDATA[
+SELECT
+id,
+area_name,
+gis_data_baidu
+FROM dm_user_concern_area
+where 1=1
+#{CITY}
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestV2_18_allConcernArea" description="查询关注区域列表V2">
+		<![CDATA[
+SELECT
+id,
+area_name,
+AREA_TYPE,
+creator,
+create_time,
+CITY,
+round(MIN_USEREX_UPAVGRATE, 2 ) as MIN_USEREX_UPAVGRATE,
+round(MIN_USEREX_DWAVGRATE ,  2) as MIN_USEREX_DWAVGRATE,
+handle_description,
+round(rsrp,2) rsrp,
+round(cover*100,2) cover,
+recent_base_statn_id,
+recent_cell_id,
+recent_cell_name,
+gis_data_baidu,
+max_longitude_baidu,
+max_latitude_baidu,
+min_longitude_baidu,
+min_latitude_baidu,
+handle_time,
+RSRP,
+COVER,
+RECENT_BASE_STATN_ID,
+RECENT_CELL_ID,
+RECENT_CELL_NAME,
+SECTOR_SET,
+LTE_TO_3G_TOT,
+FLOW_4G_TOT,
+CE_GOOD_RATIO_AVG,
+USER_4G_AVG,
+RSRP_SUM,
+RSRP_COUNT,
+RSRP_COUNT_105,
+GRID_COUNT,
+ORDERNO_TOT,
+NE_SECTOR_SET,
+CITY_ID,
+COUNTRY,
+COUNTRY_ID,
+MKTCENTER,
+MKTCENTER_ID,
+share_scope ,
+share_status ,
+audit_option ,
+round((POOR_GRID_COUNT/GRID_COUNT)*100 , 2) as poor_grid_radio
+FROM dm_user_concern_area
+where 1=1
+#{CITY}
+#{COUNTRY}
+#{MKTCENTER}
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestV2_getConcernAreaById" description="根据ID获取关注区域的信息">
+		<![CDATA[
+SELECT
+id,
+area_name,
+AREA_TYPE,
+creator,
+create_time,
+CITY,
+round(MIN_USEREX_UPAVGRATE, 2 ) as MIN_USEREX_UPAVGRATE,
+round(MIN_USEREX_DWAVGRATE ,  2) as MIN_USEREX_DWAVGRATE,
+handle_description,
+round(rsrp,2) rsrp,
+round(cover*100,2) cover,
+recent_base_statn_id,
+recent_cell_id,
+recent_cell_name,
+gis_data_baidu,
+max_longitude_baidu,
+max_latitude_baidu,
+min_longitude_baidu,
+min_latitude_baidu,
+handle_time,
+RSRP,
+COVER,
+RECENT_BASE_STATN_ID,
+RECENT_CELL_ID,
+RECENT_CELL_NAME,
+SECTOR_SET,
+LTE_TO_3G_TOT,
+FLOW_4G_TOT,
+CE_GOOD_RATIO_AVG,
+USER_4G_AVG,
+RSRP_SUM,
+RSRP_COUNT,
+RSRP_COUNT_105,
+GRID_COUNT,
+ORDERNO_TOT,
+NE_SECTOR_SET,
+CITY_ID,
+COUNTRY,
+COUNTRY_ID,
+MKTCENTER,
+MKTCENTER_ID,
+share_scope ,
+share_status ,
+audit_option ,
+round((POOR_GRID_COUNT/GRID_COUNT)*100 , 2) as poor_grid_radio
+FROM dm_user_concern_area
+where 1=1
+and
+id = #{OBJECTID}
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestAnalysi_v2_getConcernArea30DayData" description="获取关注区域30天的折线图数据">
+		<![CDATA[
+select pid , DATE_FORMAT(create_time,'%Y-%m-%d') create_time , rsrp  , cover, round(MIN_USEREX_UPAVGRATE, 2 ) as MIN_USEREX_UPAVGRATE,
+round(MIN_USEREX_DWAVGRATE ,  2) as MIN_USEREX_DWAVGRATE,
+ round((POOR_GRID_COUNT/GRID_COUNT)*100 , 2) as poor_grid_radio
+  from dm_user_concern_area_his
+WHERE
+	pid = #{PID}
+AND
+	CREATE_TIME BETWEEN '#{STARTDAY}' AND '#{ENDDAY}'
+AND
+    P_TYPE = #{TYPE}
+GROUP BY pid , CREATE_TIME
+order by CREATE_TIME ASC
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestAnalysi_v2_getConcernAreaHis" description="查询关注区域的历史详情数据（关联原表）">
+		<![CDATA[
+SELECT
+a.id,
+a.area_name,
+a.AREA_TYPE,
+a.creator,
+a.gis_data_baidu,
+a.CITY,
+a.handle_description,
+a.handle_time,
+a.max_longitude_baidu,
+a.max_latitude_baidu,
+a.min_longitude_baidu,
+a.min_latitude_baidu,
+a.CITY_ID,
+a.COUNTRY,
+a.COUNTRY_ID,
+a.MKTCENTER,
+a.MKTCENTER_ID,
+DATE_FORMAT(b.create_time,'%Y-%m-%d') create_time,
+round(b.rsrp,2) rsrp,
+round(b.cover*100,2) cover,
+b.recent_base_statn_id,
+b.recent_cell_id,
+b.recent_cell_name,
+b.SECTOR_SET,
+b.LTE_TO_3G_TOT,
+b.FLOW_4G_TOT,
+b.CE_GOOD_RATIO_AVG,
+b.USER_4G_AVG,
+b.RSRP_SUM,
+b.RSRP_COUNT,
+b.RSRP_COUNT_105,
+b.GRID_COUNT,
+b.ORDERNO_TOT,
+b.TOP5_ALARM_NUMS,
+b.NE_SECTOR_SET,
+round(b.MIN_USEREX_UPAVGRATE, 2 ) as MIN_USEREX_UPAVGRATE,
+round(b.MIN_USEREX_DWAVGRATE ,  2) as MIN_USEREX_DWAVGRATE,
+round((b.poor_grid_count / b.GRID_COUNT)*100 , 2) as poor_grid_radio -- 弱栅格占比
+FROM dm_user_concern_area as a , dm_user_concern_area_his b
+where a.id = b.pid
+and a.id = #{ID}
+and b.create_time = '#{DAY}'
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestV2_getAllConcernAreaByNormalUser_layer" description="非系统管理员查询关注区域地图图层数据">
+		<![CDATA[
+select
+DISTINCT
+id,
+area_name,
+gis_data_baidu
+from (
+select * from dm_user_concern_area where creator = '#{USERNAME}'
+#{CITY}
+#{DISTRINCT}
+UNION ALL
+select * from dm_user_concern_area
+where
+	share_scope is not null
+and
+	share_scope <>  ''
+and share_status in( '已共享' , '取消共享审核中' )
+and
+	(locate(CONCAT('_',CONCAT('#{NODE_ID}','_')) ,CONCAT('_',CONCAT(share_scope , '_'))) > 0 OR #{NODE_ID} = 1 )
+	) as a
+	#{CONDITION}
+	#{LIMIT}
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestV2_getAllConcernAreaByNormalUser_layer" description="非系统管理员查询关注区域地图图层数据">
+		<![CDATA[
+select
+DISTINCT
+id,
+area_name,
+gis_data_baidu
+from (
+select * from dm_user_concern_area where creator = '#{USERNAME}'
+#{CITY}
+#{DISTRINCT}
+UNION ALL
+select * from dm_user_concern_area
+where
+	share_scope is not null
+and
+	share_scope <>  ''
+and share_status in( '已共享' , '取消共享审核中' )
+and
+	(locate(CONCAT('_',CONCAT('#{NODE_ID}','_')) ,CONCAT('_',CONCAT(share_scope , '_'))) > 0 OR #{NODE_ID} = 1 )
+	) as a
+	#{CONDITION}
+	#{LIMIT}
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestV2_BoneArea" description="查询骨头区域列表V2">
+		<![CDATA[
+	SELECT *,
+	CASE
+	WHEN is_suspend IS NULL THEN  'N'
+	ELSE 'Y' END  IS_SUSPENDSORT
+	FROM frt_agps_poor_area_m
+	where 1=1 and month = #{MONTH}
+	#{CITY}
+	#{COUNTRY}
+	#{MKTCENTER}
+	 order BY IS_SUSPEND DESC
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestV2_18_CityBoneArea" description="查询地市骨头区域">
+		<![CDATA[
+SELECT
+id,
+object_name,
+GIS_DATA
+FROM frt_agps_poor_area_m
+where 1=1
+AND MONTH = #{MONTH}
+#{CITY}
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestV2_BoneArea" description="查询骨头区域列表V2">
+		<![CDATA[
+	SELECT *,
+	CASE
+	WHEN is_suspend IS NULL THEN  'N'
+	ELSE 'Y' END  IS_SUSPENDSORT
+	FROM frt_agps_poor_area_m
+	where 1=1 and month = #{MONTH}
+	#{CITY}
+	#{COUNTRY}
+	#{MKTCENTER}
+	 order BY IS_SUSPEND DESC
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestAnalysi_v2_getBoneAreaHis" description="查询骨头区域的历史详情数据（关联原表）">
+		<![CDATA[
+SELECT
+	a.id,
+	a.OBJECT_ID,
+	a.CITY,
+	a.LONGITUDE_MIN,
+	a.LATITUDE_MIN,
+	a.LONGITUDE_MID,
+	a.LATITUDE_MID,
+	a.LONGITUDE_MAX,
+	a.LATITUDE_MAX,
+	a.BELONG_AREA_ID,
+	a.SECTOR_SET,
+	a.GIS_DATA,
+	a.ENODEBNAME,
+	a.ENODEB_ID,
+	a.CELL_NAME,
+	a.CELL_ID,
+	a.CREATOR,
+	a.IS_SUSPEND,
+	a.NE_SECTOR_SET,
+	a.SUSPEND_REASON,
+	a.CITY_ID,
+	a.COUNTRY,
+	a.COUNTRY_ID,
+	a.MKTCENTER,
+	a.MKTCENTER_ID,
+	DATE_FORMAT(b.create_time,'%Y-%m-%d') create_time ,
+	round(b.rsrp, 2) RSRP_AVG,
+	round(b.cover * 100, 2) RSRP_COV,
+	b.recent_base_statn_id,
+	b.recent_cell_id,
+	b.recent_cell_name,
+	b.SECTOR_SET,
+	b.LTE_TO_3G_TOT,
+	b.FLOW_4G_TOT,
+	b.CE_GOOD_RATIO_AVG,
+	b.USER_4G_AVG,
+	b.RSRP_SUM,
+	b.RSRP_COUNT AS RSRP_COUNT_100,
+	b.RSRP_COUNT_105,
+	b.GRID_COUNT,
+	b.ORDERNO_TOT,
+	b.TOP5_ALARM_NUMS,
+	b.NE_SECTOR_SET
+FROM
+	frt_agps_poor_area_m AS a,
+	dm_user_concern_area_his b
+WHERE
+	a.id = b.pid
+AND a.id = #{ID}
+AND b.create_time = '#{DAY}'
+AND b.p_type = 1
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestAnalysi_v2_sector" description="取基站Table（区县或者营服）">
+		<![CDATA[
+SELECT
+g.ENODEB_NAME,
+g.city,
+g.city_id,
+g.country,
+g.country_id,
+g.mktcenter,
+round(g.MIN_USEREX_UPAVGRATE, 2 ) as MIN_USEREX_UPAVGRATE,
+round(g.MIN_USEREX_DWAVGRATE ,  2) as MIN_USEREX_DWAVGRATE,
+g.ENODEB_ID,
+g.CELL_ID,
+g.CELL_NAME,
+CASE g.BELONG_AREA_ID
+ WHEN 1 THEN '市区'
+ WHEN 2 THEN '县城'
+ WHEN 3 THEN '乡镇'
+ WHEN 4 THEN '农村'
+ELSE '未知' END AS BELONG_AREA_ID,
+g.ALARM_LEVEL,
+g.ALARM_NUMS,
+g.CELL_STATE,
+g.POOR_COVERAGE_COUNT,
+g.NB_POOR_COVERAGE_COUNT,
+g.LTE_TO_3G_TOT,
+g.Flow_4G_TOT,
+g.User_4G_AVG,
+g.CE_GOOD_RATIO_AVG,
+g.GRID_NUMS,
+g.POOR_COVERAGE_SET ,
+g.NB_POOR_COVERAGE_SET,
+concat(g.ENODEB_ID,',',g.CELL_ID)as sector_set,
+g.LONGITUDE_MID_BAIDU,
+g.LATITUDE_MID_BAIDU,
+g.PRED_LOCATION_BAIDU,
+
+g.ANT_AZIMUTH,
+g.BS_VENDOR,
+g.band_mapping,
+g.LATITUDE_MAX_BAIDU as max_latitude_baidu,
+g.LATITUDE_MIN_BAIDU as min_latitude_baidu,
+g.LONGITUDE_MAX_BAIDU as max_longitude_baidu,
+g.LONGITUDE_MIN_BAIDU as min_longitude_baidu,
+g.ENODEB_ID as statn_id,
+g.cell_id,
+g.ORDERNO_TOT,
+g.is_indoor,
+g.PRED_LOCATION_GPS ,
+g.LOCATION_GPS,
+g.AGPS_MR_COUNT , -- 包含AGPS的MR条数
+g.AGPS_MR_DIST_AVG , -- 包含AGPS的MR与小区平均距离
+g.AGPS_MR_DIST_TA , -- 包含AGPS的MR与小区每TA平均距离
+g.PRED_AZIMUTH , -- 预测角度
+g.PRED_AZIMUTH_DIFF , -- 偏离角度
+g.SURPORT_NUMBER , -- 预测位置支持MR条数
+g.PRED_DISTANCE , -- 预测位置的相差距离
+g.SURP_AZIMUTH_COUNT  -- 支持方位角预测条数
+FROM FRT_AGPS_PC_ENB_D as g
+WHERE DAY = #{DAY}
+AND city='#{CITY}'
+AND COUNTRY = '#{COUNTRY}'
+#{MKTCENTER_ID}
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="SectorUtilForBaidu_01_querySector_onlyDrawField" description="百度地图canvas画基站后台查询sql（仅取画基站的字段）">
+		<![CDATA[
+select distinct base_statn_id,cell_id,
+longitude_baidu,latitude_baidu,
+ant_azimuth,
+-- is_indoor,
+-- band,
+-- CASE is_indoor WHEN '室外' THEN 2 ELSE 1 END AS type,
+INDOOR_MAPPING as type,
+-- case band when '2.6GHz' then 4 when '2.1GHz' then 3 when '1.8GHz' then 2 when '800MHz' then 1 else 0 end as band_order
+BAND_MAPPING as band_order
+from noce.dim_sector
+where day = #{DAY}
+#{CITY} -- 地市
+#{COUNTRY} -- 区县
+#{MKTCENTER} -- 营服
+#{BAND} -- 频率
+#{FACTORY} -- 厂家
+#{NETTYPE} -- 网络类型
+#{REGON} -- 场景
+#{INDOOR} -- 室内外
+#{CONDITION} -- 其他查询条件
+AND LONGITUDE_BAIDU IS NOT NULL
+order by band_order
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestAnalysisV3_getSectorKPITrend" description="获取扇区的KPI速率历史趋势图" db="mysql">
+		<![CDATA[
+SELECT
+	DAY AS CREATE_TIME,
+	round(MIN_USEREX_UPAVGRATE, 2) AS MIN_USEREX_UPAVGRATE,
+	round(MIN_USEREX_DWAVGRATE, 2) AS MIN_USEREX_DWAVGRATE
+FROM
+	FRT_AGPS_PC_ENB_D
+WHERE
+	DAY BETWEEN #{STARTDAY}
+AND #{ENDDAY}
+AND ENODEB_ID = #{ENODEBID}
+AND CELL_ID = #{CELLID}
+ORDER BY
+	DAY ASC
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestV2_09_sectorMessage" description="取基站的一些其他信息V2">
+		<![CDATA[
+select BASE_STATN_ID ,
+CELL_ID ,
+BAND,
+HIGH ,
+ant_azimuth ,
+ant_engine_angle ,
+ant_electron_angle ,
+acceptstatus ,
+bs_vendor,
+IS_INDOOR,
+LONGITUDE_BAIDU as lng,
+LATITUDE_BAIDU as lat,
+BAND_MAPPING as band_level
+from dim_sector
+WHERE DAY = #{DAY}
+and BASE_STATN_ID = #{ENODEBID} AND CELL_ID = #{CELLID}
+]]>
+	</sqlTemplate>
+
+
+
+
+
+
+</xml-body>
