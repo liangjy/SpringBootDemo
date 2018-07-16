@@ -15417,11 +15417,11 @@ function searchenter(event) {
 }
 
 function doSubmitAndRemove(){
-//    setTimeout(function(){
-//        uploadData.getChromeData();
-//        uploadData.doSubmit();
-//    },10000);
-//    IntelligentRoadTest.map.removeEventListener("tilesloaded",doSubmitAndRemove);
+    setTimeout(function(){
+        // uploadData.getChromeData();
+        // uploadData.doSubmit();
+    },10000);
+    IntelligentRoadTest.map.removeEventListener("tilesloaded",doSubmitAndRemove);
 }
 //从数组中移除需要隐藏图例id
 IntelligentRoadTest.removeId = function IntelligentRoadTest_removeId(idArr,id){
