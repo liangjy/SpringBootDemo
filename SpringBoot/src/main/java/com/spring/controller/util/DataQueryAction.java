@@ -1,7 +1,5 @@
 package com.spring.controller.util;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;

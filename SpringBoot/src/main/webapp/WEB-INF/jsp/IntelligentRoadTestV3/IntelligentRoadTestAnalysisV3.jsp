@@ -19,7 +19,6 @@
 <script  src="../js/IntelligentRoadTestV3/fastclick.js"></script>
 <!-- <script  src="../js/util/uploadData.js" ></script>
 <script  src="../js/util/pingying.js" async="true"></script> -->
-<!-- <script  src="../js/util/exportExcel.js" async="true"></script> -->
 <!-- 增加progressbarTwo的查询数据同步方法 -->
 <script  src="../js/progressbarTwo.js?2017022803" ></script>
 <script  src="../js/util/GridMapControl.js?201706788566" ></script>
@@ -6414,10 +6413,8 @@
 	</div>
 </div>
 <script type="text/javascript" src="../js/echarts/echarts.min.js" charset="utf-8" defer></script>
-<!-- <script type="text/javascript" src="../js/tableTools/tableToolsNewTwo.js" async="true"></script> -->
 <script type="text/javascript" src="../js/util/callBackChangeData.js?2017060611" defer></script>
 <script type="text/javascript" src="../js/util/BMapUtil-new.js" defer></script>
-<%--<script type="text/javascript" src="../js/baiduUtil/mapv.js"></script>--%>
 <script type="text/javascript" src="../js/util/GeoUtils.js" async="true"></script>
 <script type="text/javascript" src="../js/util/SectorUtilForBaidu.js" defer></script>
 <script src="../js/util/vue.js" defer></script>
