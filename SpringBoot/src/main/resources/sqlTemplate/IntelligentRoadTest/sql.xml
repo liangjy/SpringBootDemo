@@ -691,6 +691,1030 @@ and BASE_STATN_ID = #{ENODEBID} AND CELL_ID = #{CELLID}
 ]]>
 	</sqlTemplate>
 
+	<sqlTemplate id="IntelligentRoadTestV2_14_polygonKPITable" description="取弱区主服务小区（top5）KPI表格数据V2">
+		<![CDATA[
+SELECT
+DAY,
+enodebid,
+CELLID, -- 小区ID
+cell_name,
+round(ERAB_SUCC_RATE*100,2) ERAB_SUCC_RATE, -- E-RAB建立成功率(%)
+round(ERAB_DROP_RATE*100,2) ERAB_DROP_RATE, -- E-RAB掉线率(%)
+round(RRCCON_SUCCRATE*100,2) RRCCON_SUCCRATE, -- RRC连接建立成功率(%)
+round(SWCHSF_SUCC_RATE*100,2) SWCHSF_SUCC_RATE, -- 同频切换成功率(%)
+round(SWCHAF_SUCC_RATE*100,2) SWCHAF_SUCC_RATE, -- 异频切换成功率(%)
+round(UP_PRB_USERATE*100,2) UP_PRB_USERATE, -- 上行PRB资源利用率（业务信息）
+round(DW_PRB_USERATE*100,2) DW_PRB_USERATE, -- 下行PRB平均利用率(%)
+Counter0003, -- 最大RRC连接用户数
+round((PDCH_DWFLOW+PDCH_UPFLOW),2) as PDCH_FLOW -- PDCP层流量(MB)
+FROM FRT_WIRELESS_KPI_STAT_D
+WHERE DAY BETWEEN #{STARTDAY} AND #{ENDDAY}
+and enodebid = #{ENODEBID} and cellid = #{CELLID}
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestV2_12_polygonAlarmTable" description="取弱区主服务小区（top5）告警表格数据V2">
+		<![CDATA[
+SELECT
+day,-- 日期
+base_statn_id, -- 基站ID
+CELL_ID, -- 小区ID
+FACTORY, -- 厂家
+RECTIME, -- 接收告警时间
+ALARM_TIME, -- 告警时间
+CLEAR_TIME, -- 告警恢复时间
+ALARM_LEVEL, -- 告警级别
+ISRECOVER, -- 是否恢复
+OUTOFSRV, -- 是否断站退服
+PROB_CAUSE, -- 告警内容
+ALARM_SCOPE -- 告警范围
+FROM FRT_BSN_ALARM_HIS_D
+WHERE DAY BETWEEN #{STARTDAY} AND #{ENDDAY}
+AND base_statn_id = #{ENODEBID} AND CELL_ID = #{CELLID}
+AND ALARM_SCOPE = 'CELL'
+AND OUTOFSRV = 1
+UNION ALL
+SELECT
+day,-- 日期
+base_statn_id, -- 基站ID
+CELL_ID, -- 小区ID
+FACTORY, -- 厂家
+RECTIME, -- 接收告警时间
+ALARM_TIME, -- 告警时间
+CLEAR_TIME, -- 告警恢复时间
+ALARM_LEVEL, -- 告警级别
+ISRECOVER, -- 是否恢复
+OUTOFSRV, -- 是否断站退服
+PROB_CAUSE, -- 告警内容
+ALARM_SCOPE -- 告警范围
+FROM FRT_BSN_ALARM_HIS_D
+WHERE DAY BETWEEN #{STARTDAY} AND #{ENDDAY}
+AND base_statn_id = #{ENODEBID}
+AND ALARM_SCOPE = 'BASE_STATION'
+AND OUTOFSRV = 1
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTest_14_polygonMacSectorTable" description="取宏站勘误的取数模板">
+		<![CDATA[
+SELECT
+	CITY , COUNTRY , MKTCENTER , ENODEB_ID ,  CELL_ID , CELL_NAME , LONGITUDE_MID_BaiDu ,
+  LATITUDE_MID_BaiDu , ALARM_LEVEL , PRED_LOCATION_BAIDU , PRED_LOCATION_GPS ,
+  PRED_DISTANCE ,  LOCA_CORR_PRIORIATY , NB_POOR_COVERAGE_COUNT, FLOW_4G_TOT ,DAY,ant_azimuth,band_mapping ,
+  AGPS_MR_COUNT , -- 包含AGPS的MR条数
+  AGPS_MR_DIST_AVG , -- 包含AGPS的MR与小区平均距离
+  AGPS_MR_DIST_TA , -- 包含AGPS的MR与小区每TA平均距离
+  PRED_AZIMUTH , -- 预测角度
+  PRED_AZIMUTH_DIFF , -- 偏离角度
+  SURP_AZIMUTH_COUNT , -- 支持方位角预测条数
+  SURPORT_NUMBER , -- 预测位置支持MR条数
+  LOCATION_GPS,(select ALT_NO from  ALT_ESBH_ENB_D B where B.ENODEB_ID=A.ENODEB_ID and B.CELL_ID=A.CELL_ID and b.day=a.day)ALT_NO
+from
+	FRT_AGPS_PC_ENB_D A
+where day = #{DAY}
+and city = '#{CITY}'
+#{COUNTRY}
+#{MKTCENTER}
+and ENODEB_ID is not null
+and CELL_ID is not null
+and LONGITUDE_MID_BaiDu is not null and LONGITUDE_MID_BaiDu != ""
+and LATITUDE_MID_BaiDu  is not null and LATITUDE_MID_BaiDu != ""
+and PRED_LOCATION_BAIDU is not null and PRED_LOCATION_BAIDU != ""
+and PRED_LOCATION_BAIDU is not null and PRED_LOCATION_BAIDU != ""
+and is_indoor = '室外'
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="alarm_info_V2_Tab" description="V2版本的工单告警查询">
+		<![CDATA[
+SELECT
+city,
+eNodeB_ID,
+TASK_ID,
+ALARM_NAME,
+ALARM_ID,
+ALARM_LEVEL,
+date_format(ALARM_TIME,'%Y%m%d-%H:%m:%s') as ALARM_TIME,
+CASE IS_RECOVER
+WHEN 1 THEN '是'
+WHEN 0 THEN '否'
+ELSE '未知' END AS IS_RECOVER,
+date_format(RECOVER_TIME,'%Y%m%d-%H:%m:%s') as RECOVER_TIME,
+TASK_STATUS,
+date_format(TASK_SEND_TIME,'%Y%m%d-%H:%m:%s') as TASK_SEND_TIME,
+date_format(TASK_FINISH_TIME,'%Y%m%d-%H:%m:%s') as TASK_FINISH_TIME,
+REPLACE ( ALARM_TEXT, '>', '大于' ) as ALARM_TEXT
+from  alarm_info
+where
+Date(ALARM_TIME)<=#{ENDTIME}
+#{CITY}
+#{ALARM_ID}
+and
+(
+ALARM_NAME='AGPS智能路测弱覆盖区域'
+or  ALARM_NAME = '4G基站扇区基础信息异常'
+or  ALARM_NAME = '天翼蓝鹰高密度住宅区'
+or  ALARM_NAME = '天翼蓝鹰高流量商务区'
+or  ALARM_NAME = '天翼蓝鹰美景'
+or  ALARM_NAME = '天翼蓝鹰美食'
+or  ALARM_NAME = '天翼蓝鹰农贸市场'
+or  ALARM_NAME = '天翼蓝鹰战狼区域'
+or  ALARM_NAME = '天翼蓝鹰高速'
+or  ALARM_NAME = '天翼蓝鹰高校'
+or  ALARM_NAME = '天翼蓝鹰场馆'
+or  ALARM_NAME = '天翼蓝鹰中小学'
+or  ALARM_NAME = '天翼蓝鹰城中村'
+)
+order by alarm_name , eNodeB_ID
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestAnalysisV2_getAlarmArea" description="获取工单对应的弱区">
+		<![CDATA[
+select
+trim(LONGITUDE_MID_BaiDu) as LONGITUDE_MID_BaiDu,trim(LATITUDE_MID_BaiDu) as LATITUDE_MID_BaiDu
+,OBJECT_ID
+, eNodeB_ID,CELL_ID ,CELL_NAME,'扇区勘误' order_type, alarm_id
+
+
+from (
+select b.LONGITUDE_MID_BaiDu , b.LATITUDE_MID_BaiDu
+,CONCAT(b.eNodeB_ID,'_', b.CELL_ID) OBJECT_ID
+,b. eNodeB_ID, b.CELL_ID ,b.CELL_NAME,'扇区勘误' order_type,b.alt_no as alarm_id
+from alt_esbh_enb_d b
+where b.alt_no in(#{ALT_NO_LIST})
+union all
+select b.LONGITUDE_MID_BaiDu , b.LATITUDE_MID_BaiDu
+, b.OBJECT_ID
+,b. eNodeB_ID, b.CELL_ID ,b.cell_name ,'弱区' order_type,a.order_id as alarm_id
+ from ALT_AGPS_POOR_COVERAGE_D a inner join frt_agps_poor_coverage_d b
+on a.object_id=b.OBJECT_ID and a.day=b.day and a.grid_type=b.grid_type
+where a.order_id in(#{ORDER_ID_LIST})
+union ALL
+SELECT c.LONGITUDE_MID_BaiDu , c.LATITUDE_MID_BaiDu
+, c.ESBH_ID objcet_id
+,c.ESBH_ID eNodeB_ID, null ,c.cell_name ,'','' from  FRT_ESBH_INFO_D c where
+#{ESBH_SQL}
+union ALL
+SELECT gis_gps_bd(c.longitude_mid,c.latitude_mid,0) , gis_gps_bd(c.longitude_mid,c.latitude_mid,1)
+, c.line_id objcet_id
+,c.line_id eNodeB_ID, null ,c.cell_name ,'','' from  frt_esbh_line_coverage_d c where
+#{ROAD_SQL}
+) t order by t.OBJECT_ID
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestAnalysisV2_101_HighwayList" description="某天某地市下所有高速路的汇总数据">
+		<![CDATA[
+  SELECT
+  	CITY ,
+	ROAD_ID,
+	ROAD_NAME,
+	POOR_LENGTH,
+	COVER_LENGTH,
+	POOR_RATIO,
+	POOR_COUNT ,
+	LONGITUDE_MIN, -- 线路最小经度
+	LATITUDE_MIN, -- 线路最小纬度
+	LONGITUDE_MID, -- 线路中心经度
+	LATITUDE_MID, -- 线路中心纬度
+	LONGITUDE_MAX, -- 线路最大经度
+	LATITUDE_MAX, -- 线路最大纬度
+	pc_orderno_tot,
+	lte_to_3g_orderno,
+	flow_4g_orderno,
+	ce_good_ratio_orderno,
+	poor_cov_length_orderno,
+	user_4g_orderno ,
+	MIN_USEREX_UPAVGRATE,
+	MIN_USEREX_DWAVGRATE,
+	round(ROAD_LENGTH/1000 , 2) as road_length
+FROM
+(
+SELECT
+	CITY ,
+	ROAD_ID,
+	ROAD_NAME,
+	sum((case when RSRP_SUM/RSRP_COUNT< -105 then 1 else 0 end)*ROAD_LENGTH)/1000 as POOR_LENGTH,
+	sum(ROAD_LENGTH)/1000 as COVER_LENGTH,
+	round((sum((case when RSRP_SUM/RSRP_COUNT< -105 then 1 else 0 end)*ROAD_LENGTH)/sum(ROAD_LENGTH)) * 100,2 ) as POOR_RATIO,
+	count(*) AS POOR_COUNT ,
+	LONGITUDE_MIN, -- 线路最小经度
+	LATITUDE_MIN, -- 线路最小纬度
+	LONGITUDE_MID, -- 线路中心经度
+	LATITUDE_MID, -- 线路中心纬度
+	LONGITUDE_MAX, -- 线路最大经度
+	LATITUDE_MAX, -- 线路最大纬度
+	pc_orderno_tot,
+	lte_to_3g_orderno,
+	flow_4g_orderno,
+	ce_good_ratio_orderno,
+	poor_cov_length_orderno,
+	user_4g_orderno,
+	round(MIN_USEREX_UPAVGRATE, 2 ) as MIN_USEREX_UPAVGRATE ,
+round(MIN_USEREX_DWAVGRATE ,  2) as MIN_USEREX_DWAVGRATE
+FROM
+	FRT_ESBH_LINE_COVERAGE_D
+WHERE
+	DAY = #{DAY}
+AND CITY = '#{CITYNAME}'
+AND LINE_TYPE = #{TYPE} -- 1：表示高速；2：表示高铁；3：表示市政路。
+AND LINE_LEVEL=500
+#{CONDITION}
+GROUP BY
+	ROAD_ID,
+	ROAD_NAME
+) A
+JOIN
+(
+SELECT
+	ROAD_ID AS ID,ROAD_LENGTH
+FROM
+	DIM_ROAD_CITY
+WHERE
+    CITY_NAME = '#{CITYNAME}'
+) B
+ON A.ROAD_ID = B.ID
+ORDER BY
+  POOR_RATIO DESC
+    #{LIMIT}
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestAnalysisV2_103_HighwaySectors" description="取视图范围内的路段对象" DB="postgrepSQL">
+		<![CDATA[
+SELECT
+t1.city_id,
+t1.city_name,
+t1.road_id,
+t1.id
+FROM dim_road_section t1,
+(SELECT ST_PolygonFromText('POLYGON((#{MINLNG} #{MINLAT},
+                                                   #{MINLNG} #{MAXLAT},
+                                                   #{MAXLNG} #{MAXLAT},
+                                                   #{MAXLNG} #{MINLAT},
+                                                   #{MINLNG} #{MINLAT}))',4326) AS geom) t2
+WHERE ST_Intersects(t1.geom,t2.geom)
+AND city_name = '#{CITYNAME}'
+AND road_type_id=#{ROAD_TYPE_ID} -- 1：表示高速；2：表示高铁；3：表示市政路
+AND level=#{LEVEL}
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestAnalysisV2_105_HighwaySector500" description="取某条高速路的500米分段数据">
+		<![CDATA[
+SELECT
+    ROAD_ID , -- 道路ID
+	LINE_ID, -- 线段ID
+	city , -- 地市名称
+	road_name , -- 道路名称
+LONGITUDE_MIN, -- 线路最小经度
+LATITUDE_MIN, -- 线路最小纬度
+LONGITUDE_MID, -- 线路中心经度
+LATITUDE_MID, -- 线路中心纬度
+LONGITUDE_MAX, -- 线路最大经度
+LATITUDE_MAX, -- 线路最大纬度
+ALL_COV_LENGTH, -- 覆盖长度
+LTE_TO_3G_TOT, -- 4G切3G总次数
+Flow_4G_TOT, -- 4G总流量
+CE_GOOD_RATIO_AVG, -- 感知优良率按天平均值
+User_4G_AVG, -- 4G用户数按天平均值
+RSRP_COUNT, -- RSRP总条数
+RSRP_SUM, -- RSRP之和
+RSRP_COUNT_105, -- RSRP大于105之和
+round((RSRP_COUNT_105/RSRP_COUNT) * 100 , 2) as COVER_RATE, -- 覆盖率
+RSRP_SUM/RSRP_COUNT as RSRP_AVG, -- RSRP均值
+Do_Type, -- 路段处理措施
+eNodeB_ID, -- 基站ID
+eNodeB_Name, -- 最近基站名称
+CELL_ID, -- 最近的小区ID
+CELL_NAME, -- 最近的小区的名称
+CELL_ADDRESS, -- 最近基站地址
+CELL_STATE , -- 最近的小区的状态
+sector_set , -- mr最大的小区集合
+pc_orderno_tot,
+lte_to_3g_orderno,
+flow_4g_orderno,
+ce_good_ratio_orderno,
+poor_cov_length_orderno,
+user_4g_orderno,
+round(MIN_USEREX_UPAVGRATE, 2 ) as MIN_USEREX_UPAVGRATE,
+round(MIN_USEREX_DWAVGRATE ,  2) as MIN_USEREX_DWAVGRATE,
+nc_sector_set as ne_sector_set -- 附近小区集合
+FROM
+	FRT_ESBH_LINE_COVERAGE_D
+WHERE
+	DAY = #{DAY}
+AND LINE_LEVEL=500
+AND LINE_TYPE=#{TYPE} -- 1：表示高速；2：表示高铁；3：表示市政路。
+AND ROAD_ID= #{ROAD_ID}
+AND CITY = '#{CITY}'
+#{CONDITION} -- 用于扩展查询条件的变量
+ORDER BY
+  LINE_ID
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestAnalysisV2_103_HighwayAllLine" description="取某条高速分段所有线路数据" DB="postgrepSQL">
+		<![CDATA[
+SELECT
+city_id,
+city_name,
+road_id,
+id
+FROM dim_road_section
+WHERE 1=1
+AND city_name = '#{CITYNAME}'
+AND road_type_id=#{ROAD_TYPE_ID} -- 1：表示高速；2：表示高铁；3：表示市政路
+AND road_id = #{ROAD_ID}
+AND level=#{LEVEL}
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestAnalysisV2_103_Highway20meter" description="查询500米线段对应的20米全部线段" DB="mysql">
+		<![CDATA[
+SELECT sect_id,sect_20_id FROM dim_road_sect_ref WHERE sect_id = #{SECTID}
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestAnalysisV2_107_HighwaySector500His" description="取某个500米分段的历史30天的覆盖率和rsrp均值数据">
+		<![CDATA[
+SELECT
+    DAY as create_time,
+	LINE_ID, -- 线段ID
+RSRP_COUNT_105/RSRP_COUNT as cover, -- 覆盖率
+RSRP_SUM/RSRP_COUNT as rsrp, -- RSRP均值
+round(MIN_USEREX_UPAVGRATE, 2 ) as MIN_USEREX_UPAVGRATE,
+round(MIN_USEREX_DWAVGRATE ,  2) as MIN_USEREX_DWAVGRATE
+FROM
+	FRT_ESBH_LINE_COVERAGE_D
+WHERE
+	DAY between #{DAYSTART} AND #{DAYEND}
+AND LINE_LEVEL=500
+AND LINE_TYPE =#{TYPE} -- 1：表示高速；2：表示高铁；3：表示市政路。
+AND ROAD_ID= #{ROAD_ID}
+AND LINE_ID= '#{LINE_ID}'
+ORDER BY
+  DAY
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestAnalysisV2_109_HighwayList_Continuous" description="某天某地市下所有高速路的连片弱区数据地图（连片模式）">
+		<![CDATA[
+SELECT
+CITY ,
+CITY_ID,
+OBJECT_ID,
+TYPE,
+ROAD_ID,
+ROAD_NAME,
+LONGITUDE_MIN_BaiDu AS LONGITUDE_MIN, -- 栅格最小经度(用于OSM，取值为GPS，只是复用字段名称)
+LATITUDE_MIN_BaiDu AS LATITUDE_MIN, -- 栅格最小纬度
+LONGITUDE_MID_BaiDu AS LONGITUDE_MID, -- 栅格中心经度
+LATITUDE_MID_BaiDu AS LATITUDE_MID, -- 栅格中心纬度
+LONGITUDE_MAX_BaiDu AS LONGITUDE_MAX, -- 栅格最大经度
+LATITUDE_MAX_BaiDu AS LATITUDE_MAX, -- 栅格最大纬度
+contain_ids,
+GIS_DATA --	GIS经纬度集合
+FROM
+	FRT_AGPS_POOR_COVERAGE_D
+WHERE
+	DAY = #{DAY}
+AND GRID_TYPE=20
+AND TYPE = #{TYPE}-- 1：表示高速；2：表示高铁；3：表示市政路。
+AND CITY = '#{CITY}'
+#{CONDITION}
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestAnalysisV2_108_HighwayList_Continuous" description="某天某地市下所有高速路的汇总数据（连片模式）">
+		<![CDATA[
+SELECT A.CITY , A.ROAD_ID,ROAD_NAME,POOR_LENGTH,POOR_COUNT, ROAD_LENGTH ,
+ROUND((POOR_LENGTH/COVER_LENGTH) * 100,2) AS POOR_RATIO ,
+b.COVER_LENGTH,
+a.longitude_min,
+a.latitude_min,
+a.longitude_max,
+a.latitude_max,
+a.longitude_mid,
+a.latitude_mid,
+a.pc_orderno_tot,
+a.lte_to_3g_orderno,
+a.flow_4g_orderno,
+a.ce_good_ratio_orderno,
+a.poor_cov_length_orderno,
+a.user_4g_orderno
+FROM
+(
+SELECT
+	d.CITY ,
+	d.ROAD_ID,
+	d.ROAD_NAME,
+	d.LONGITUDE_MIN_BAIDU as longitude_min,
+	d.LATITUDE_MIN_BAIDU as latitude_min,
+	d.LONGITUDE_MAX_BAIDU as longitude_max,
+	d.LATITUDE_MAX_BAIDU as latitude_max,
+	d.LONGITUDE_MID_BAIDU as longitude_mid,
+	d.LATITUDE_MID_BAIDU as latitude_mid,
+	d.PC_ORDERNO_TOT,
+	d.LTE_TO_3G_ORDERNO as lte_to_3g_orderno,
+	d.FLOW_4G_ORDERNO as flow_4g_orderno,
+	d.ce_good_ratio_orderno,
+    d.POOR_GRID_NUMS_ORDERNO as poor_cov_length_orderno,
+	d.USER_4G_ORDERNO as user_4g_orderno,
+	ROUND(sum(d.POOR_GRID_AREA)/1000 , 2) as POOR_LENGTH ,-- 连片弱里程数
+	count(*) AS POOR_COUNT, -- 连片弱区数
+	round(c.road_length/1000 , 0) as road_length
+FROM
+	FRT_AGPS_POOR_COVERAGE_D as d
+JOIN
+(
+	select road_id , road_length from DIM_ROAD_CITY
+WHERE
+    CITY_NAME = '#{CITY}'
+) as c
+on d.road_id = c.road_id
+WHERE
+	d.DAY = #{DAY}
+AND d.GRID_TYPE=20
+AND d.TYPE = #{TYPE} -- 1：表示高速；2：表示高铁；3：表示市政路。
+AND d.CITY = '#{CITY}'
+#{CONDITION}
+GROUP BY
+	ROAD_ID,
+	ROAD_NAME
+) A
+join
+(
+SELECT
+	ROAD_ID,
+	sum(ROAD_LENGTH)/1000 as COVER_LENGTH -- 覆盖里程数
+FROM
+	FRT_ESBH_LINE_COVERAGE_D
+WHERE
+	DAY = #{DAY}
+AND LINE_LEVEL=500
+AND LINE_TYPE = #{TYPE} -- 1：表示高速；2：表示高铁；3：表示市政路。
+AND CITY = '#{CITY}'
+GROUP BY
+	ROAD_ID,
+	ROAD_NAME
+) B
+on A.ROAD_ID = B.ROAD_ID
+ORDER BY POOR_RATIO DESC
+#{LIMIT}
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestAnalysisV2_111_HighwayPoor" description="取某条高速路的连片弱区明细数据">
+		<![CDATA[
+SELECT
+CITY ,
+ROAD_ID ,
+road_name,
+OBJECT_ID as line_id, -- 线段ID，为了复用对象，这里将名称和500米段的名称统一一下
+POOR_GRID_AREA, -- 里程数
+LONGITUDE_MIN_BAIDU AS LONGITUDE_MIN, -- 线路最小经度
+LATITUDE_MIN_BAIDU AS LATITUDE_MIN, -- 线路最小纬度
+LONGITUDE_MID_BAIDU AS LONGITUDE_MID, -- 线路中心经度
+LATITUDE_MID_BAIDU AS LATITUDE_MID, -- 线路中心纬度
+LONGITUDE_MAX_BAIDU AS LONGITUDE_MAX, -- 线路最大经度
+LATITUDE_MAX_BAIDU AS LATITUDE_MAX, -- 线路最大纬度
+LTE_TO_3G_TOT, -- 4G切3G总次数
+Flow_4G_TOT, -- 4G总流量
+CE_GOOD_RATIO_AVG, -- 感知优良率按天平均值
+User_4G_AVG, -- 4G用户数按天平均值
+DX_RSRP_COUNT AS RSRP_COUNT, -- RSRP总条数
+DX_RSRP_SUM AS RSRP_SUM, -- RSRP之和
+DX_RSRP_105_COUNT AS RSRP_COUNT_105, -- RSRP大于105之和
+round((DX_RSRP_105_COUNT/DX_RSRP_COUNT ) * 100 ,2)as COVER_RATE, -- 覆盖率
+DX_RSRP_SUM/DX_RSRP_COUNT as RSRP_AVG, -- RSRP均值
+Do_Type, -- 路段处理措施
+ENODEB_ID, -- 基站ID
+ENODEBNAME, -- 最近基站名称
+CELL_ID, -- 最近的小区ID
+CELL_NAME, -- 最近的小区的名称
+ADDRESS, -- 最近基站地址
+CELL_STATE , -- 最近的小区的状态
+SECTOR_SET , -- mr最大的小区集合
+TOP5_SECTOR_SET as ne_sector_set ,-- 附近小区集合
+GIS_DATA,  -- gis数据
+pc_orderno_tot,
+lte_to_3g_orderno,
+flow_4g_orderno,
+ce_good_ratio_orderno,
+POOR_GRID_NUMS_ORDERNO as poor_cov_length_orderno,
+user_4g_orderno,
+contain_ids   -- 弱连片对应的20米线段的id集合
+FROM
+FRT_AGPS_POOR_COVERAGE_D
+WHERE
+DAY = #{DAY}
+AND GRID_TYPE=20
+AND TYPE =  #{TYPE} -- 1：表示高速；2：表示高铁；3：表示市政路。
+AND CITY = '#{CITYNAME}'
+AND ROAD_ID = '#{ROAD_ID}'
+#{CONDITION} -- 用于扩展查询条件的变量
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestAnalysisV2_201_MetroLinesList" description="取某地市各条地铁线路汇总列表数据（汇总到线路）">
+		<![CDATA[
+SELECT
+	A.line_id,
+	line_name,
+	poor_count,
+	cov_count,
+	poor_ratio,
+	cover_rate,
+	rsrp_avg,
+	B.line_sect_count
+FROM
+	(
+		SELECT
+			Line_ID,
+			line_name,
+			round(
+				(sum(DX_RSRP_105_Cnt)/sum(DX_RSRP_140_Cnt)) * 100,
+				2
+			) AS cover_rate,
+			-- 覆盖率
+			round(
+				sum(DX_RSRP_140_Sum)/sum(DX_RSRP_140_Cnt),
+				2
+			) AS rsrp_avg,
+			-- rsrp均值
+			sum(
+				CASE
+				WHEN DX_RSRP_140_Avg < - 105 THEN
+					1
+				ELSE
+					0
+				END
+			) AS poor_count,
+			-- 弱路段数
+			count(*) AS cov_count,
+			-- 覆盖段数
+			round(
+				sum(
+					CASE
+					WHEN DX_RSRP_140_Avg < - 105 THEN
+						1
+					ELSE
+						0
+					END
+				) / count(*) * 100,
+				2
+			) AS poor_ratio -- 弱覆盖占比
+		FROM
+			FRT_METRO_LINE_RSRP_D
+		WHERE
+			DAY = #{DAY}
+		AND CITY_ID = #{CITY_ID}
+		and MR_FLAG = 2
+	  #{CONDITION}
+		GROUP BY
+			line_id,
+			LINE_NAME
+	) A
+JOIN (
+	SELECT
+		LINE_ID,
+		count(*) line_sect_count
+	FROM
+		dim_metro_section
+	WHERE
+		LEVEL = 78
+	GROUP BY
+		LINE_ID
+) B ON A.line_id = B.line_id
+ORDER BY
+	poor_ratio DESC
+#{LIMIT}
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestAnalysisV2_202_MetroStations" description="取某地市各条地铁线路地理数据和业务数据（汇总到每两个相邻站）">
+		<![CDATA[
+SELECT a.*, -- 这里包括有rsrp均值指标
+b.BAIDU_LONGITUDE AS from_station_longitude,
+b.BAIDU_LATITUDE AS from_station_latitude,
+c.BAIDU_LONGITUDE AS to_station_longitude,
+c.BAIDU_LATITUDE AS to_station_latitude,
+e.line_sect_count, -- 路段数
+e.cov_count cov_count_sect, -- 覆盖段数
+e.poor_ratio poor_ratio_sect -- 弱覆盖占比
+FROM (
+select
+CITY_ID,
+CITY_NAME ,
+LINE_ID, -- 线路ID
+LINE_NAME, -- 线路名称
+FROM_STATION_ID, -- 源地铁站ID
+FROM_STATION_NAME, -- 源地铁站名称
+TO_STATION_ID, -- 目的地铁站ID
+TO_STATION_NAME, -- 目的地铁站名称
+ALL_COV_SECTION, -- 覆盖段数
+(ALL_COV_SECTION*78) as cover_length, -- 覆盖里程，单位：米
+POOR_COV_SECTION, -- 弱覆盖段数
+round(POOR_COV_SECTION/ALL_COV_SECTION*100,2) as poor_ratio, -- 弱覆盖占比
+LINE_LENGTH, -- 总里程
+POOR_COV_SECTION_OrderNo, -- 路弱覆盖段数排名
+SECTOR_SET, -- 主服务小区集合
+LTE_TO_3G_TOT, -- 4G切3G总次数
+Lte_To_3g_OrderNo, -- 4G切3G总次数在本地网内排名
+Flow_4G_TOT, -- 4G总流量
+Flow_4G_OrderNo, -- 本地网内4G流量排名
+CE_GOOD_RATIO_AVG, -- 感知优良率按天平均值
+Ce_GOOD_RATIO_OrderNo, -- 本地网内感知优良率排名
+User_4G_AVG, -- 4G用户数按天平均值
+User_4G_OrderNo, -- 本地网内4G用户数排名
+PC_OrderNo_TOT, -- 最终排名累计值
+ALARM_NUMS, -- 曾发生退服告警总次数
+ALARM_CELLS, -- 曾发生退服告警小区数
+NR_ALARM_CELLS, -- 未恢复退服告警小区数
+NC_SECTOR_SET, -- 距离最近的TOP5的小区集合
+NC_ALARM_NUMS, -- 最近小区告警数
+Do_Type, -- 路段处理措施
+eNodeB_ID, -- 基站ID
+eNodeB_Name, -- 最近基站名称
+CELL_ID, -- 最近的小区ID
+CELL_NAME, -- 最近的小区的名称
+CELL_ADDRESS, -- 最近基站地址
+CELL_STATE, -- 最近的小区的状态
+DX_RSRP_140_Cnt, -- 电信RSRP[-140，0)记录数
+DX_RSRP_115_Cnt, -- 电信RSRP[-115，0)记录数
+DX_RSRP_110_Cnt, -- 电信RSRP[-110，0)记录数
+DX_RSRP_105_Cnt, -- 电信RSRP[-105，0)记录数
+DX_RSRP_100_Cnt, -- 电信RSRP[-100，0)记录数
+DX_RSRP_95_Cnt, -- 电信RSRP[-95，0)记录数
+DX_RSRP_140_Sum, -- 电信RSRP[-140，0)之和
+round(DX_RSRP_140_Sum/ DX_RSRP_140_Cnt,2) as rsrp_avg_sect, -- RSRP均值
+round((DX_RSRP_105_Cnt/ DX_RSRP_140_Cnt)*100,2) as cover_rate_sect, -- 覆盖率
+POOR_COV_SECTION as poor_count_sect, -- 弱路段数
+round(MIN_USEREX_UPAVGRATE, 2 ) as MIN_USEREX_UPAVGRATE,
+round(MIN_USEREX_DWAVGRATE ,  2) as MIN_USEREX_DWAVGRATE,
+LONGITUDE_MIN,
+LATITUDE_MIN,
+LONGITUDE_MID,
+LATITUDE_MID,
+LONGITUDE_MAX,
+LATITUDE_MAX,
+MR_FLAG,
+LINE_GIS_DATA
+from FRT_METRO_INTER_COV_D
+where
+		day = #{DAY}
+		and CITY_ID = #{CITY_ID}
+		and MR_FLAG in (-1 , 1 , 2) -- 将正向指标、方向指标和综合指标都取出来
+    #{CONDITION}
+) a
+left join (
+-- 计算站间覆盖率
+select a.FROM_STATION_ID,a.TO_STATION_ID,a.MR_FLAG,a.cover_rate,a.rsrp_avg,a.poor_count,a.cov_count,a.poor_ratio,b.line_sect_count
+from (
+select FROM_STATION_ID,TO_STATION_ID ,MR_FLAG,
+  round(AVG(DX_RSRP_110_Cnt/DX_RSRP_140_Cnt)*100 , 2) as cover_rate , -- 覆盖率
+   round(AVG(DX_RSRP_140_Sum/DX_RSRP_140_Cnt) , 2) as rsrp_avg , -- rsrp均值
+  sum(case when DX_RSRP_140_Avg < -105 then 1 else 0 end) as poor_count, -- 弱路段数
+  count(*) as cov_count, -- 覆盖段数
+  round(sum(case when DX_RSRP_140_Avg < -110 then 1 else 0 end)/count(*) * 100,2) as poor_ratio -- 弱覆盖占比
+from FRT_METRO_LINE_RSRP_D
+where day = #{DAY}
+and MR_FLAG in (-1 , 1 , 2)
+group by FROM_STATION_ID,TO_STATION_ID,MR_FLAG
+
+) a left join (
+
+select FROM_STATION_ID,TO_STATION_ID ,count(*) line_sect_count from dim_metro_section where LEVEL=78
+group by FROM_STATION_ID,TO_STATION_ID
+union
+select TO_STATION_ID,FROM_STATION_ID ,count(*) line_sect_count from dim_metro_section where LEVEL=78
+group by TO_STATION_ID,FROM_STATION_ID
+
+) b on a.FROM_STATION_ID=b.FROM_STATION_ID and a.TO_STATION_ID=b.TO_STATION_ID
+-- 结束计算站间覆盖率
+) e on a.FROM_STATION_ID=e.FROM_STATION_ID and a.TO_STATION_ID=e.TO_STATION_ID and a.MR_FLAG=e.MR_FLAG
+ LEFT JOIN dim_metro_station b
+ON a.FROM_STATION_ID = b.STATION_ID
+left join dim_metro_station c on a.TO_STATION_ID=c.STATION_ID
+order by poor_ratio desc
+#{LIMIT}
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestAnalysi_v2_getSenecsAreaDataV2" description="查询五高一地两美一场的图层数据">
+		<![CDATA[
+select
+ESBH_ID,
+ESBH_NAME,
+GIS_DATA ,
+CASE ESBH_TYPE
+WHEN 1 THEN '高校'
+WHEN 2 THEN '高密度住宅区'
+WHEN 3 THEN '高流量商务区'
+WHEN 7 THEN '美景'
+WHEN 8 THEN '农贸市场'
+WHEN 9 THEN '美食'
+WHEN 10 THEN '场馆'
+WHEN 11 THEN '中小学'
+WHEN 12 THEN '城中村'
+WHEN 13 THEN '自然村'
+WHEN 14 THEN '工厂'
+ELSE '未知' END AS ESBH_TYPE
+from
+	FRT_ESBH_INFO_D
+where
+	day = #{DAY}
+and
+	ESBH_TYPE = #{ESBHTYPE}
+and city = '#{CITY}'
+#{COUNTRY}
+#{MKTCENTER}
+#{OTHERCONDITION}
+]]>
+	</sqlTemplate>
+
+
+
+	<sqlTemplate id="IntelligentRoadTestAnalysi_v2_getPolygon" description="根据object_id数组 日期 获取所有object_id对应的弱区">
+		<![CDATA[
+SELECT
+*
+FROM FRT_AGPS_POOR_COVERAGE_D
+WHERE DAY =#{DAY}
+AND TYPE = 0
+AND object_id in(#{OBJECT_ID_LIST})
+AND grid_type = 20
+AND gis_data is not null order by field(object_id,#{OBJECT_ID_LIST})
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTest_SystemLayerEdit_loadLastVersionGisData" description="读取最新版本轮廓" db="mysql">
+		<![CDATA[
+SELECT
+gis_data_baidu as gis_data
+FROM
+	dm_scene_area_gis
+WHERE
+	obj_id = #{OBJ_ID}
+AND obj_type = '#{OBJ_TYPE}'
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTest_SystemLayerEdit_loadHisVersion" description="读取历史版本信息" db="mysql">
+		<![CDATA[
+SELECT
+	date_format(version_time, '%Y-%m-%d %T') version_time,
+gis_data_baidu
+FROM dm_scene_area_gis_his
+WHERE obj_id = #{OBJ_ID}
+AND obj_type = '#{OBJ_TYPE}'
+-- GROUP BY version_time,gis_data_baidu
+order by version_time
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTest_SystemLayerEdit_loadSaveGisData" description="根据用户、对象id、对象类型查询是否有编辑状态的轮廓" db="mysql">
+		<![CDATA[
+SELECT
+	obj_id,
+obj_name,
+obj_type,
+gis_data_baidu,
+longitude_max_baidu,
+latitude_max_baidu,
+longitude_mid_baidu,
+latitude_mid_baidu,
+longitude_min_baidu,
+latitude_min_baidu,
+audit_status
+FROM
+	dm_scene_area_gis_act
+WHERE
+	obj_id = #{OBJ_ID}
+AND obj_type = '#{OBJ_TYPE}'
+AND editor_id = '#{NAME}'
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestAnalysi_v2_getSenecsArea30DayLineData" description="根据ESBH_ID查询30天的折线图数据">
+		<![CDATA[
+SELECT
+	ESBH_ID,
+	RSRP_105_CNT/RSRP_140_0_CNT as cover,  -- 覆盖率
+	RSRP_140_0_AVG  as rsrp ,-- RSRP均值
+	DAY,
+	GRID_TYPE,
+	ESBH_TYPE,
+	round(MIN_USEREX_UPAVGRATE, 2 ) as MIN_USEREX_UPAVGRATE,
+	round(MIN_USEREX_DWAVGRATE ,  2) as MIN_USEREX_DWAVGRATE
+FROM
+	FRT_ESBH_INFO_D
+WHERE
+	DAY BETWEEN #{STARTDAY}
+AND #{ENDDAY}
+and GRID_TYPE=20
+#{CITYCONDITION}
+AND ESBH_TYPE = #{ESBHTYPE}
+and ESBH_ID = #{ESBHID}
+order by day asc
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestV2_getAlarmList" description="取告警列表的数据">
+		<![CDATA[
+SELECT
+DISTINCT
+base_statn_id,
+CELL_ID,
+case FACTORY
+when 'ZTE' then '中兴'
+when 'AL' then '阿郎'
+when 'HW' then '华为'
+when 'ERIC' then '爱立信'
+when '国人' then '国人'
+ELSE '未知' END AS factory,
+BTSNAME as enodeb_name
+FROM FRT_BSN_ALARM_HIS_D
+WHERE DAY BETWEEN #{STARTDAY} AND #{ENDDAY}
+AND base_statn_id*1000000+cell_id in (#{BSTIDANDCELLID})
+AND ALARM_SCOPE = 'CELL'
+AND OUTOFSRV = 1
+UNION ALL
+SELECT
+DISTINCT
+base_statn_id ,
+CELL_ID,
+case FACTORY
+when 'ZTE' then '中兴'
+when 'AL' then '阿郎'
+when 'HW' then '华为'
+when 'ERIC' then '爱立信'
+when '国人' then '国人'
+ELSE '未知' END AS factory,
+BTSNAME as enodeb_name
+FROM FRT_BSN_ALARM_HIS_D
+WHERE DAY BETWEEN #{STARTDAY} AND #{ENDDAY}
+AND base_statn_id in (#{BSTID})
+AND ALARM_SCOPE = 'BASE_STATION'
+AND OUTOFSRV = 1
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestV2_getAlarmCompleteMessageForSector" description="取告警详情页的数据(基站级)">
+		<![CDATA[
+SELECT
+day,
+base_statn_id,
+BTSNAME as enodeb_name ,
+CELL_ID,
+FACTORY,
+RECTIME,
+ALARM_TIME,
+CLEAR_TIME,
+ALARM_LEVEL,
+ISRECOVER,
+OUTOFSRV,
+PROB_CAUSE,
+case ALARM_SCOPE
+when 'CELL' then '小区级'
+when 'BASE_STATION' then '基站级'
+ELSE ALARM_SCOPE
+END as ALARM_SCOPE
+FROM FRT_BSN_ALARM_HIS_D
+WHERE DAY BETWEEN #{STARTDAY} AND #{ENDDAY}
+AND base_statn_id in (#{BSTID})
+AND ALARM_SCOPE = 'BASE_STATION'
+AND OUTOFSRV = 1
+order by day
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestV2_getKPIList" description="取KPI的列表数据">
+		<![CDATA[
+select f.* , d.BASE_STATN_NAME from (SELECT
+DISTINCT
+enodebid,
+CELLID, -- 小区ID
+cell_name,
+MANUFACTURER as factory
+FROM FRT_WIRELESS_KPI_STAT_D
+WHERE DAY BETWEEN #{STARTDAY} AND #{ENDDAY}
+AND ENODEBID*1000000+cellid in (#{BSTIDANDCELLID}) ) as f
+
+join (select BASE_STATN_ID , CELL_ID ,BASE_STATN_NAME from dim_sector where day = #{STARTDAY}) d
+on f.enodebid = d.BASE_STATN_ID and f.cellid = d.CELL_ID
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestV2_getKPICompleteMessage" description="取KPI的详情页数据">
+		<![CDATA[
+SELECT
+DAY,
+enodebid,
+CELLID, -- 小区ID
+cell_name,
+MANUFACTURER as factory,
+round(ERAB_SUCC_RATE*100,2) ERAB_SUCC_RATE, -- E-RAB建立成功率(%)
+round(ERAB_DROP_RATE*100,2) ERAB_DROP_RATE, -- E-RAB掉线率(%)
+round(RRCCON_SUCCRATE*100,2) RRCCON_SUCCRATE, -- RRC连接建立成功率(%)
+round(SWCHSF_SUCC_RATE*100,2) SWCHSF_SUCC_RATE, -- 同频切换成功率(%)
+round(SWCHAF_SUCC_RATE*100,2) SWCHAF_SUCC_RATE, -- 异频切换成功率(%)
+round(UP_PRB_USERATE*100,2) UP_PRB_USERATE, -- 上行PRB资源利用率（业务信息）
+round(DW_PRB_USERATE*100,2) DW_PRB_USERATE, -- 下行PRB平均利用率(%)
+Counter0003, -- 最大RRC连接用户数
+round((PDCH_DWFLOW+PDCH_UPFLOW),2) as PDCH_FLOW -- PDCP层流量(MB)
+FROM FRT_WIRELESS_KPI_STAT_D
+WHERE DAY BETWEEN #{STARTDAY} AND #{ENDDAY}
+AND ENODEBID*1000000+cellid in (#{BSTIDANDCELLID})
+order by DAY
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestV3_getPoorAreaHistorTrendData" description="根据当前查看的弱区的轮廓数据获取到该弱区中的所有栅格的编号" db="habse">
+		<![CDATA[
+getGridsByContour
+#{TABLENAME}
+#{GRIDKEYPREFIX}
+#{GRIDLEVEL}
+#{POLYGONCONTOUR}
+#{COLUMNLIST}
+#{PARTITIONMOD}
+rowkey 1
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestV2_getGridDataV2" description="获取栅格数据-4.29表取分频段栅格">
+		<![CDATA[
+getGridsByContour
+#{TABLENAME}
+#{GRIDKEYPREFIX}
+#{GRIDLEVEL}
+#{POLYGONCONTOUR}
+#{COLUMNLIST}
+#{PARTITIONMOD}
+rowkey 0
+]]>
+	</sqlTemplate>
+
+
+	<sqlTemplate id="IntelligentRoadTestV2_getGridDataByGridIDV2" description="取栅格7天历史数据(4.29表)">
+		<![CDATA[
+getByKeys
+#{TABLENAME}
+#{KEYLIST}
+#{COLUMNLIST}
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestAnalysisV2_104_HighwaySectorsIdx" description="取指定高速路段对象的业务数据" DB="hbase">
+		<![CDATA[
+getByKeys
+NOCE:DSI_ESBH_LINE_RSRP_D
+#{KEYLIST}
+#{COLUMNLIST}
+]]>
+	</sqlTemplate>
+
+	<sqlTemplate id="IntelligentRoadTestV2_BoneArea" description="查询骨头区域列表V2">
+		<![CDATA[
+	SELECT *,
+	CASE
+	WHEN is_suspend IS NULL THEN  'N'
+	ELSE 'Y' END  IS_SUSPENDSORT
+	FROM frt_agps_poor_area_m
+	where 1=1 and month = #{MONTH}
+	#{CITY}
+	#{COUNTRY}
+	#{MKTCENTER}
+	 order BY IS_SUSPEND DESC
+]]>
+	</sqlTemplate>
+
 
 
 
