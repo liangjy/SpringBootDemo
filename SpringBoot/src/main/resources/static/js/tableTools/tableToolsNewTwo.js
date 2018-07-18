@@ -150,7 +150,7 @@ TableToolsNewTwo.prototype.submit1=function(arguments){
 	var tableSqlPara=tableObj.sql;//拼接的sql
 	var sqlPara= tableSqlPara;
 	var dataType=noceUtil.isUndefined(tableObj.dataType) ? 1 : tableObj.dataType;//数据库类型  默认为1impala
-	var sortFlag=tableObj.sortFlag==undefined ? 1 :　tableObj.sortFlag;//是否排序  0：不排序 ；1：排序
+	var sortFlag=tableObj.sortFlag==undefined ? 1 : tableObj.sortFlag;//是否排序  0：不排序 ；1：排序
 	var sortColumn="";
 	var sortType="desc";
 	if(!noceUtil.isUndefined(tableObj.sortObj)){ //排序字段
@@ -174,7 +174,7 @@ TableToolsNewTwo.prototype.submit1=function(arguments){
 		
 	}
 	var pageIndex = 0;
-	var thead = noceUtil.isUndefined(tableObj.tableHead) ? "" :　tableObj.tableHead;//表头，不包括需要合并的表头
+	var thead = noceUtil.isUndefined(tableObj.tableHead) ? "" : tableObj.tableHead;//表头，不包括需要合并的表头
 	var specifyCss = [];
 	if(tableCss!=undefined){
 		specifyCss=tableCss;
@@ -2327,10 +2327,10 @@ TableToolsNewTwo.prototype.createTableDiv = function(that){
 	
 	var loadMoreCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.loadMoreCss) ? that.divCss.loadMoreCss : "pmore_1";//加载更多数据
 	var loadingCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.loadingCss) ?  that.divCss.loadingCss : "pmore_2";//正在加载
-	var noMoreCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.noMoreCss) ?  that.divCss.noMoreCss　: "pmore_3";//已无更多数据
-	var loadBtnCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.loadBtnCss) ?  that.divCss.loadBtnCss :　"loadbtn";//按钮的统一样式
+	var noMoreCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.noMoreCss) ?  that.divCss.noMoreCss : "pmore_3";//已无更多数据
+	var loadBtnCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.loadBtnCss) ?  that.divCss.loadBtnCss : "loadbtn";//按钮的统一样式
 	var pbtCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.pbtCss) ?  that.divCss.pbtCss : "pbt";//导出数据
-	var pbtBtnCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.pbtBtnCss) ? that.divCss.pbtBtnCss　: "pbt_btn";//导出数据按钮样式
+	var pbtBtnCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.pbtBtnCss) ? that.divCss.pbtBtnCss : "pbt_btn";//导出数据按钮样式
 	var divOutCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.divOutCss) ? that.divCss.divOutCss : "tableWrap";//表格最外边的div
 
 	var tableDiv = "";
@@ -2358,10 +2358,10 @@ TableToolsNewTwo.prototype.createTablePtn = function(that){
 	
 	var loadMoreCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.loadMoreCss) ? that.divCss.loadMoreCss : "pmore_1";//加载更多数据
 	var loadingCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.loadingCss) ?  that.divCss.loadingCss : "pmore_2";//正在加载
-	var noMoreCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.noMoreCss) ?  that.divCss.noMoreCss　: "pmore_3";//已无更多数据
-	var loadBtnCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.loadBtnCss) ?  that.divCss.loadBtnCss :　"loadbtn";//按钮的统一样式
+	var noMoreCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.noMoreCss) ?  that.divCss.noMoreCss : "pmore_3";//已无更多数据
+	var loadBtnCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.loadBtnCss) ?  that.divCss.loadBtnCss : "loadbtn";//按钮的统一样式
 	var pbtCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.pbtCss) ?  that.divCss.pbtCss : "pbt";//导出数据
-	var pbtBtnCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.pbtBtnCss) ? that.divCss.pbtBtnCss　: "pbt_btn";//导出数据按钮样式
+	var pbtBtnCss=!noceUtil.isUndefined(that.divCss)&&!noceUtil.isUndefined(that.divCss.pbtBtnCss) ? that.divCss.pbtBtnCss : "pbt_btn";//导出数据按钮样式
 	
 	
 	var tableDiv = "";

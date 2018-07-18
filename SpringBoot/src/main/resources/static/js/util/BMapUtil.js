@@ -505,7 +505,7 @@ sectorStation.prototype.sectorShow=function(){
 	var sectorChePoint = null;
 	var circleChePoint = null;
 	var stationChePoint = null;
-	if(that.alreadySector &&　that.NetTypeChe==that.selectNetType　 &&　((that.selecMarketbase!= "全营服中心" && that.selecMarketbase!=null && that.lastTimeSelecMarketbase==that.selecMarketbase) || PointswAndne)){//选了营服		
+	if(that.alreadySector && that.NetTypeChe==that.selectNetType && ((that.selecMarketbase!= "全营服中心" && that.selecMarketbase!=null && that.lastTimeSelecMarketbase==that.selecMarketbase) || PointswAndne)){//选了营服		
 		if(that.RSRPSectorChe.length>0){
 			$.each(that.RSRPSectorChe, function (i, item) {
 				var market = item.point2.market;//营服中心名称

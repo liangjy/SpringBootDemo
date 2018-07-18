@@ -976,9 +976,9 @@ sectorStation.prototype.sectorShow=function(data){
 	var sectorChePoint = null;
 	var circleChePoint = null;
 	var stationChePoint = null;
-	if(that.alreadySector &&　that.NetTypeChe==that.selectNetType　 && that.selectCity==that.cityChe &&
-		that.selectDistrict==that.districtChe &&　that.regonChe==that.regon &&　that.bandChe==that.band &&　
-		that.factoryChe==that.factory &&　that.indoorChe==that.indoor &&　that.selectTime == that.selectTimeOld && !that.isClickSearch &&
+	if(that.alreadySector && that.NetTypeChe==that.selectNetType && that.selectCity==that.cityChe &&
+		that.selectDistrict==that.districtChe && that.regonChe==that.regon && that.bandChe==that.band &&
+		that.factoryChe==that.factory && that.indoorChe==that.indoor && that.selectTime == that.selectTimeOld && !that.isClickSearch &&
 		((that.selecMarketbase!= "全营服中心" && that.selecMarketbase!=null &&
 		that.lastTimeSelecMarketbase==that.selecMarketbase) || PointswAndne)
 	){//选了营服		

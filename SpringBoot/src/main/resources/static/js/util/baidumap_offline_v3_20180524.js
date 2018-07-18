@@ -82,17 +82,17 @@ window.BMAP_AUTHENTIC_KEY = "BRBlNEMNKB7jwL2kAULKI66G";
     }
     function ba(a) {
         return function (b) {
-            this[a] = b
+            this[a] = b;
         }
     }
     function w(a) {
         return function () {
-            return this[a]
+            return this[a];
         }
     }
     function ca(a) {
         return function () {
-            return a
+            return a;
         }
     }
     var da, fa = [];
@@ -588,7 +588,7 @@ window.BMAP_AUTHENTIC_KEY = "BRBlNEMNKB7jwL2kAULKI66G";
             }
         };
         return function (b) {
-            return new a(b)
+            return new a(b);
         }
     }();
     var B = window.BMap || {};
