@@ -51,7 +51,8 @@ public class DataQueryServiceImpl implements DataQueryService{
 	    		sql = getSqlByToolsPara(sql,database,tableToolsPara,toolsType); 
 	    	}
     	}
-    	Map<String, Object> resultMap = queryForDataPublic(database, cmd,sql);
+		String dbName = WebUtil.getParameter("dbName");
+    	Map<String, Object> resultMap = queryForDataPublic(database, cmd,sql,dbName);
 //    	Map<String, Object> resultMap = new HashMap<String, Object>();
     	return resultMap;
 	}
@@ -62,7 +63,7 @@ public class DataQueryServiceImpl implements DataQueryService{
     	if(database!=8){
 	    	sql = getSqlBySqlparaList(cmd); //获取sql
     	}
-    	Map<String, Object> resultMap = queryForDataPublic(database, cmd,sql);
+    	Map<String, Object> resultMap = queryForDataPublic(database, cmd,sql,null);
 //    	Map<String, Object> resultMap = new HashMap<String, Object>();
     	return resultMap;
 	}
@@ -130,7 +131,7 @@ public class DataQueryServiceImpl implements DataQueryService{
     	return sql+sqlNewStr;
 	}
 	
-	public Map<String,Object> queryForDataPublic(int database,String cmd,String sql) throws Exception{
+	public Map<String,Object> queryForDataPublic(int database,String cmd,String sql,String dbName) throws Exception{
 		Map<String, Object> resultMap = null;
     	Date queryStartDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -144,13 +145,13 @@ public class DataQueryServiceImpl implements DataQueryService{
 			
 			Date jdbcStartQueryDate = new Date();
 			JdbcTemplate jdbc=jdbcTemplate;
-			String parameter = WebUtil.getParameter("dbName");
+//			String parameter = WebUtil.getParameter("dbName");
 //			if(parameter!=null&&parameter.trim().equals("MYSQL_BROADBAND")){
 //				System.out.println("进来："+parameter);
 //				jdbc=MYSQL_BROADBAND;
 //			}else
-			if(parameter!=null&&parameter.trim().equals("Alarms")){
-				System.out.println("进来："+parameter);
+			if(dbName!=null&&dbName.trim().equals("Alarms")){
+				System.out.println("进来："+dbName);
 				jdbc=alarmJdbcTemplate;
 			}
 			jdbc.query(sql, new RowCallbackHandler() {

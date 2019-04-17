@@ -1,25 +1,42 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 		 pageEncoding="utf-8"%>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" type="text/css" href="../js/tableTools/tableToolsNewTwo.css"/>
+<link rel="stylesheet" href="../css/jquery-ui.css">
+<link rel="stylesheet" href="../css/leanModal.css">
+<link rel="stylesheet" href="../css/mian.css">
+<link rel="stylesheet" type="text/css" href="../css/home/common.min.css" />
 <link rel="stylesheet" type="text/css" href="../css/zTreeStyle.css" />
 <link rel="stylesheet" type="text/css" href="../js/IntelligentRoadTestV5/daterangepicker.css"/>
 <link rel="stylesheet" type="text/css" href="../js/IntelligentRoadTestV5/colorPick.css"/>
-<link rel="stylesheet" type="text/css" href="../js/IntelligentRoadTestV5/IntelligentRoadTestAnalysisV5.css?2017090911" />
-<link rel="stylesheet" type="text/css" href="../js/IntelligentRoadTestV5/slider-legend.css?2017090911" />
-<link rel="stylesheet" type="text/css" href="../js/IntelligentRoadTestV5/ShareObject.css?" />
+<link rel="stylesheet" type="text/css" href="../js/IntelligentRoadTestV5/IntelligentRoadTestAnalysisV5.css" />
+<link rel="stylesheet" type="text/css" href="../js/IntelligentRoadTestV5/slider-legend.css" />
+<link rel="stylesheet" type="text/css" href="../js/IntelligentRoadTestV5/ShareObject.css" />
 <link rel="stylesheet" type="text/css" href="../js/leaflet/leaflet.css"/>
-
+<script  src="../js/jquery-1.12.3.js"></script>
+<script src="http://api.map.baidu.com/api?v=3.0&ak=9GHKUjkZOzsijtyX179MLRz2lGnfFfHA"></script>
+<script  src="../js/noceUtil.js"></script>
+<script  src="../js/noceAjax.js"></script>
+<script  src="../js/util/BMapUtil.js"></script>
 <script src="../js/IntelligentRoadTestV5/moment.min.js"  ></script>
 <script src="../js/IntelligentRoadTestV5/jquery.daterangepicker.js" ></script>
 <script src="../js/util/vue.js" ></script>
 <script src="../js/IntelligentRoadTestV5/colorPick.js" ></script>
 
 <%--初始化地图js--%>
-<script src="../js/crossfilter/crossfilter.js?20171204" async="true"></script>
+<script src="../js/crossfilter/crossfilter.js" async="true"></script>
 <script src="../js/util/baidumap_offline_v3.js"></script>
 <script src="../js/IntelligentRoadTestV5/myBMapTypeControl.js" async></script>
 <script src="../js/IntelligentRoadTestV5/initMap.js" async></script>
+
+<input type="hidden" id="version" value="2.0">
+<input type="hidden" id="currentPerId" value="486">
+<input value="" id="currentTabIndex" type="hidden">
+<input type="hidden" id="cityPermission_common" value="全省">
+<input type="hidden" id="district_common" value="">
+<input type="hidden" id="user_permission_group_id" value="1">
+<input type="hidden" value="分公司_全省,系统管理员2,普通用户2,审核员" id="user_role_List_string">
+<input value="全省" id="currentCityName" type="hidden">
+
 <div class="pc_listb" id="pc_listb_IntelligentRoadTestV5">
 	<div class="main-content">
 		<div class="page-title">
@@ -7715,7 +7732,7 @@
 						</div>
 					</div>
 					<div class="level_7 map-w-i fallNet" id="level_7" style="background-color: rgb(0, 0, 0);">
-						<span id="jichaText">脱网</span>
+						<span id="tuowang">脱网</span>
 					</div>
 				</div>
 			</div>
@@ -7726,102 +7743,12 @@
 					<img src="../js/IntelligentRoadTestV5/images/collapse.png" class="">
 				</div>
 				<div class="colorWrap">
-					<%--<ul id="colorLegenSH" class="colorBar colorLegen">
-						<li class="map-w colorText"></li>
-						<li class="map-w-i level_1" id="level_1_sh">优[5,+∞)</li>
-						<li class="map-w-i level_2" id="level_2_sh">良[3,5)</li>
-						<li class="map-w-i level_3" id="level_3_sh">中[1,3)</li>
-						<li class="map-w-i level_4" id="level_4_sh">差[0.25,1)</li>
-						<li class="map-w-i level_5" id="level_5_sh">极差[-∞,0.25)</li>
-						<li class="map-w-i level_6" id="level_6_sh">记录数≤3</li>
-					</ul>
-					<ul id="colorLegenXH" class="colorBar colorLegen">
-						<li class="map-w colorText"></li>
-						<li class="map-w-i level_1" id="level_1_xh">优[12,+∞)</li>
-						<li class="map-w-i level_2" id="level_2_xh">良[8,12)</li>
-						<li class="map-w-i level_3" id="level_3_xh">中[5,8)</li>
-						<li class="map-w-i level_4" id="level_4_xh">差[2,5)</li>
-						<li class="map-w-i level_5" id="level_5_xh">极差(-∞,2)</li>
-						<li class="map-w-i level_6" id="level_6_xh">记录数≤3</li>
-					</ul>
-					<ul id="colorLegen" class="colorBar colorLegen">
-						<li class="map-w colorText"></li>
-						<li class="map-w-i level_1" id="level_1">优(-85,0)</li>
-						<li class="map-w-i level_2" id="level_2">良(-95,-85]</li>
-						<li class="map-w-i level_3" id="level_3">中(-105,-95]</li>
-						<li class="map-w-i level_4" id="level_4">差(-115,-105]</li>
-						<li class="map-w-i level_5" id="level_5">极差(-140,-115]</li>
-						<li class="map-w-i level_6" id="level_6">记录数≤3</li>
-					</ul>
-					<ul id="colorLegenM3" class="colorBar colorLegen">
-						<li class="map-w colorText"></li>
-						<li class="map-w-i level_1" id="level_1">优[0,5%]</li>
-						<li class="map-w-i level_2" id="level_2">良(5%,15%]</li>
-						<li class="map-w-i level_3" id="level_3">中(15%,25%]</li>
-						<li class="map-w-i level_4" id="level_4">差(25%,35%]</li>
-						<li class="map-w-i level_5" id="level_5">极差(35%,+∞]</li>
-						<li class="map-w-i level_6" id="level_6">记录数≤3</li>
-					</ul>
-					<ul id="colorLegenYQ" class="colorBar colorLegen">
-						<li class="map-w colorText"></li>
-						<li class="map-w-i level_1" id="level_1">优0,5%]</li>
-						<li class="map-w-i level_2" id="level_2">良(5%,15%]</li>
-						<li class="map-w-i level_3" id="level_3">中(15%,25%]</li>
-						<li class="map-w-i level_4" id="level_4">差(25%,35%]</li>
-						<li class="map-w-i level_5" id="level_5">极差(35%,+∞]</li>
-						<li class="map-w-i level_6" id="level_6">记录数≤3</li>
-					</ul>
-					<ul id="colorLegenCD" class="colorBar colorLegen">
-						<li class="map-w colorText"></li>
-						<li class="map-w-i level_1" id="level_1">优0,5%]</li>
-						<li class="map-w-i level_2" id="level_2">良(5%,15%]</li>
-						<li class="map-w-i level_3" id="level_3">中(15%,25%]</li>
-						<li class="map-w-i level_4" id="level_4">差(25%,35%]</li>
-						<li class="map-w-i level_5" id="level_5">极差(35%,+∞]</li>
-						<li class="map-w-i level_6" id="level_6">记录数≤3</li>
-					</ul>
-					<ul id="colorLegenOther" class="colorBar colorLegen">
-						<li class="map-w colorText"></li>
-						<li class="map-w-i level_1" id="level_1">优(-85,0)</li>
-						<li class="map-w-i level_2" id="level_2">良(-95,-85]</li>
-						<li class="map-w-i level_3" id="level_3">中(-105,-95]</li>
-						<li class="map-w-i level_4" id="level_4">差(-115,-105]</li>
-						<li class="map-w-i level_5" id="level_5">极差(-140,-115]</li>
-					</ul>--%>
 					<ul id="colorLegenUC" class="colorBar colorLegenBihuan">
 						<li class="map-w colorText">抱怨热点状态</li>
 						<li class="map-w-i level_1" id="level_1">已闭环</li>
 						<li class="map-w-i level_2" id="level_2">未闭环持续3周以内（<3）</li>
 						<li class="map-w-i level_3" id="level_3">未闭环持续3周以上（≥3）</li>
 					</ul>
-					<!-- 线段图层图例 -->
-					<%--<ul id="colorLegenSHLine" class="colorBar colorLegenLine">
-						<li class="map-w colorText"></li>
-						<li class="map-w-i level_1" id="level_1_sh_line">优[5,+∞)</li>
-						<li class="map-w-i level_2" id="level_2_sh_line">良[3,5)</li>
-						<li class="map-w-i level_3" id="level_3_sh_line">中[1,3)</li>
-						<li class="map-w-i level_4" id="level_4_sh_line">差[0.25,1)</li>
-						<li class="map-w-i level_5" id="level_5_sh_line">极差[-∞,0.25)</li>
-						<li class="map-w-i level_6" id="level_6_sh_line">记录数≤3</li>
-					</ul>
-					<ul id="colorLegenXHLine" class="colorBar colorLegenLine">
-						<li class="map-w colorText"></li>
-						<li class="map-w-i level_1" id="level_1_xh_line">优[12,+∞)</li>
-						<li class="map-w-i level_2" id="level_2_xh_line">良[8,12)</li>
-						<li class="map-w-i level_3" id="level_3_xh_line">中[5,8)</li>
-						<li class="map-w-i level_4" id="level_4_xh_line">差[2,5)</li>
-						<li class="map-w-i level_5" id="level_5_xh_line">极差(-∞,2)</li>
-						<li class="map-w-i level_6" id="level_6_xh_line">记录数≤3</li>
-					</ul>
-					<ul id="colorLegenLine" class="colorBar colorLegenLine">
-						<li class="map-w colorText"></li>
-						<li class="map-w-i level_1" id="level_1_line">优(-85,0)</li>
-						<li class="map-w-i level_2" id="level_2_line">良(-95,-85]</li>
-						<li class="map-w-i level_3" id="level_3_line">中(-105,-95]</li>
-						<li class="map-w-i level_4" id="level_4_line">差(-115,-105]</li>
-						<li class="map-w-i level_5" id="level_5_line">极差(-140,-115]</li>
-						<li class="map-w-i level_6" id="level_6_line">记录数≤3</li>
-					</ul>--%>
 					
 				</div>
 			</div>
@@ -7866,110 +7793,6 @@
 				</div>
 			</div>
 		</div>
-		<!-- 正在加载数据弹框--end -->
-		<%--<div class="modal importModal" id="importModal" style="display: none;">
-			<div class="modal-body">
-				<div class="colseImg"><img src="../js/IntelligentRoadTestV5/images/iconClose.png"></div>
-				<form name="uploadForm" id="uploadForm">
-					<table>
-						<tr>
-							<td>路测名称：</td>
-							<td><input type="text"  id="uploadName" value="" placeholder="请输入路测名称" name="uploadName"/></td>
-						</tr>
-						<tr>
-							<td>路测时间：</td>
-							<td>
-								<input id="date97" type="text" class="datebox" value="20171107" name="uploadDate" readonly="readonly"
-									   onFocus="WdatePicker({opposite:true,dateFmt:'yyyyMMdd',isShowClear:false})" />
-							</td>
-						</tr>
-
-						<tr>
-							<td>字段排序：</td>
-							<td>
-								<div class="filedSort">
-									<div>编号</div>
-									<div>
-										<select id="Offset" name="Offset">
-											<option selected = "selected">1</option>
-											<option>2</option>
-											<option>3</option>
-											<option>4</option>
-											<option>5</option>
-										</select>
-									</div>
-								</div>
-								<div class="filedSort">
-									<div>时间</div>
-									<div>
-										<select id="LogTime" name="LogTime">
-											<option>1</option>
-											<option selected = "selected">2</option>
-											<option>3</option>
-											<option>4</option>
-											<option>5</option>
-										</select>
-									</div>
-								</div>
-								<div class="filedSort">
-									<div>经度</div>
-									<div>
-										<select id="GPS_Lon" name="GPS_Lon">
-											<option>1</option>
-											<option>2</option>
-											<option selected = "selected">3</option>
-											<option>4</option>
-											<option>5</option>
-										</select>
-									</div>
-								</div>
-								<div class="filedSort">
-									<div>纬度</div>
-									<div>
-										<select id="GPS_Lat" name="GPS_Lat">
-											<option>1</option>
-											<option>2</option>
-											<option>3</option>
-											<option selected = "selected">4</option>
-											<option>5</option>
-										</select>
-									</div>
-								</div>
-								<div class="filedSort">
-									<div>RSRP</div>
-									<div>
-										<select id="PCell" name="PCell">
-											<option>1</option>
-											<option>2</option>
-											<option>3</option>
-											<option>4</option>
-											<option selected = "selected">5</option>
-										</select>
-									</div>
-								</div>
-							</td>
-						</tr>
-
-						<tr>
-							<td colspan="2" class="btnTD"><input type="file" class="importFile"  value="DT导入" name="fujian" id="fujian" accept=".csv"/></td>
-						</tr>
-						<tr>
-							<td colspan="2" class="btnTD"><input type="button" class="btn-bg btn-upload" value="上传" id="upload"/></td>
-						</tr>
-					</table>
-				</form>
-				<div class="tipInfoCon">
-					文件必须为csv文件，最多12个字段，前5个为必填。<br />
-					前5列可自由选择列顺序，不选则为默认顺序。<br />
-					上传CSV文件字段规范：序号、时间、经度、维度、主RSRP、主ENODEBID_CELLID、邻区1RSRP、邻区1ENODEBID_CELLID、邻区2RSRP、邻区2ENODEBID_CELLID、邻区3RSRP、邻区3ENODEBID_CELLID。<br />
-					经纬度、各RSRP为double类型。时间格式：HH:MM:SS
-
-				</div>
-				<div id="message" class="message">
-					<!-- 提示信息 -->
-				</div>
-			</div>
-		</div>--%>
 		<!-- GPS经纬度提示弹框--start -->
 		<div class="modal gpsModal" style="display: none;">
 			<div class="modal-body">
@@ -8023,90 +7846,6 @@
 					</button>
 				</div>
 				<div class="modal-content ztree" id="cityZtree">
-					<!-- <ul class="modal-tabTitle">
-						<li class="active">区县共享</li>
-						<li>本地网共享</li>
-					</ul>
-					<div class="modal-tabContent">
-						<div class="tab-info">						
-							<div class="leftTabInfo">
-								<div class="infoTitle">
-									<span>区县</span>
-									<span class="searchWrap">
-                                        <input id="citySearch" type="text" class="textBox" />
-                                        <button title="搜索" type="button" class="btn-searchImg">
-                                            <img src="../js/IntelligentRoadTest/images/search_blue.png"/>
-                                        </button>
-                                    </span>
-								</div>
-								<ul class="tab-list" id="leftcountyScope">
-									<li v-for="item in items">{{item.node_name}}</li>
-								</ul>
-							</div>
-							<div class="midleBtn">
-								<ul>
-									<li>
-										<button id="" type="button" class="btn-to btn-toRight">
-											<img src="../js/IntelligentRoadTest/images/searchBg.png"/>
-										</button>
-									</li>
-									<li>
-										<button id="" type="button" class="btn-to btn-toLeft">
-											<img src="../js/IntelligentRoadTest/images/searchBg.png"/>
-										</button>
-									</li>
-								</ul>
-							</div>
-							<div class="rightTabInfo">
-								<div class="infoTitle">
-									<span>选中区县用户</span>
-								</div>
-								<ul class="tab-list" id="rightcountyScope">
-									<li v-for="item in items">{{item.node_name}}</li>
-								</ul>
-							</div>
-							<div style="clear: both;"></div>
-						</div>
-						<div class="tab-info" style="display: none;">
-							<div class="leftTabInfo">
-								<div class="infoTitle">
-									<span>本地网</span>
-									<span class="searchWrap">
-                                        <input type="text" class="textBox" />
-                                        <button title="搜索" type="button" class="btn-searchImg">
-                                            <img src="../js/IntelligentRoadTest/images/search_blue.png"/>
-                                        </button>
-                                    </span>
-								</div>
-								<ul class="tab-list" id="leftCityScope">
-									<li v-for="item in items">{{item.city}}</li>
-								</ul>
-							</div>
-							<div class="midleBtn">
-								<ul>
-									<li>
-										<button id="" type="button" class="btn-to btn-toRight">
-											<img src="../js/IntelligentRoadTest/images/searchBg.png"/>
-										</button>
-									</li>
-									<li>
-										<button id="" type="button" class="btn-to btn-toLeft">
-											<img src="../js/IntelligentRoadTest/images/searchBg.png"/>
-										</button>
-									</li>
-								</ul>
-							</div>
-							<div class="rightTabInfo">
-								<div class="infoTitle">
-									<span>选中本地网</span>
-								</div>
-								<ul class="tab-list" id="rightCityScope">
-									<li v-for="item in items">{{item.city}}</li>
-								</ul>
-							</div>
-							<div style="clear: both;"></div>
-						</div>
-					</div> -->
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn-bg btn-sure" id="sureShare">确定</button>
@@ -8132,31 +7871,25 @@
 		</div>
 	</div>
 </div>
-
-<%-- 初始化地图这些没有任何依赖的js挪到标签渲染前面会更快一点
-<script src="../js/crossfilter/crossfilter.js?20171204" async="true"></script>
-<script src="../js/util/baidumap_offline_v3.js"></script>
-<script src="../js/IntelligentRoadTestV5/myBMapTypeControl.js" async></script>
-<script src="../js/IntelligentRoadTestV5/initMap.js" async></script>--%>
-<script src="../js/util/BMapUtil-Measure.js" async="true"></script>
-<script src="../js/util/osmMapUtil-Measure.js" async="true"></script>
-<script src="../js/util/DrawingManager.js" async="true"></script>
-<script src="../js/util/BMapUtil-Conversion.js" async="true"></script>
-<script src="../js/util/GPSUtil.js" async="true"></script>
-<script src="../js/util/GridHelperForUserComplain.js" async="true"></script>
+<script src="../js/util/BMapUtil-Measure.js" async="true"></script><!-- 待确认是否更新 -->
+<script src="../js/util/osmMapUtil-Measure.js" async="true"></script><!-- 待确认是否更新 -->
+<script src="../js/util/DrawingManager.js" async="true"></script><!-- 待确认是否更新 -->
+<script src="../js/util/BMapUtil-Conversion.js" async="true"></script><!-- 待确认是否更新 -->
+<script src="../js/util/GPSUtil.js" async="true"></script><!-- 待确认是否更新 -->
+<script src="../js/util/GridHelperForUserComplain.js" async="true"></script><!-- 待确认是否更新 -->
 
 
 
 <script src="../js/IntelligentRoadTestV5/jquery-ui-slider-pips.js" async="true"></script>
 <script src="../js/IntelligentRoadTestV5/fastclick.js" async="true"></script>
-<script src="../js/util/uploadData.js" defer></script>
+<script src="../js/util/uploadData.js" defer></script><!-- 请求中将写入日志的调用注释掉了 -->
 <script src="../js/util/pingying.js" async="true"></script>
 <script type="text/javascript" src="../js/util/exportExcel.js" ></script>
 <!-- 增加progressbarTwo的查询数据同步方法 -->
-<script src="../js/util/progressbarTwo.js?2017022803" defer></script>
+<script src="../js/progressbarTwo.js" defer></script>
 <!-- <script type="text/javascript" src="../js/perception/cityJson.js" async="true"></script>
 <script type="text/javascript" src="../js/util/areaUtil.js?2017031401" async="true"></script> -->
-<script src="../js/util/GridMapControl.js?201706788566" defer></script>
+<script src="../js/util/GridMapControl.js" defer></script>
 <script src="../js/util/GridHelper.js" async="true"></script>
 <!-- <script type="text/javascript" src="../js/util/baidumap_offline_v2_20160921.js"></script> -->
 <%--<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>--%>
@@ -8176,11 +7909,11 @@
 
 <%--<script type="text/javascript" src="../js/baiduUtil/mapv.js"></script>--%>
 <script src="../js/util/GeoUtils.js" ></script>
-<script src="../js/util/SectorUtilForBaidu.js" defer></script>
-<script src="../js/util/polyLineDivide.js" defer></script>
-<script src="../js/util/GAO.js" async="true"></script>
-<script src="../js/util/bdMapUtil/MarkerCluster.js" async="true"></script>
-<script src="../js/util/bdMapUtil/TextIconOverlay.js" async="true"></script>
+<script src="../js/util/SectorUtilForBaidu.js" defer></script><!-- 待确认是否更新 -->
+<script src="../js/util/polyLineDivide.js" defer></script><!-- 缺 -->
+<script src="../js/util/GAO.js" async="true"></script><!-- 缺 -->
+<script src="../js/util/bdMapUtil/MarkerCluster.js" async="true"></script><!-- 缺 -->
+<script src="../js/util/bdMapUtil/TextIconOverlay.js" async="true"></script><!-- 缺 -->
 <%--<script type="text/javascript" src="../js/util/PolylineToProfile.js" defer></script>
 <script type="text/javascript" src="../js/util/LineUtilForBaidu.js" defer></script>--%>
 
@@ -8201,5 +7934,5 @@
 <script src="../js/IntelligentRoadTestV5/screenCompared/IntelligentRoadTest_ScreenCompared.js" defer></script>
 <script src="../js/IntelligentRoadTestV5/NrCoverCheckbox.js" defer></script>
 <script src="../js/IntelligentRoadTestV5/polygonToLayer/polygonToLayer.js" defer></script>
-<script src="../js/jquery.ztree.all-3.5.min.js" defer></script>
-<script src="../js/AuditList/ztreeUtil.js" defer></script>
+<script src="../js/jquery.ztree.all-3.5.min.js" defer></script><!-- 缺 -->
+<script src="../js/AuditList/ztreeUtil.js" defer></script><!-- 缺 -->
