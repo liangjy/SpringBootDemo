@@ -12,22 +12,6 @@
 <link rel="stylesheet" type="text/css" href="../js/IntelligentRoadTestV5/slider-legend.css" />
 <link rel="stylesheet" type="text/css" href="../js/IntelligentRoadTestV5/ShareObject.css" />
 <link rel="stylesheet" type="text/css" href="../js/leaflet/leaflet.css"/>
-<script  src="../js/jquery-1.12.3.js"></script>
-<script src="http://api.map.baidu.com/api?v=3.0&ak=9GHKUjkZOzsijtyX179MLRz2lGnfFfHA"></script>
-<script  src="../js/noceUtil.js"></script>
-<script  src="../js/noceAjax.js"></script>
-<script  src="../js/util/BMapUtil.js"></script>
-<script src="../js/IntelligentRoadTestV5/moment.min.js"  ></script>
-<script src="../js/IntelligentRoadTestV5/jquery.daterangepicker.js" ></script>
-<script src="../js/util/vue.js" ></script>
-<script src="../js/IntelligentRoadTestV5/colorPick.js" ></script>
-
-<%--初始化地图js--%>
-<script src="../js/crossfilter/crossfilter.js" async="true"></script>
-<script src="../js/util/baidumap_offline_v3.js"></script>
-<script src="../js/IntelligentRoadTestV5/myBMapTypeControl.js" async></script>
-<script src="../js/IntelligentRoadTestV5/initMap.js" async></script>
-
 <input type="hidden" id="version" value="2.0">
 <input type="hidden" id="currentPerId" value="486">
 <input value="" id="currentTabIndex" type="hidden">
@@ -39,13 +23,13 @@
 
 <div class="pc_listb" id="pc_listb_IntelligentRoadTestV5">
 	<div class="main-content">
-		<div class="page-title">
+		<%--<div class="page-title">
 			<div>
 				<img src="../images/ITEphone/logo.png" class="titleImg">
 				<span class="mTitle">广东电信智慧运营网络大数据</span>
 			</div>
 			<div class="sTitle">天翼蓝鹰网络测评</div>
-		</div>
+		</div>--%>
 		<div class="contentWrap">
 			<div class="topDiv" onselectstart="return false">
 				<div class="packList" title="打开列表">
@@ -7871,26 +7855,44 @@
 		</div>
 	</div>
 </div>
-<script src="../js/util/BMapUtil-Measure.js" async="true"></script><!-- 待确认是否更新 -->
-<script src="../js/util/osmMapUtil-Measure.js" async="true"></script><!-- 待确认是否更新 -->
-<script src="../js/util/DrawingManager.js" async="true"></script><!-- 待确认是否更新 -->
-<script src="../js/util/BMapUtil-Conversion.js" async="true"></script><!-- 待确认是否更新 -->
-<script src="../js/util/GPSUtil.js" async="true"></script><!-- 待确认是否更新 -->
-<script src="../js/util/GridHelperForUserComplain.js" async="true"></script><!-- 待确认是否更新 -->
+
+<script  src="../js/jquery-1.12.3.js"></script>
+<script  src="../js/jquery-ui.js"></script>
+<%--<script src="http://api.map.baidu.com/api?v=3.0&ak=9GHKUjkZOzsijtyX179MLRz2lGnfFfHA"></script>--%>
+<script  src="../js/noceUtil2.js"></script>
+<script  src="../js/noceAjax.js"></script>
+<script  src="../js/util/BMapUtil.js"></script>
+<script src="../js/IntelligentRoadTestV5/moment.min.js"  ></script>
+<script src="../js/IntelligentRoadTestV5/jquery.daterangepicker.js" ></script>
+<script src="../js/util/vue.js" ></script>
+<script src="../js/IntelligentRoadTestV5/colorPick.js" ></script>
+
+<%--初始化地图js--%>
+<script src="../js/crossfilter/crossfilter.js"></script>
+<script src="../js/util/baidumap_offline_v3.js"></script>
+<script src="../js/IntelligentRoadTestV5/myBMapTypeControl.js"></script>
+<script src="../js/IntelligentRoadTestV5/initMap.js"></script>
+
+<script src="../js/util/BMapUtil-Measure.js"></script><!-- 待确认是否更新 -->
+<script src="../js/util/osmMapUtil-Measure.js"></script><!-- 待确认是否更新 -->
+<script src="../js/util/DrawingManager.js"></script><!-- 待确认是否更新 -->
+<script src="../js/util/BMapUtil-Conversion.js"></script><!-- 待确认是否更新 -->
+<script src="../js/util/GPSUtil.js"></script><!-- 待确认是否更新 -->
+<script src="../js/util/GridHelperForUserComplain.js"></script><!-- 待确认是否更新 -->
 
 
 
-<script src="../js/IntelligentRoadTestV5/jquery-ui-slider-pips.js" async="true"></script>
-<script src="../js/IntelligentRoadTestV5/fastclick.js" async="true"></script>
-<script src="../js/util/uploadData.js" defer></script><!-- 请求中将写入日志的调用注释掉了 -->
-<script src="../js/util/pingying.js" async="true"></script>
+<script src="../js/IntelligentRoadTestV5/jquery-ui-slider-pips.js"></script>
+<script src="../js/IntelligentRoadTestV5/fastclick.js"></script>
+<script src="../js/util/uploadData.js"></script><!-- 请求中将写入日志的调用注释掉了 -->
+<script src="../js/util/pingying.js"></script>
 <script type="text/javascript" src="../js/util/exportExcel.js" ></script>
 <!-- 增加progressbarTwo的查询数据同步方法 -->
-<script src="../js/progressbarTwo.js" defer></script>
+<script src="../js/progressbarTwo.js"></script>
 <!-- <script type="text/javascript" src="../js/perception/cityJson.js" async="true"></script>
 <script type="text/javascript" src="../js/util/areaUtil.js?2017031401" async="true"></script> -->
-<script src="../js/util/GridMapControl.js" defer></script>
-<script src="../js/util/GridHelper.js" async="true"></script>
+<script src="../js/util/GridMapControl.js"></script>
+<script src="../js/util/GridHelper.js"></script>
 <!-- <script type="text/javascript" src="../js/util/baidumap_offline_v2_20160921.js"></script> -->
 <%--<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>--%>
 
@@ -7899,9 +7901,9 @@
 <script src="../js/util/OSMapUtil.js" defer></script>
 <script src="../js/leaflet/leaflet.js" defer></script>
 <script src="../js/util/commonOsmUrl.js" defer></script>
-<script src="../js/util/wellknown.js" async="true"></script>
+<script src="../js/util/wellknown.js"></script>
 <script src="../js/util/SectorUtilForOsm.js" defer></script>
-<script src="../js/util/OsmUtil-Conversion.js" async="true"></script>
+<script src="../js/util/OsmUtil-Conversion.js"></script>
 
 <script src="../js/echarts/echarts.min.js" charset="utf-8" defer></script>
 <!-- <script type="text/javascript" src="../js/tableTools/tableToolsNewTwo.js" async="true"></script> -->
@@ -7909,11 +7911,11 @@
 
 <%--<script type="text/javascript" src="../js/baiduUtil/mapv.js"></script>--%>
 <script src="../js/util/GeoUtils.js" ></script>
-<script src="../js/util/SectorUtilForBaidu.js" defer></script><!-- 待确认是否更新 -->
-<script src="../js/util/polyLineDivide.js" defer></script><!-- 缺 -->
-<script src="../js/util/GAO.js" async="true"></script><!-- 缺 -->
-<script src="../js/util/bdMapUtil/MarkerCluster.js" async="true"></script><!-- 缺 -->
-<script src="../js/util/bdMapUtil/TextIconOverlay.js" async="true"></script><!-- 缺 -->
+<script src="../js/util/SectorUtilForBaidu.js" defer></script>
+<script src="../js/util/polyLineDivide.js" defer></script>
+<script src="../js/util/GAO.js" async="true"></script>
+<script src="../js/util/bdMapUtil/MarkerCluster.js" async="true"></script>
+<script src="../js/util/bdMapUtil/TextIconOverlay.js" async="true"></script>
 <%--<script type="text/javascript" src="../js/util/PolylineToProfile.js" defer></script>
 <script type="text/javascript" src="../js/util/LineUtilForBaidu.js" defer></script>--%>
 
@@ -7934,5 +7936,5 @@
 <script src="../js/IntelligentRoadTestV5/screenCompared/IntelligentRoadTest_ScreenCompared.js" defer></script>
 <script src="../js/IntelligentRoadTestV5/NrCoverCheckbox.js" defer></script>
 <script src="../js/IntelligentRoadTestV5/polygonToLayer/polygonToLayer.js" defer></script>
-<script src="../js/jquery.ztree.all-3.5.min.js" defer></script><!-- 缺 -->
-<script src="../js/AuditList/ztreeUtil.js" defer></script><!-- 缺 -->
+<script src="../js/jquery.ztree.all-3.5.min.js" defer></script>
+<script src="../js/AuditList/ztreeUtil.js" defer></script>

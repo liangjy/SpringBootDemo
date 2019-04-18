@@ -5778,7 +5778,7 @@ function clearDTGridData() {
 
 //--------------梁杰禹增加----------------
 //------------置顶上移下移置底 start----------------
-$('#layerUl').sortable();
+//$('#layerUl').sortable();
 //置顶方法
 IntelligentRoadTest.layerSetTop = function IntelligentRoadTest_layerSetTop(layerA) {
     var obj = $('#layerUl').find("li.P_current");
@@ -6415,7 +6415,7 @@ IntelligentRoadTest.districtSelectBindEvent = function IntelligentRoadTest_distr
 
 //查询全省的营服进行缓存，（不查询轮廓）
 IntelligentRoadTest.loadMktCenterData = function IntelligentRoadTest_loadMktCenterData() {
-    if (window.localStorage) {//检查浏览器是否支持localStorage，不支持则乖乖的去查询
+    /*if (window.localStorage) {//检查浏览器是否支持localStorage，不支持则乖乖的去查询
         var mkcenterData = JSON.parse(localStorage.getItem("NOCEMktcenterData"));
         var isSaveForLocalStorage = false;
 
@@ -6439,26 +6439,26 @@ IntelligentRoadTest.loadMktCenterData = function IntelligentRoadTest_loadMktCent
             }
 
         }
-    } else {
+    } else {*/
         var list = ["Common_04_city_area_mkt_NameAndId"];
         var progressBarSqls = [];
         progressBarSqls.push(list);
         var functionlist = [IntelligentRoadTest.handleMktcenterJson];
         progressbarTwo.submitSql(progressBarSqls, functionlist, [3], null, null, null, true);
-    }
+    // }
 }
 
 
 IntelligentRoadTest.handleMktcenterJson = function IntelligentRoadTest_handleMktcenterJson(data, isSaveForLocalStorage) {
     var result = callBackChangeData(data);
-    if (isSaveForLocalStorage) {
+    /*if (isSaveForLocalStorage) {
         var saveData = {};
         saveData.version = noceUtil.districtGisDataVersion;
         saveData.data = data;
 //		console.log(JSON.stringify(saveData));
         localStorage.setItem("NOCEMktcenterData", JSON.stringify(saveData));
         saveData = null;
-    }
+    }*/
 
     var mktcenterDataChe = {};
     var city = "", district_id = "", marketbase = "";

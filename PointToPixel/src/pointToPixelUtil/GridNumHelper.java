@@ -1,4 +1,4 @@
-package com.spring.common.util.geoUtil;
+package pointToPixelUtil;
 
 
 import java.io.Serializable;
@@ -53,7 +53,7 @@ public class GridNumHelper implements Serializable {
      * @param len 栅格号计算拼接值，10米为1000000，其他级别都为100000
      * @return 栅格号
      */
-    public static Long gridNum(Double longitude, Double latitude, int level,int len) {
+    public static Long gridNum(Double longitude, Double latitude, int level, int len) {
         // 经度编号=(经度-109.456006485399)/(0.00000972*级别)+1001（向下取整）
         // 纬度编号=(纬度-20.1297900884702)/(0.00000896*级别)+1001（向下取整）
         // 网格编号=经度编号*100000+纬度编号
@@ -73,7 +73,7 @@ public class GridNumHelper implements Serializable {
      * @param level 级别
      * @return 列号
      */
-    public static Long gridLngNum(Double longitude,int level){
+    public static Long gridLngNum(Double longitude, int level){
         long lngnum = (long) Math.floor((longitude - 109.456006485399) / (0.00000972 * level) + 1001);
         return lngnum;
     }

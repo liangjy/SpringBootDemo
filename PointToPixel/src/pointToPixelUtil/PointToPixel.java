@@ -31,6 +31,17 @@ public class PointToPixel {
         LL2MC[5] = new double[] { -0.0003218135878613132, 111320.7020701615, 0.00369383431289, 823725.6402795718, 0.46104986909093, 2351.343141331292, 1.58060784298199, 8.77738589078284, 0.37238884252424, 7.45 };
     }
 
+    /**********************************
+     * @funcname PointToPixel
+     * @funcdesc 经纬度转像素
+     * @param {Point} point 需要转换的点
+     * @param {int} zoom 地图级别
+     * @param {Point} center 地图中心点
+     * @param {BoundSize} boundsSize 地图而DIV大小
+     * @return {Pixel} 转换点的像素位置
+     * @author liangjy
+     * @createDate 2019/4/18 17:27
+     ***********************************/
     public static Pixel PointToPixel(Point point,int zoom,Point center,BoundSize boundsSize){
         point = FormatPoint(point);
         center = FormatPoint(center);

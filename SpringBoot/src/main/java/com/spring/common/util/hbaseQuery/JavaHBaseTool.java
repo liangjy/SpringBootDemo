@@ -1,12 +1,10 @@
 package com.spring.common.util.hbaseQuery;
 
-import java.io.IOException;
-import java.util.*;
-
-
+import com.spring.common.util.PropertiesUtil;
+import com.spring.common.util.StringUtil;
+import com.spring.common.util.geoUtil.GridNumHelper;
+import com.spring.common.util.geoUtil.MapUtils;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -16,15 +14,14 @@ import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.security.UserGroupInformation;
 
-import com.spring.common.util.PropertiesUtil;
-import com.spring.common.util.geoUtil.GridNumHelper;
-import com.spring.common.util.geoUtil.MapUtils;
+import java.io.IOException;
+import java.util.*;
 
 public class JavaHBaseTool {
 	// 声明配置  
-    
+    private static String cityString = "广州韶关深圳珠海汕头佛山江门湛江茂名肇庆惠州梅州汕尾河源阳江清远东莞中山潮州揭阳云浮";
     public Configuration getJavaHBaseKerberosConfig(){
-    	Configuration conf = null;  
+    	Configuration conf = null;
         Properties hbaseProperties = null;
     	 try {
  			hbaseProperties = PropertiesUtil.getPropertiesByFileName("Hbase.properties");
@@ -58,7 +55,7 @@ public class JavaHBaseTool {
  	    conf.set("hbase.master.kerberos.principal", masterPrincipal);  
  	    conf.set("hbase.regionserver.kerberos.principal",regionserverPrincipal);  
  	    //使用设置的用户登陆  
- 	    UserGroupInformation.setConfiguration(conf);  
+ 	    UserGroupInformation.setConfiguration(conf);
 // 	    UserGroupInformation.loginUserFromKeytab("test2@HAOY.COM","C:\\hbase213\\test2.keytab");
  	    try {
  			UserGroupInformation.loginUserFromKeytab(loginUser,keytabFile);
@@ -277,7 +274,7 @@ public class JavaHBaseTool {
         return queryHbaseData(conf,sql);
     }
 
-    public  Map<String,Object> queryHbaseData(Configuration conf,String sql) throws Exception{
+    public  Map<String,Object> queryHbaseData(Configuration conf, String sql) throws Exception{
         Map<String, Object> queryMap = getHbaseParaBySqlstr(sql);
         String queryType = (String) queryMap.get("queryType");
         String tableName = (String) queryMap.get("tableName");
@@ -326,7 +323,7 @@ public class JavaHBaseTool {
             if(cloumns==null||"null".equals(cloumns)){
                 //取全部列数据
 //                HTable htable = new HTable(conf,tableName);
-            	Table htable = htableManager.getHTable(tableName);
+                HTableInterface htable = htableManager.getHTable(tableName);
                 Result[] result = htable.get(keyList);
 
                 List<Result> rowResult = new ArrayList<Result>();
@@ -346,10 +343,10 @@ public class JavaHBaseTool {
                             }
                             for (Cell cell:r.listCells()) {
                                 if(cloumnsLabel.size()<resultSize){
-                                    String cmn =Bytes.toString(cell.getFamilyArray())+":"+Bytes.toString(cell.getQualifierArray());
+                                    String cmn = Bytes.toString(cell.getFamily())+":"+ Bytes.toString(cell.getQualifier());
                                     cloumnsLabel.add(cmn);
                                 }
-                                rList.add(Bytes.toString(cell.getValueArray()));
+                                rList.add(Bytes.toString(cell.getValue()));
                             }
                             resultList.add(rList);
                         }
@@ -372,10 +369,10 @@ public class JavaHBaseTool {
 //								rList.add(Bytes.toString(rowResult.get(i).getRow()));
                                 for (Cell cell:rowResult.get(i).listCells()) {
                                     if(cloumnsLabel.size()<resultSize){
-                                        String cmn =Bytes.toString(cell.getFamilyArray())+":"+Bytes.toString(cell.getQualifierArray());
+                                        String cmn = Bytes.toString(cell.getFamily())+":"+ Bytes.toString(cell.getQualifier());
                                         cloumnsLabel.add(cmn);
                                     }
-                                    rList.add(Bytes.toString(cell.getValueArray()));
+                                    rList.add(Bytes.toString(cell.getValue()));
                                 }
                                 resultList.add(rList);
                                 num++;
@@ -403,7 +400,7 @@ public class JavaHBaseTool {
                         throw new Exception("查询的cloumn不包含有冒号");
                     }
                 }
-                Table htable = htableManager.getHTable(tableName);
+                HTableInterface htable = htableManager.getHTable(tableName);
 //                HTable htable = new HTable(conf,tableName);
                 Result[] result = htable.get(keyList);
 
@@ -640,7 +637,7 @@ public class JavaHBaseTool {
             Map<String,Object> resultMap = new HashMap<String, Object>();
             List<String> cloumnsLabel = new ArrayList<String>();
             List<Object> resultList = new ArrayList<Object>();
-            Table htable = htableManager.getHTable(tableName);
+            HTableInterface htable = htableManager.getHTable(tableName);
             Scan scan = new Scan();
             if("backward".equals(key)){
 //				scan.setReversed(true);
@@ -677,7 +674,7 @@ public class JavaHBaseTool {
             List<Object> resultList = new ArrayList<Object>();
 
 
-            Table htable = htableManager.getHTable(tableName);
+            HTableInterface htable = htableManager.getHTable(tableName);
 
             Scan scan = new Scan();
 
@@ -694,6 +691,7 @@ public class JavaHBaseTool {
                     }
                 }
             }
+
             scan.setStartRow(startKey.getBytes("UTF-8"));
             scan.setStopRow(endKey.getBytes("UTF-8"));
 
@@ -702,8 +700,8 @@ public class JavaHBaseTool {
                 String[] col = para[0].split(":");
                 FilterList filterList = new FilterList();
                 //SingleColumnValueFilter(byte[] family, byte[] qualifier, CompareOp compareOp, byte[] value) {
-                SingleColumnValueFilter singleColumnValue1 = new SingleColumnValueFilter(col[0].getBytes("UTF-8"),col[1].getBytes("UTF-8"),CompareOp.GREATER_OR_EQUAL,(para[1]).getBytes("UTF-8"));
-                SingleColumnValueFilter singleColumnValue2 = new SingleColumnValueFilter(col[0].getBytes("UTF-8"),col[1].getBytes("UTF-8"),CompareOp.LESS_OR_EQUAL,(para[2]).getBytes("UTF-8"));
+                SingleColumnValueFilter singleColumnValue1 = new SingleColumnValueFilter(col[0].getBytes("UTF-8"),col[1].getBytes("UTF-8"), CompareOp.GREATER_OR_EQUAL,(para[1]).getBytes("UTF-8"));
+                SingleColumnValueFilter singleColumnValue2 = new SingleColumnValueFilter(col[0].getBytes("UTF-8"),col[1].getBytes("UTF-8"), CompareOp.LESS_OR_EQUAL,(para[2]).getBytes("UTF-8"));
                 filterList.addFilter(singleColumnValue1);
                 filterList.addFilter(singleColumnValue2);
                 scan.setFilter(filterList);
@@ -735,10 +733,10 @@ public class JavaHBaseTool {
 
                         for(Cell cell: result.listCells()){
                             if(cloumnsLabel.size()<resultSize){
-                                String cmn =Bytes.toString(cell.getFamilyArray())+":"+Bytes.toString(cell.getQualifierArray());
+                                String cmn = Bytes.toString(cell.getFamily())+":"+ Bytes.toString(cell.getQualifier());
                                 cloumnsLabel.add(cmn);
                             }
-                            rList.add(Bytes.toString(cell.getValueArray()));
+                            rList.add(Bytes.toString(cell.getValue()));
                         }
                         resultList.add(rList);
                     }else{
@@ -794,7 +792,7 @@ public class JavaHBaseTool {
             long minGridLatNum = GridNumHelper.gridLatNum(minLat,gridLevel);
             long maxGridLatNum = GridNumHelper.gridLatNum(maxLat,gridLevel);
 
-            
+
             List<String[]> cloumnsList = new ArrayList<String[]>();
             if(cloumns == null || "null".equals(cloumns)){
 
@@ -802,13 +800,13 @@ public class JavaHBaseTool {
                 String[] cloumnArr = cloumns.split(",");
                 for(String c:cloumnArr){//i:a1
                     if(c.contains(":")){
-                    	cloumnsList.add(c.split(":"));                
+                    	cloumnsList.add(c.split(":"));
                     }else{
                         throw new Exception("查询的cloumn不包含有冒号，请输入正确的列名");
                     }
                 }
             }
-            
+
             Date handleGridNum = new Date();
             List<Get> gridNumList = new ArrayList<Get>();
             boolean showRowkey = true;
@@ -848,7 +846,7 @@ public class JavaHBaseTool {
                 }
             }
             System.out.println("查询的rowkey长度："+gridNumList.size());
-            
+
             Date handleGridNumEnd = new Date();
             System.out.println("生成Get对象集合时间:"+(handleGridNumEnd.getTime()-handleGridNum.getTime()));
             if(cloumns == null || "null".equals(cloumns)){
@@ -863,7 +861,7 @@ public class JavaHBaseTool {
                     }
                 }
             }
-            Table htable = htableManager.getHTable(tableName);
+            HTableInterface htable = htableManager.getHTable(tableName);
 //            HTable htable = new HTable(conf,tableName);
             Result[] resultScanner = htable.get(gridNumList);
             for(Result result : resultScanner){
@@ -878,10 +876,10 @@ public class JavaHBaseTool {
 
                         for(Cell cell: result.listCells()){
                             if(cloumnsLabel.size()<resultSize){
-                                String cmn =Bytes.toString(cell.getFamilyArray())+":"+Bytes.toString(cell.getQualifierArray());
+                                String cmn = Bytes.toString(cell.getFamily())+":"+ Bytes.toString(cell.getQualifier());
                                 cloumnsLabel.add(cmn);
                             }
-                            rList.add(Bytes.toString(cell.getValueArray()));
+                            rList.add(Bytes.toString(cell.getValue()));
                         }
                         resultList.add(rList);
                     }else{
@@ -976,7 +974,7 @@ public class JavaHBaseTool {
                 		for(String[] c : cloumnsList){//i:a1,i:a2
                 			g.addColumn(c[0].getBytes(),c[1].getBytes());
                 		}
-                		
+
                 	}
                 }
                 gridNumList.add(g);
@@ -992,7 +990,7 @@ public class JavaHBaseTool {
             System.out.println("构造查询rowkey时间："+(getRowkey.getTime()-handleGridNumEnd.getTime()));
            
             //使用生成的Get对象集合，精确查询数据
-            Table htable = htableManager.getHTable(tableName);
+            HTableInterface htable = htableManager.getHTable(tableName);
 //            HTable htable = new HTable(conf,tableName);
             Result[] resultScanner = htable.get(gridNumList);
             for(Result result : resultScanner){
@@ -1007,11 +1005,10 @@ public class JavaHBaseTool {
 
                         for(Cell cell: result.listCells()){
                             if(cloumnsLabel.size()<resultSize){
-                            	
-                                String cmn =Bytes.toString(cell.getFamilyArray())+":"+Bytes.toString(cell.getQualifierArray());
+                                String cmn = Bytes.toString(cell.getFamily())+":"+ Bytes.toString(cell.getQualifier());
                                 cloumnsLabel.add(cmn);
                             }
-                            rList.add(Bytes.toString(cell.getValueArray()));
+                            rList.add(Bytes.toString(cell.getValue()));
                         }
                         resultList.add(rList);
                     }else{
@@ -1057,7 +1054,7 @@ public class JavaHBaseTool {
 //    	JavaHBaseTool tool = new JavaHBaseTool();
     	Configuration conf = getJavaHBaseKerberosConfig();
         HTableManager htableManager = HTableManager.getInstance(conf);
-        Table htable = htableManager.getHTable(tableName);
+        HTableInterface htable = htableManager.getHTable(tableName);
 //		HTable htable = new HTable(conf, tableName);
 	    List<Get> getList = new ArrayList<Get>();
 	    for(String key:keyList){
@@ -1082,8 +1079,8 @@ public class JavaHBaseTool {
 	    		Map<String,Object> cellMap = new HashMap<String, Object>();
 	    		String rowKey = Bytes.toString(r.getRow());
 	    		for (Cell kv : r.listCells()) {
-	    			String cmn = Bytes.toString(kv.getFamilyArray())+":"+Bytes.toString(kv.getQualifierArray());
-	    			String value = Bytes.toString(kv.getValueArray());
+	    			String cmn = Bytes.toString(kv.getFamily())+":"+ Bytes.toString(kv.getQualifier());
+	    			String value = Bytes.toString(kv.getValue());
 	    			cellMap.put(cmn, value);
 			    }
 	    		resultMap.put(rowKey, cellMap);
@@ -1096,7 +1093,7 @@ public class JavaHBaseTool {
 //    	JavaHBaseTool tool = new JavaHBaseTool();
     	Configuration conf = getJavaHBaseKerberosConfig();
         HTableManager htableManager = HTableManager.getInstance(conf);
-        Table htable = htableManager.getHTable(tableName);
+        HTableInterface htable = htableManager.getHTable(tableName);
 //		HTable htable = new HTable(conf, tableName);
 		Scan scan = new Scan();
 		Filter filter = new PrefixFilter(prekey.getBytes("UTF-8"));
@@ -1119,8 +1116,8 @@ public class JavaHBaseTool {
 	    		Map<String,Object> cellMap = new HashMap<String, Object>();
 	    		String rowKey = Bytes.toString(r.getRow());
 	    		for (Cell kv : r.listCells()) {
-	    			String cmn = Bytes.toString(kv.getFamilyArray())+":"+Bytes.toString(kv.getQualifierArray());
-	    			String value = Bytes.toString(kv.getValueArray());
+	    			String cmn = Bytes.toString(kv.getFamily())+":"+ Bytes.toString(kv.getQualifier());
+	    			String value = Bytes.toString(kv.getValue());
 	    			cellMap.put(cmn, value);
 			    }
 	    		resultMap.put(rowKey, cellMap);
@@ -1134,7 +1131,7 @@ public class JavaHBaseTool {
     	Configuration conf = getJavaHBaseKerberosConfig();
     	System.out.println("准备查询。。。。。");
         HTableManager htableManager = HTableManager.getInstance(conf);
-        Table htable = htableManager.getHTable("NOCE:DSI_AGPS_GRID_AREA_D");
+        HTableInterface htable = htableManager.getHTable("NOCE:DSI_AGPS_GRID_AREA_D");
 //    	HTable htable = new HTable(conf, "NOCE:DSI_AGPS_GRID_AREA_D");
 	    System.out.println("创建HTable成功....");
 	    
@@ -1196,9 +1193,9 @@ public class JavaHBaseTool {
 //        String sql = "getGridByKey\nNOCE:DSI_AGPS_GRID_RSRP_M\n201711_200_0_50_999188_\n" +
 //                "50\n113.359,23.1353,113.322,23.1131\n" +
 //                "i:a1,i:a2,i:a4,i:a6,i:a9,i:a10,i:a13,i:a14,i:a48,i:a49,i:a57,i:a58,i:a59,i:a69\nrowkey 1";
-        String sql = "getGridsByContour\nNOCE:DSI_MRO_ALL_GRID_TOT_W\n1805_0_\n20\n" +
+        String sql = "getGridsByContour\nNOCE:DSI_MRO_ALL_GRID_TOT_W\n_0_20_20180323_\n20\n" +
                 "113.27866481001894,23.127818881775035@113.27854615605008,23.12720886904501@113.27892792604403,23.12468885877834@113.27821474096064,23.124383428522957@113.27728295128318,23.124094720426417@113.27701161470381,23.124739704267135@113.27639373476909,23.124524531493037@113.27630204463743,23.124880680750163@113.27741037728717,23.125571404029532@113.27644943521112,23.126971752880237@113.2762355845516,23.126841183225654@113.27577934546187,23.12669866369659@113.27574603914083,23.126784017945365@113.27626523921693,23.126969998334705@113.27629373104429,23.127039297728558@113.27648737117046,23.127195850212534@113.27638272288415,23.127371232711983@113.27580771617869,23.127047169245454@113.27576964848888,23.127156279923835@113.27576494717644,23.12715462543447@113.2760120119807,23.12738199675587@113.27840772827538,23.12859711861355@113.27866481001894,23.127818881775035|113.27834303690605,23.125169704264373@113.27851938431027,23.12463317742799@113.27877614055079,23.124735119156124@113.27884265210618,23.124871291032647@113.2787877482859,23.125289784731205@113.2783455313423,23.125171985639664@113.27834303690605,23.125169704264373|113.27796063450441,23.125850086535348@113.27808217747987,23.125494058633947@113.2784577899262,23.125618453670743@113.27835776006256,23.125967549828445@113.27796312965211,23.125852488350972@113.27796063450441,23.125850086535348|113.27649611526054,23.127597179907447@113.27577718266262,23.127155770303307@113.2758142315274,23.127069261698157@113.27633458895464,23.127357628424978@113.27632269755102,23.127377747030746@113.2765590660007,23.1275323157372@113.27649611526054,23.127597179907447\n" +
-                "i:a1,i:a2,i:a3,i:a4,i:a5,i:a6,i:a7,i:a8,i:a9\nrowkey 1\n";
+                "i:a1,i:a2,i:a3,i:a4,i:a5,i:a6,i:a7,i:a8,i:a9\npartitionmod 1\nrowkey 1\n";
     	Map<String,Object> resultMap = new JavaHBaseTool().queryHbaseNoKerberos(sql);
 //    	Map<String,Object> resultMap = new JavaHBaseTool().queryHbase(sql);
     	System.out.println("长度"+((List)resultMap.get("result")).size());
@@ -1207,7 +1204,7 @@ public class JavaHBaseTool {
 //    	System.out.println("resultMap:"+JSONObject.fromObject(resultMap).toString());
 	}
     
-    public static void scanTable(Table hTable, Scan scan) throws IOException
+    public static void scanTable(HTableInterface hTable, Scan scan) throws IOException
 	  {
 	    ResultScanner resultScanner = hTable.getScanner(scan);
 //	    System.out.println();
@@ -1241,10 +1238,10 @@ public class JavaHBaseTool {
 //	    		rList.add(Bytes.toString(result.getRow()));
 		    	for(Cell cell: result.listCells()){
 		    		if(cloumnsLabel.size()<resultSize){
-		    			String cmn =Bytes.toString(cell.getFamilyArray())+":"+Bytes.toString(cell.getQualifierArray());
+		    			String cmn = Bytes.toString(cell.getFamily())+":"+ Bytes.toString(cell.getQualifier());
 		    			cloumnsLabel.add(cmn);
 		    		}
-		    		rList.add(Bytes.toString(cell.getValueArray()));
+		    		rList.add(Bytes.toString(cell.getValue()));
 		    	}
 		    	resultList.add(rList);
 	    	}

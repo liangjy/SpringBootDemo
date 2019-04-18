@@ -2969,7 +2969,6 @@ IntelligentRoadTest.initMap = function IntelligentRoadTest_initMap() {
     IntelligentRoadTest.map = new BMap.Map("baiduMap", {enableMapClick: false, minZoom: 8, maxZoom: 20});          // 创建地图实例
     // map.centerAndZoom(IntelligentRoadTest.city,15);
     IntelligentRoadTest.map.centerAndZoom(point, zoom);
-    IntelligentRoadTest.map.addEventListener("tilesloaded", doSubmitAndRemove);
 
     IntelligentRoadTest.map.enableScrollWheelZoom(); // 允许滚轮缩放
     IntelligentRoadTest.map.enableDragging();

@@ -105,7 +105,25 @@ function SectorUtilForBaidu(bMapObj){
 	this.isBindMapEvent = bMapObj.isBindMapEvent==undefined?false:true;
 	this.scopeDistance = 3;//范围6*6KM扇区
 	this.bounds = null;
-	
+
+	this.useShadow = bMapObj.useShadow==undefined?false:bMapObj.useShadow;//是否使用阴影
+    if(this.useShadow){
+        this.shadowBlur = bMapObj.shadowBlur==undefined?20:bMapObj.shadowBlur;
+        this.shadowColor = bMapObj.shadowColor==undefined?'black':bMapObj.shadowColor;
+    }
+
+    this.useLineLevelColor = bMapObj.useLineLevelColor==undefined?false:bMapObj.useLineLevelColor;//是否各个等级的线条颜色
+    if(this.useLineLevelColor){
+        this.LineLevelColor = {
+            level1:bMapObj.LineLevelColor.level1==undefined?"#993399":bMapObj.LineLevelColor.level1,
+            level2:bMapObj.LineLevelColor.level2==undefined?"#9900FF":bMapObj.LineLevelColor.level2,
+            level3:bMapObj.LineLevelColor.level3==undefined?"#ffffff":bMapObj.LineLevelColor.level3,
+            level4:bMapObj.LineLevelColor.level4==undefined?"#ffffff":bMapObj.LineLevelColor.level4,
+            level5:bMapObj.LineLevelColor.level5==undefined?"#ffffff":bMapObj.LineLevelColor.level5,
+        }
+    }
+
+
 	this.useBandsColor = bMapObj.useBandsColor==undefined?false:bMapObj.useBandsColor;//是否使用频段的各自颜色
     if(this.useBandsColor){
     	this.bandLevelColor = {
@@ -114,6 +132,11 @@ function SectorUtilForBaidu(bMapObj){
 	        level3:bMapObj.bandLevelColor.level3==undefined?"#00CCFF":bMapObj.bandLevelColor.level3,// level3:2.1GHz
 	        level4:bMapObj.bandLevelColor.level4==undefined?"#66CC00":bMapObj.bandLevelColor.level4,// level4:2.6GHz
 	        level5:bMapObj.bandLevelColor.level5==undefined?"#6666FF":bMapObj.bandLevelColor.level5,// level5:other
+	        level6:bMapObj.bandLevelColor.level6==undefined?"#6666FF":bMapObj.bandLevelColor.level6,// level6:other
+	        level7:bMapObj.bandLevelColor.level7==undefined?"#6666FF":bMapObj.bandLevelColor.level7,// level7:other
+	        level8:bMapObj.bandLevelColor.level8==undefined?"#6666FF":bMapObj.bandLevelColor.level8,// level8:other
+	        level9:bMapObj.bandLevelColor.level9==undefined?"#6666FF":bMapObj.bandLevelColor.level9,// level9:other
+	        level10:bMapObj.bandLevelColor.level10==undefined?"#6666FF":bMapObj.bandLevelColor.level10,// level9:other
     	}
     }
 	
@@ -121,14 +144,23 @@ function SectorUtilForBaidu(bMapObj){
 	this.LastTimeSelectTime = null;//记录上一次全量查询的查询时间
 	this.LastTimeSelectCity = null;//记录上一次全量查询的查询地市
 	this.allDataFlagIsCompleted = false;//查全量数据的时候是否结束
-	this.queryConditionIschange = false;
-	this.isBackgroundQuerying = false;
+	this.queryConditionIschange = false;//全量数据查询是否结束
+	this.isBackgroundQuerying = false;//是否是局部数据查询
 	this.senes = bMapObj.senes==undefined?1:bMapObj.senes;//场景
+    this.queryOtherTable = bMapObj.queryOtherTable==undefined?false:bMapObj.queryOtherTable;//查询其他表
+    this.useOptionColor =  bMapObj.useOptionColor==undefined?false:bMapObj.useOptionColor;//使用独立的颜色配置
+    if(this.useOptionColor){
+        this.optionColor = bMapObj.optionColor==undefined?{}:bMapObj.optionColor;//使用独立的颜色配置;
+        this.optionChangeFunc = bMapObj.optionChangeFunc==undefined?null:bMapObj.optionChangeFunc;//数据库值转换成对应level的函数，由外部传入
+        // this.optionColor = {field:'',option:[level:'',color:'']}//field数据库对应的字段，level等级，color等级对应的颜色
+    }
 
     this.dilutionPointNum = 4;//抽稀间隔数
     this.dilutionPointNumMin = 50;//多边形顶点小于这个值的不进行抽稀
     this.pointRadius = 2;//地图放大到1公里及以上时画点的像素大小
-	
+
+	this.useScopeQuery = false;
+
 	if(!this.isBindMapEvent){
 //		this.map.addEventListener("zoomend",SectorUtilForBaidu.prototype.MapZoomAndDragEnd());
 //		this.map.addEventListener("dragend",SectorUtilForBaidu.prototype.MapZoomAndDragEnd());
@@ -136,7 +168,13 @@ function SectorUtilForBaidu(bMapObj){
 	}else{
 		
 	}
-	
+
+
+	this.modalInfo = null;
+	if(typeof modalInfo == "function"){
+	    this.modalInfo = null;
+    }
+
 	//如果未引入百度GeoUtils工具，则引入该工具（但是未测试是否能用20171025）
 //	if("undefined" == typeof BMapLib.GeoUtils){
 //		document.write('<script src="../js/util/GeoUtils.js"><\/script>');
@@ -161,18 +199,14 @@ SectorUtilForBaidu.prototype.cancleQuery = function(){
 SectorUtilForBaidu.prototype.queryByTemplate=function(){
 	if(this.senes==0){
 		if(this.useSelectTimeQuerySector){
-			if((this.LastTimeSelectTime!=this.selectTime||this.LastTimeSelectCity!=this.selectCity)
-					){
-				
+			if((this.LastTimeSelectTime!=this.selectTime||this.LastTimeSelectCity!=this.selectCity)){
 				this.queryConditionIschange = true;
 				this.allDataFlagIsCompleted = false;
 				this.LastTimeSelectTime = this.selectTime;
 				this.LastTimeSelectCity = this.selectCity;
-				
 			}
 		}else{
-			if(this.LastTimeSelectCity!=this.selectCity
-					){
+			if(this.LastTimeSelectCity!=this.selectCity){
 				this.queryConditionIschange = true;
 				this.allDataFlagIsCompleted = false;
 				this.LastTimeSelectCity = this.selectCity;
@@ -185,7 +219,6 @@ SectorUtilForBaidu.prototype.queryByTemplate=function(){
 			//比例尺大于等于1000米
 			if(this.map.getZoom()<=14){
 				this.queryByTemplateForScope();
-				
 			}else{
 				if(this.bounds!=null){
 					if(!this.allDataFlagIsCompleted){//全量查询还未完成
@@ -361,7 +394,13 @@ SectorUtilForBaidu.prototype.queryByTemplate=function(){
 		}else{
 			list1.push("CONDITION:"+this.queryCondition);
 		}
-		
+
+        if(this.useOptionColor){
+            list1.push('QueryField:'+this.optionColor.field+',');
+        }else{
+            list1.push('QueryField:');
+        }
+
 		this.ifCompleted = false;
 		progressBarSqls.push(list1);
 		functionlist.push(this.showSectorDate);
@@ -486,6 +525,15 @@ SectorUtilForBaidu.prototype.showSectorDate = function SectorUtilForBaidu_showSe
 				assemble.bsc_id = result[i].bsc_id==null?"":result[i].bsc_id;//bsc_id
 				assemble.city_id = result[i].city_id==null?"200":result[i].city_id;//city_id
 			}
+
+			if(thisObject.useOptionColor){
+			    // var feildVal = result[i][thisObject.optionColor.field];
+                if(thisObject.optionChangeFunc!=null&& typeof thisObject.optionChangeFunc == 'function'){
+                    assemble.fieldLevel = thisObject.optionChangeFunc(result[i][thisObject.optionColor.field]);
+                }else{
+                    assemble.fieldLevel = result[i][thisObject.optionColor.field];
+                }
+            }
 			
 			thisObject.polygonCanvasArr.push(assemble);//将扇形点集合进行存储
 			assemble = null;
@@ -524,6 +572,16 @@ SectorUtilForBaidu.prototype.showSectorDate = function SectorUtilForBaidu_showSe
 				assemble.bsc_id = result[i].bsc_id==null?"":result[i].bsc_id;//bsc_id
 				assemble.city_id = result[i].city_id==null?"200":result[i].city_id;//city_id
 			}
+
+            if(thisObject.useOptionColor){
+                // var feildVal = result[i][thisObject.optionColor.field];
+                if(thisObject.optionChangeFunc!=null&& typeof thisObject.optionChangeFunc == 'function'){
+                    assemble.fieldLevel = thisObject.optionChangeFunc(result[i][thisObject.optionColor.field]);
+                }else{
+                    assemble.fieldLevel = result[i][thisObject.optionColor.field];
+                }
+            }
+
 			thisObject.polygonCanvasArr.push(assemble);
 			assemble = null;
 		}
@@ -633,6 +691,49 @@ SectorUtilForBaidu.prototype.draw = function() {
                             context.fillStyle = thisObject.bandLevelColor.level4;
                         }else if(item.bandLevel == 5 ){
                             context.fillStyle = thisObject.bandLevelColor.level5;
+                        }else if(item.bandLevel == 6 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level6;
+	                    }else if(item.bandLevel == 7 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level7;
+	                    }else if(item.bandLevel == 8 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level8;
+	                    }else if(item.bandLevel == 9 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level9;
+	                    }else if(item.bandLevel == 10 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level10;
+	                    }
+                    }
+
+                    if(thisObject.useLineLevelColor){
+                        if(item.lineLevel == 1){
+                            context.strokeStyle = thisObject.LineLevelColor.level1;
+                        }else if(item.lineLevel == 2 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level2;
+                        }else if(item.lineLevel == 3 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level3;
+                        }else if(item.lineLevel == 4 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level4;
+                        }else if(item.lineLevel == 5 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level5;
+                        }else if(item.lineLevel == 6 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level6;
+                        }else if(item.lineLevel == 7 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level7;
+                        }else if(item.lineLevel == 8 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level8;
+                        }else if(item.lineLevel == 9 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level9;
+                        }else if(item.lineLevel == 10 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level10;
+                        }
+                    }
+
+                    if(thisObject.useOptionColor){
+                        option: for(var OptionItem in thisObject.optionColor.option){
+                            if(item.fieldLevel == thisObject.optionColor.option[OptionItem].level){
+                                context.fillStyle = thisObject.optionColor.option[OptionItem].color;
+                                break option;
+                            }
                         }
                     }
 
@@ -651,58 +752,175 @@ SectorUtilForBaidu.prototype.draw = function() {
                 // points.push(point2);
                 // points.push(point3);
                 // points.push(point4);
-                isDraw = false;
 
-				// for(var i=0;i<points.length;i++){
-				// 	if(bound.containsPoint(points[i])==true){
-                 //        isDraw = true;
-				// 	}
-				// }
 				isDraw = BMapLib.GeoUtils.isIntersectTwoRect(bound ,otherBound)
 
-				if( isDraw == true){
+				if(isDraw == true){
+					if(thisObject.useBandsColor){
+	                    if(item.bandLevel == 1){
+	                        context.fillStyle = thisObject.bandLevelColor.level1;
+	                    }else if(item.bandLevel == 2 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level2;
+	                    }else if(item.bandLevel == 3 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level3;
+	                    }else if(item.bandLevel == 4 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level4;
+	                    }else if(item.bandLevel == 5 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level5;
+	                    }else if(item.bandLevel == 6 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level6;
+	                    }else if(item.bandLevel == 7 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level7;
+	                    }else if(item.bandLevel == 8 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level8;
+	                    }else if(item.bandLevel == 9 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level9;
+	                    }else if(item.bandLevel == 10 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level10;
+	                    }
+	                }
+                    if(thisObject.useLineLevelColor){
+                        if(item.lineLevel == 1){
+                            context.strokeStyle = thisObject.LineLevelColor.level1;
+                        }else if(item.lineLevel == 2 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level2;
+                        }else if(item.lineLevel == 3 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level3;
+                        }else if(item.lineLevel == 4 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level4;
+                        }else if(item.lineLevel == 5 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level5;
+                        }else if(item.lineLevel == 6 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level6;
+                        }else if(item.lineLevel == 7 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level7;
+                        }else if(item.lineLevel == 8 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level8;
+                        }else if(item.lineLevel == 9 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level9;
+                        }else if(item.lineLevel == 10 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level10;
+                        }
+                    }
+
+                    if(thisObject.useShadow) {
+                        context.shadowBlur = thisObject.shadowBlur;
+                        context.shadowColor = thisObject.shadowColor;
+                    }
+					
                     thisObject.drawItem(item, context, zoom);
 				}
 			}
 			
 		}else{
-//			var assemble = {};
-//			assemble.radiusL = radiusL;
-//			assemble.radiusS = radiusS;
-//			assemble.type = is_indoor;
-//			assemble.point = point;
-			if(BMapLib.GeoUtils.isPointInRect(item.point, bounds)){
-				var largeRadius = item.radiusL;//单位为米
-				var smallRadius = item.radiusS;//单位为米
-				
-				var radiusCenterPoint = item.point;//圆心
-				
-				//水平方向加了大圆半径的经纬度    水平方向1米的经度*长度+圆心经度
-				var lengPointLarge = new BMap.Point(onemeterLng*largeRadius+radiusCenterPoint.lng,radiusCenterPoint.lat);
-				var lengPointSmall = new BMap.Point(onemeterLng*smallRadius+radiusCenterPoint.lng,radiusCenterPoint.lat);
-				
-				item.lengPointLarge = lengPointLarge;
-				item.lengPointSmall = lengPointSmall;
-				context.fillStyle = thisObject.circleColor;
+			if(item.decide==undefined){
+				//正常的画室内圆，大圆和小圆
+				if(BMapLib.GeoUtils.isPointInRect(item.point, bounds)){
+					var largeRadius = item.radiusL;//单位为米
+					var smallRadius = item.radiusS;//单位为米
+					
+					var radiusCenterPoint = item.point;//圆心
+					
+					//水平方向加了大圆半径的经纬度    水平方向1米的经度*长度+圆心经度
+					var lengPointLarge = new BMap.Point(onemeterLng*largeRadius+radiusCenterPoint.lng,radiusCenterPoint.lat);
+					var lengPointSmall = new BMap.Point(onemeterLng*smallRadius+radiusCenterPoint.lng,radiusCenterPoint.lat);
+					
+					item.lengPointLarge = lengPointLarge;
+					item.lengPointSmall = lengPointSmall;
+					context.fillStyle = thisObject.circleColor;
 
-                if(thisObject.useBandsColor){
-                    if(item.bandLevel == 1){
-                        context.fillStyle = thisObject.bandLevelColor.level1;
-                    }else if(item.bandLevel == 2 ){
-                        context.fillStyle = thisObject.bandLevelColor.level2;
-                    }else if(item.bandLevel == 3 ){
-                        context.fillStyle = thisObject.bandLevelColor.level3;
-                    }else if(item.bandLevel == 4 ){
-                        context.fillStyle = thisObject.bandLevelColor.level4;
-                    }else if(item.bandLevel == 5 ){
-                        context.fillStyle = thisObject.bandLevelColor.level5;
+	                if(thisObject.useBandsColor){
+	                    if(item.bandLevel == 1){
+	                        context.fillStyle = thisObject.bandLevelColor.level1;
+	                    }else if(item.bandLevel == 2 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level2;
+	                    }else if(item.bandLevel == 3 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level3;
+	                    }else if(item.bandLevel == 4 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level4;
+	                    }else if(item.bandLevel == 5 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level5;
+	                    }else if(item.bandLevel == 6 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level6;
+	                    }else if(item.bandLevel == 7 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level7;
+	                    }else if(item.bandLevel == 8 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level8;
+	                    }else if(item.bandLevel == 9 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level9;
+	                    }else if(item.bandLevel == 10 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level10;
+	                    }
+	                }
+                    if(thisObject.useOptionColor){
+                        option: for(var OptionItem in thisObject.optionColor.option){
+                            if(item.fieldLevel == thisObject.optionColor.option[OptionItem].level){
+                                context.fillStyle = thisObject.optionColor.option[OptionItem].color;
+                                break option;
+                            }
+                        }
                     }
-                }
 
-				thisObject.drawCicle(item, context, zoom);
+					thisObject.drawCicle(item, context, zoom);
+				}
+			}else{
+				//预留画固定像素半径的圆
+				if(BMapLib.GeoUtils.isPointInRect(item.point, bounds)){
+					context.fillStyle = thisObject.circleColor;
+					if(thisObject.useBandsColor){
+	                    if(item.bandLevel == 1){
+	                        context.fillStyle = thisObject.bandLevelColor.level1;
+	                    }else if(item.bandLevel == 2 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level2;
+	                    }else if(item.bandLevel == 3 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level3;
+	                    }else if(item.bandLevel == 4 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level4;
+	                    }else if(item.bandLevel == 5 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level5;
+	                    }else if(item.bandLevel == 6 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level6;
+	                    }else if(item.bandLevel == 7 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level7;
+	                    }else if(item.bandLevel == 8 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level8;
+	                    }else if(item.bandLevel == 9 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level9;
+	                    }else if(item.bandLevel == 10 ){
+	                        context.fillStyle = thisObject.bandLevelColor.level10;
+	                    }
+	                }
+
+                    if(thisObject.useLineLevelColor){
+                        if(item.lineLevel == 1){
+                            context.strokeStyle = thisObject.LineLevelColor.level1;
+                        }else if(item.lineLevel == 2 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level2;
+                        }else if(item.lineLevel == 3 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level3;
+                        }else if(item.lineLevel == 4 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level4;
+                        }else if(item.lineLevel == 5 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level5;
+                        }else if(item.lineLevel == 6 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level6;
+                        }else if(item.lineLevel == 7 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level7;
+                        }else if(item.lineLevel == 8 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level8;
+                        }else if(item.lineLevel == 9 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level9;
+                        }else if(item.lineLevel == 10 ){
+                            context.strokeStyle = thisObject.LineLevelColor.level10;
+                        }
+                    }
+                    if(thisObject.useShadow) {
+                        context.shadowBlur = thisObject.shadowBlur;
+                        context.shadowColor = thisObject.shadowColor;
+                    }
+					thisObject.drawCicle(item, context, zoom);
+				}
 			}
-			
-			
 		}
 		
 	});
@@ -768,41 +986,48 @@ SectorUtilForBaidu.prototype.draw = function() {
  * @create 20171025
  ***********************************/
 SectorUtilForBaidu.prototype.drawCicle = function(arr, cxt, zoom) {
-	
-	var sw = this.map.pointToPixel(arr.point); //左下 圆心
-	var rl =  this.map.pointToPixel(arr.lengPointLarge); //水平方向的像素位置,用于求半径
-	var rs =  this.map.pointToPixel(arr.lengPointSmall); //水平方向的像素位置,用于求半径
-	
-	var radiusL = Math.sqrt((rl.x-sw.x)*(rl.x-sw.x)+(rl.y-sw.y)*(rl.y-sw.y));//计算半径
-	var radiuss = Math.sqrt((rs.x-sw.x)*(rs.x-sw.x)+(rs.y-sw.y)*(rs.y-sw.y));//计算半径
-
-    if(zoom<=14){
-        //画一个3像素的小圆标记为一个点
+	if(arr.decide==1){
+		var circleCenter = this.map.pointToPixel(arr.point); //圆心
+		var radius = arr.radius;
+		//画一个指定像素的圆
         cxt.beginPath();
-        cxt.arc(sw.x,sw.y, this.pointRadius, 0, Math.PI * 2, true); //Math.PI*2是JS计算方法，是圆
+        cxt.arc(circleCenter.x,circleCenter.y, radius, 0, Math.PI * 2, true); //Math.PI*2是JS计算方法，是圆
         cxt.closePath();
         // cxt.stroke();
         cxt.fill();
-    }else{
-        //大圆
-        cxt.beginPath();
-//	cxt.fillStyle = this.circleColor;
-        cxt.arc(sw.x, sw.y, radiusL, 0, Math.PI * 2, true); //Math.PI*2是JS计算方法，是圆
-        cxt.closePath();
-        // cxt.stroke();
-        cxt.fill();
+	}else{
+		var sw = this.map.pointToPixel(arr.point); //左下 圆心
+		var rl =  this.map.pointToPixel(arr.lengPointLarge); //水平方向的像素位置,用于求半径
+		var rs =  this.map.pointToPixel(arr.lengPointSmall); //水平方向的像素位置,用于求半径
+		
+		var radiusL = Math.sqrt((rl.x-sw.x)*(rl.x-sw.x)+(rl.y-sw.y)*(rl.y-sw.y));//计算半径
+		var radiuss = Math.sqrt((rs.x-sw.x)*(rs.x-sw.x)+(rs.y-sw.y)*(rs.y-sw.y));//计算半径
 
-        //小圆
-        cxt.beginPath();
-        cxt.fillStyle = "white";
-        cxt.arc(sw.x, sw.y, radiuss, 0, Math.PI * 2, true); //Math.PI*2是JS计算方法，是圆
-        cxt.closePath();
-        // cxt.stroke();
-        cxt.fill();
-    }
+	    if(zoom<=14){
+	        //画一个3像素的小圆标记为一个点
+	        cxt.beginPath();
+	        cxt.arc(sw.x,sw.y, this.pointRadius, 0, Math.PI * 2, true); //Math.PI*2是JS计算方法，是圆
+	        cxt.closePath();
+	        // cxt.stroke();
+	        cxt.fill();
+	    }else{
+	        //大圆
+	        cxt.beginPath();
+//		cxt.fillStyle = this.circleColor;
+	        cxt.arc(sw.x, sw.y, radiusL, 0, Math.PI * 2, true); //Math.PI*2是JS计算方法，是圆
+	        cxt.closePath();
+	        // cxt.stroke();
+	        cxt.fill();
 
-
-
+	        //小圆
+	        cxt.beginPath();
+	        cxt.fillStyle = "white";
+	        cxt.arc(sw.x, sw.y, radiuss, 0, Math.PI * 2, true); //Math.PI*2是JS计算方法，是圆
+	        cxt.closePath();
+	        // cxt.stroke();
+	        cxt.fill();
+	    }
+	}
 }
 /**********************************
  * @funcname drawItem
@@ -933,7 +1158,23 @@ SectorUtilForBaidu.prototype.getSectorPolygonByPoint = function(clickPoint){
         if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
 			//手机端
         }else{
-            alert("浏览器进行了放大或缩小,会引发点击地图匹配扇区不正确问题,Chrome、IE、Firfox请按Ctrl+0恢复");
+            /*var SectorUtilConfirmNoMessage = localStorage.getItem("SectorUtilConfirmNoMessage")
+            if(SectorUtilConfirmNoMessage == undefined || (SectorUtilConfirmNoMessage != true && SectorUtilConfirmNoMessage !="true")){
+                if(confirm("浏览器进行了放大或缩小,会引发点击地图匹配扇区不正确问题，Chrome、IE、Firfox请按Ctrl+0恢复。如果您已知悉，点击确定不提示该信息(清除缓存后再次提示该信息)")){
+                    localStorage.setItem("SectorUtilConfirmNoMessage",true);
+                }
+            }
+            console.log("浏览器进行了放大或缩小,会引发点击地图匹配扇区不正确问题,Chrome、IE、Firfox请按Ctrl+0恢复");*/
+            // alert("浏览器进行了放大或缩小,会引发点击地图匹配扇区不正确问题,Chrome、IE、Firfox请按Ctrl+0恢复");
+            var alertMessage = "浏览器进行了放大或缩小,会引发点击地图匹配扇区不正确问题，Chrome、IE、Firfox请按Ctrl+0恢复。";
+            if(this.modalInfo == null){
+                this.modalInfo = new modalInfo("sectorUtil","sectorUtilInfo",alertMessage,420,12,"black");
+                this.modalInfo.openModal();
+            }else{
+                this.modalInfo.content = alertMessage;
+                this.modalInfo.openModal();
+            }
+            console.log("浏览器进行了放大或缩小,会引发点击地图匹配扇区不正确问题,Chrome、IE、Firfox请按Ctrl+0恢复");
         }
 	}
 
@@ -965,25 +1206,38 @@ SectorUtilForBaidu.prototype.getSectorPolygonByPoint = function(clickPoint){
 			
 		}else{
 //			var circle = new BMap.Circle(this.polygonCanvasArr[i].point,radiusL);
-			var circlePoint = this.polygonCanvasArr[i].point;
-			if(BMapLib.GeoUtils.isPointInRect(circlePoint, bounds)){
-				var radiusL = 15;
-				if(this.polygonCanvasArr[i].bandLevel==1){
-					radiusL = 18;
-				}else if(this.polygonCanvasArr[i].bandLevel==3){
-					radiusL = 12;
-				}else if(this.polygonCanvasArr[i].bandLevel==4){
-					radiusL = 8;
+			if(this.polygonCanvasArr[i].decide==undefined){
+				var circlePoint = this.polygonCanvasArr[i].point;
+				if(BMapLib.GeoUtils.isPointInRect(circlePoint, bounds)){
+					var radiusL = 15;
+					if(this.polygonCanvasArr[i].bandLevel==1){
+						radiusL = 18;
+					}else if(this.polygonCanvasArr[i].bandLevel==3){
+						radiusL = 12;
+					}else if(this.polygonCanvasArr[i].bandLevel==4){
+						radiusL = 8;
+					}
+					var distance = BMapLib.GeoUtils.getDistance(clickPoint,circlePoint);
+					if(distance <= radiusL){
+						var clickP = this.polygonCanvasArr[i];
+						clickPolygon.push(clickP);
+						clickP = null;
+					}
 				}
-				var distance = BMapLib.GeoUtils.getDistance(clickPoint,circlePoint);
-				if(distance <= radiusL){
-					var clickP = this.polygonCanvasArr[i];
-					clickPolygon.push(clickP);
-					clickP = null;
+				
+				circlePoint = null;
+			}else{
+				var circlePoint = this.polygonCanvasArr[i].point;
+				if(BMapLib.GeoUtils.isPointInRect(circlePoint, bounds)){
+					var ciclePixel = this.map.pointToPixel(circlePoint);//圆心的像素位置
+					var clickPixel = this.map.pointToPixel(clickPoint);//点击位置的像素位置
+					//如果两个点的距离小于设置的圆半径则认为点击点在圆内
+					var twoPixelDistince = Math.sqrt((ciclePixel.x-clickPixel.x)*(ciclePixel.x-clickPixel.x)+(ciclePixel.y-clickPixel.y)*(ciclePixel.y-clickPixel.y));//计算半径
+					if(twoPixelDistince<=this.polygonCanvasArr[i].radius){
+						clickPolygon.push(this.polygonCanvasArr[i]);
+					}
 				}
 			}
-			
-			circlePoint = null;
 		}
 	}
 	if(clickPolygon.length>1){
@@ -1080,12 +1334,13 @@ SectorUtilForBaidu.prototype.MapClickEvent = function(e,thisObject){
 				var functionList = [thisObject.ClickSectorInfo];
 				progressbarTwo.submitSql(sqlList, functionList ,[3] , [[thisObject,clickPolygon,clickPoint]]);
 			}else{//查询2/3G基站信息
-//				SECTOR_ID*1000000+BSC_ID*100000+CELL_ID
+//				base_statn_id*100000+SECTOR_ID*10000+BSC_ID
 				for(var i=0;i<clickPolygon.length;i++){
 					if(i<clickPolygon.length-1){
-						bstStr += clickPolygon[i].sector_id*1000000+clickPolygon[i].bsc_id*100000+clickPolygon[i].cell_id+",";
+						// base_statn_id*100000+SECTOR_ID*10000+BSC_ID
+						bstStr += clickPolygon[i].statn_id*100000+clickPolygon[i].sector_id*10000+clickPolygon[i].bsc_id+",";
 					}else{
-						bstStr += clickPolygon[i].sector_id*1000000+clickPolygon[i].bsc_id*100000+clickPolygon[i].cell_id;
+						bstStr += clickPolygon[i].statn_id*100000+clickPolygon[i].sector_id*10000+clickPolygon[i].bsc_id;
 					}
 					
 				}
@@ -1383,100 +1638,234 @@ SectorUtilForBaidu.prototype.queryByTemplateForScope = function (){
 	var tempList = [];
 	var nettype = "";
 	var band = null;
-	if(this.selectNetType == '4G' || this.selectNetType == null){
-		nettype = "NETTYPE: and nettype = '4G'";
-		if(this.band==null){
-			band = "BAND:"; 	
-		}else{
-			if(this.band.indexOf(",")>-1){
-				var band_new = this.band.replace(/\,/g,"','");
-				band = "BAND: and band in ('"+band_new+"')";
-			}else{
-				band = "BAND: and band = '"+this.band+"'";
-			}
-			
-			
-		}
-		tempList.push(band);
-	}else{
-		list1[0] = "SectorUtilForBaidu_02_querySector_ByScope_OnlyDrawField";
-		nettype = "NETTYPE: and nettype <> '4G'";
-	}
-	tempList.push(nettype);
-	// list1.push(band);
-	var timepara = "DAY:";
-	if(this.useSelectTimeQuerySector){
-		timepara = "DAY:"+ this.selectTime;
-	}else{
-		timepara = "DAY:(select max(day) from noce.dim_sector)";
-	}
-	tempList.push(timepara);
-	
-	if(this.selectCity==null){
-		tempList.push("CITY:");
-	}else{
-        if(this.cityString.indexOf(','+this.selectCity+',')>0){
-            this.selectCity = this.cityForId[this.selectCity];
+
+	if(this.queryOtherTable){
+        list1[0]= "SectorUtilForBaidu_01_querySector_ByScope_OnlyDrawField_otherTable";
+	    //查询其他表，目前是查询3.171（全部是4G基站）
+        if(this.selectNetType == '4G' || this.selectNetType == null){
+            if(this.band==null){
+                band = "BAND:";
+            }else{
+                if(this.band.indexOf(",")>-1){
+                    var bandArr = this.band.split(',');
+                    var bandNewArr = [];
+                    // '2.6GHz' then 4 when '2.1GHz' then 3 when '1.8GHz' then 2 when '800MHz' then 1 else 0 end as band_order
+                    for(var i=0;i<bandArr.length;i++){
+                        var band_level = null;
+                        if(bandArr[i]=='2.6GHz'){
+                            band_level = 4;
+                        }else if(bandArr[i]=='2.1GHz'){
+                            band_level = 3;
+                        }else if(bandArr[i]=='1.8GHz'){
+                            band_level = 2;
+                        }else if(bandArr[i]=='800MHz'){
+                            band_level = 1;
+                        }
+                        if(band_level!=null){
+                            bandNewArr.push(band_level);
+                        }
+                    }
+                    if(bandNewArr.length>0){
+                        band = "BAND: and band_mapping in ("+bandNewArr.join(',')+")";
+                    }else{
+                        var band_new = this.band.replace(/\,/g,"','");
+                        band = "BAND: and band_mapping in ('"+band_new+"')";
+                    }
+
+                }else{
+                    var band_level = null;
+                    if(this.band=='2.6GHz'){
+                        band_level = 4;
+                    }else if(this.band=='2.1GHz'){
+                        band_level = 3;
+                    }else if(this.band=='1.8GHz'){
+                        band_level = 2;
+                    }else if(this.band=='800MHz'){
+                        band_level = 1;
+                    }
+                    if(band_level!=null){
+                        band = "BAND: and band_mapping = "+band_level;
+                    }else{
+                        band = "BAND: and band_mapping = '"+this.band+"'";
+                    }
+                }
+            }
+            tempList.push(band);
         }
-		tempList.push("CITY: and city_id="+this.selectCity);
+
+        var timepara = "DAY:";
+        if(this.useSelectTimeQuerySector){
+            timepara = "DAY:"+ this.selectTime;
+        }else{
+            timepara = "DAY:(select max(day) from noce.frt_agps_pc_enb_d)";
+        }
+        tempList.push(timepara);
+
+        if(this.selectCity==null){
+            tempList.push("CITY:");
+        }else{
+            if(this.cityString.indexOf(','+this.selectCity+',')>0){
+                this.selectCity = this.cityForId[this.selectCity];
+            }
+            tempList.push("CITY: and city_id="+this.selectCity);
 //			this.cityChe = this.selectCity;
-	}
-	if(this.selectDistrict==null){
-		tempList.push("COUNTRY:");
-	}else{
-		tempList.push("COUNTRY: and area_name = '"+this.selectDistrict+"'");
+        }
+        if(this.selectDistrict==null){
+            tempList.push("COUNTRY:");
+        }else{
+            tempList.push("COUNTRY: and COUNTRY = '"+this.selectDistrict+"'");
 //			this.districtChe = this.selectDistrict;
-	}
-	if(this.selecMarketbase!=null && this.selecMarketbase!="全营服中心"){
-		tempList.push("MKTCENTER: and mkt_center_name = '"+this.selecMarketbase+"'");
-	}else{
-		tempList.push("MKTCENTER:");
-	}
+        }
+        if(this.selecMarketbase!=null && this.selecMarketbase!="全营服中心"){
+            tempList.push("MKTCENTER: and MKTCENTER = '"+this.selecMarketbase+"'");
+        }else{
+            tempList.push("MKTCENTER:");
+        }
 
-	//增加筛选条件
-	if(this.regon==null){
-		tempList.push("REGON:");
-	}else{
-		if(this.regon.indexOf(",")>-1){
-			var regon_new = this.regon.replace(/\,/g,"','");
-			tempList.push("REGON:and REGION in ('"+regon_new+"')");
-		}else{
-			tempList.push("REGON:and REGION = '"+this.regon+"'");
-		}
+        //增加筛选条件
+        /**
+        if(this.regon==null){
+            tempList.push("REGON:");
+        }else{
+            if(this.regon.indexOf(",")>-1){
+                var regon_new = this.regon.replace(/\,/g,"','");
+                tempList.push("REGON:and REGION in ('"+regon_new+"')");
+            }else{
+                tempList.push("REGON:and REGION = '"+this.regon+"'");
+            }
 //		this.regonChe = this.regon;
-	}
+        }**/
 
-	if(this.indoor==null ){
-		tempList.push("INDOOR:");
-	}else{
-		if(this.indoor.indexOf(",")>-1){
-			var is_indoor = this.indoor.replace(/\,/g,"','");
-			tempList.push("INDOOR:and IS_INDOOR in ('"+is_indoor+"')");
-		}else{
-			tempList.push("INDOOR:and IS_INDOOR = '"+this.indoor+"'");
-		}
+        if(this.indoor==null ){
+            tempList.push("INDOOR:");
+        }else{
+            if(this.indoor.indexOf(",")>-1){
+                var is_indoor = this.indoor.replace(/\,/g,"','");
+                tempList.push("INDOOR:and IS_INDOOR in ('"+is_indoor+"')");
+            }else{
+                tempList.push("INDOOR:and IS_INDOOR = '"+this.indoor+"'");
+            }
 //		this.indoorChe = this.indoor;
-	}
+        }
 
-	if(this.factory==null){
-		tempList.push("FACTORY:");
-	}else{
-		if(this.factory.indexOf(",")>-1){
-			var factory_new = this.factory.replace(/\,/g,"','");
-			tempList.push("FACTORY:and BS_VENDOR in ('"+factory_new+"')");
-		}else{
-			tempList.push("FACTORY:and BS_VENDOR = '"+this.factory+"'");
-		}
+        if(this.factory==null){
+            tempList.push("FACTORY:");
+        }else{
+            if(this.factory.indexOf(",")>-1){
+                var factory_new = this.factory.replace(/\,/g,"','");
+                tempList.push("FACTORY:and BS_VENDOR in ('"+factory_new+"')");
+            }else{
+                tempList.push("FACTORY:and BS_VENDOR = '"+this.factory+"'");
+            }
 //		this.factoryChe = this.factory;
-	}
-	
-	if(this.queryCondition == null){
-		tempList.push("CONDITION:");
-	}else{
-		tempList.push("CONDITION:"+this.queryCondition);
-	}
-	
-	
+        }
+
+        if(this.queryCondition == null){
+            tempList.push("CONDITION:");
+        }else{
+            tempList.push("CONDITION:"+this.queryCondition);
+        }
+
+
+    }else{
+        if(this.selectNetType == '4G' || this.selectNetType == null){
+            nettype = "NETTYPE: and nettype = '4G'";
+            if(this.band==null){
+                band = "BAND:";
+            }else{
+                if(this.band.indexOf(",")>-1){
+                    var band_new = this.band.replace(/\,/g,"','");
+                    band = "BAND: and band in ('"+band_new+"')";
+                }else{
+                    band = "BAND: and band = '"+this.band+"'";
+                }
+            }
+            tempList.push(band);
+        }else{
+            list1[0] = "SectorUtilForBaidu_02_querySector_ByScope_OnlyDrawField";
+            nettype = "NETTYPE: and nettype <> '4G'";
+        }
+        tempList.push(nettype);
+        // list1.push(band);
+        var timepara = "DAY:";
+        if(this.useSelectTimeQuerySector){
+            timepara = "DAY:"+ this.selectTime;
+        }else{
+            timepara = "DAY:(select max(day) from noce.dim_sector)";
+        }
+        tempList.push(timepara);
+
+        if(this.selectCity==null){
+            tempList.push("CITY:");
+        }else{
+            if(this.cityString.indexOf(','+this.selectCity+',')>0){
+                this.selectCity = this.cityForId[this.selectCity];
+            }
+            tempList.push("CITY: and city_id="+this.selectCity);
+//			this.cityChe = this.selectCity;
+        }
+        if(this.selectDistrict==null){
+            tempList.push("COUNTRY:");
+        }else{
+            tempList.push("COUNTRY: and area_name = '"+this.selectDistrict+"'");
+//			this.districtChe = this.selectDistrict;
+        }
+        if(this.selecMarketbase!=null && this.selecMarketbase!="全营服中心"){
+            tempList.push("MKTCENTER: and mkt_center_name = '"+this.selecMarketbase+"'");
+        }else{
+            tempList.push("MKTCENTER:");
+        }
+
+        //增加筛选条件
+        if(this.regon==null){
+            tempList.push("REGON:");
+        }else{
+            if(this.regon.indexOf(",")>-1){
+                var regon_new = this.regon.replace(/\,/g,"','");
+                tempList.push("REGON:and REGION in ('"+regon_new+"')");
+            }else{
+                tempList.push("REGON:and REGION = '"+this.regon+"'");
+            }
+//		this.regonChe = this.regon;
+        }
+
+        if(this.indoor==null ){
+            tempList.push("INDOOR:");
+        }else{
+            if(this.indoor.indexOf(",")>-1){
+                var is_indoor = this.indoor.replace(/\,/g,"','");
+                tempList.push("INDOOR:and IS_INDOOR in ('"+is_indoor+"')");
+            }else{
+                tempList.push("INDOOR:and IS_INDOOR = '"+this.indoor+"'");
+            }
+//		this.indoorChe = this.indoor;
+        }
+
+        if(this.factory==null){
+            tempList.push("FACTORY:");
+        }else{
+            if(this.factory.indexOf(",")>-1){
+                var factory_new = this.factory.replace(/\,/g,"','");
+                tempList.push("FACTORY:and BS_VENDOR in ('"+factory_new+"')");
+            }else{
+                tempList.push("FACTORY:and BS_VENDOR = '"+this.factory+"'");
+            }
+//		this.factoryChe = this.factory;
+        }
+
+        if(this.queryCondition == null){
+            tempList.push("CONDITION:");
+        }else{
+            tempList.push("CONDITION:"+this.queryCondition);
+        }
+    }
+
+    if(this.useOptionColor){
+        tempList.push('QueryField:'+this.optionColor.field+',');
+    }else{
+        tempList.push('QueryField:');
+    }
+
 	list1 = list1.concat(tempList);
 	this.ifCompleted = false;
 	progressBarSqls.push(list1);
@@ -1485,12 +1874,14 @@ SectorUtilForBaidu.prototype.queryByTemplateForScope = function (){
 	this.allDataFlag = false;
 	
 	//后台查询全量数据
-	if(!this.isBackgroundQuerying&&!this.allDataFlagIsCompleted){
+	if(!this.isBackgroundQuerying&&!this.allDataFlagIsCompleted && !this.useScopeQuery){
 		var list2 =["SectorUtilForBaidu_01_querySector_onlyDrawField"];
 		if(!(this.selectNetType == '4G' || this.selectNetType == null)){
 			list2[0] = "SectorUtilForBaidu_02_querySector_onlyDrawField";
 		}
-		
+		if(this.queryOtherTable){
+            list2[0] = "SectorUtilForBaidu_01_querySector_onlyDrawField_otherTable";
+        }
 //		var list2 =["SectorUtilForBaidu_01_querySector"];
 		list2 = list2.concat(tempList);
 		var pSqls = [list2];
@@ -1659,8 +2050,9 @@ SectorUtilForBaidu.prototype.detectZoom = function() {
 	ua = navigator.userAgent.toLowerCase();
 
 	if (window.devicePixelRatio !== undefined) {
-		ratio = window.devicePixelRatio;
-	} else if (~ua.indexOf('msie')) {
+        ratio = window.devicePixelRatio;
+    } else
+	    if (~ua.indexOf('msie')) {
 		if (screen.deviceXDPI && screen.logicalXDPI) {
 			ratio = screen.deviceXDPI / screen.logicalXDPI;
 		}

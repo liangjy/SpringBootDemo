@@ -10,13 +10,13 @@ import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.Table;
 
-public class HTableManager {
+public class HTableManagerBack {
 //    public static int HTABLE_POOL_SIZE = 100;
 	ExecutorService executor = Executors.newFixedThreadPool(10);
-    private static HTableManager instance;
+    private static HTableManagerBack instance;
     private static Connection connection;
 
-    private HTableManager(Configuration config) throws IOException {
+    private HTableManagerBack(Configuration config) throws IOException {
 //        Configuration config = HBaseConfiguration.create();
         config.set("hbase.defaults.for.version.skip", "false");
         config.setInt("hbase.client.retries.number",3);
@@ -24,9 +24,9 @@ public class HTableManager {
         connection = ConnectionFactory.createConnection(config);
     }
 
-    public static HTableManager getInstance(Configuration config) throws IOException {
+    public static HTableManagerBack getInstance(Configuration config) throws IOException {
         if (instance == null) {
-            instance = new HTableManager(config);
+            instance = new HTableManagerBack(config);
         }
         return instance;
     }
