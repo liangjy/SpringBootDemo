@@ -1,0 +1,229 @@
+/**********************************
+ * @filedesc CrossFilter工具js
+ * @author laijunbao
+ * @create 2018-10-25-0025 11:15
+ * @modifier
+ * @modify
+ ***********************************/
+
+var IntelligentTuningStatisticalExportCrossFilterUtil = {};
+
+IntelligentTuningStatisticalExportCrossFilterUtil.isFirst = true;
+
+IntelligentTuningStatisticalExportCrossFilterUtil.filterType = {
+    "create_day": "create_day",
+    "city": "city",
+}
+
+// 图表crossfilter对象
+IntelligentTuningStatisticalExportCrossFilterUtil.chartCrossfilter = null;
+
+
+
+function IntelligentTuningCrossFilter(){
+
+
+}
+
+
+
+IntelligentTuningStatisticalExportCrossFilterUtil.chartCrossfilteradapter = function(type){
+
+    var dataDimensionByCreateDay = IntelligentTuningStatisticalExportCrossFilterUtil.chartCrossfilter.dimension(function (d) {
+        return d.create_day;
+    });
+    var dataGroupByCreateDay = dataDimensionByCreateDay.group(function (createData) {
+        return createData;
+    });
+}
+
+
+/**********************************
+ * @funcname IntelligentTuningStatisticalExportCrossFilterUtil.init
+ * @funcdesc 初始化crossfilter
+ * @param data 结果集对象数组
+ * @return {datatype}
+ * @author laijunbao
+ * @create 2018-10-25-0025 14:47
+ * @modifier 
+ * @modify 
+ ***********************************/
+IntelligentTuningStatisticalExportCrossFilterUtil.init = function (data) {
+
+    IntelligentTuningStatisticalExportCrossFilterUtil.chartCrossfilter = crossfilter(data);
+
+    IntelligentTuningStatisticalExportCrossFilterUtil.handler(null,null,null,null);
+
+    IntelligentTuningStatisticalExportCrossFilterUtil.isFirst = false;
+}
+
+/**********************************
+ * @funcname IntelligentTuningStatisticalExportCrossFilterUtil.handler
+ * @funcdesc 处理数据，默认按日期拼接方案派单数、方案受理数、执行成功数、成功解决数
+ * @param
+ * @return {datatype}
+ * @author laijunbao
+ * @create 2018-10-25-0025 14:58
+ * @modifier
+ * @modify
+ ***********************************/
+IntelligentTuningStatisticalExportCrossFilterUtil.handler = function (create_day,city,country,mktcenter) {
+    try {
+        IntelligentTuningStatisticalExportCrossFilterUtil.chart1handler(create_day,city,country,mktcenter);
+        IntelligentTuningStatisticalExportCrossFilterUtil.chart2handler(create_day,city,country,mktcenter);
+
+    } catch (e) {
+        IntelligentTuningStatisticalExportCrossFilterUtil.resultByCrossfilter = [];
+        alert("crossfilter数据处理过程异常");
+        console.error(e);
+    }
+
+}
+
+/**********************************
+ * @funcname IntelligentTuningStatisticalExportCrossFilterUtil.handler
+ * @funcdesc 处理数据，默认按日期拼接方案派单数、方案受理数、执行成功数、成功解决数
+ * @param
+ * @return {datatype}
+ * @author laijunbao
+ * @create 2018-10-25-0025 14:58
+ * @modifier
+ * @modify
+ ***********************************/
+IntelligentTuningStatisticalExportCrossFilterUtil.chart1handler = function (create_day,city,country,mktcenter) {
+
+    if(!IntelligentTuningStatisticalExportCrossFilterUtil.isFirst){
+        var data = IntelligentTuningStatisticalExportCrossFilterUtil.filterHandler(create_day,city,country,mktcenter);
+
+        IntelligentTuningStatisticalExportCrossFilterUtil.chartCrossfilter = crossfilter(data);
+    }
+    var dataDimensionByCreateDay = IntelligentTuningStatisticalExportCrossFilterUtil.chartCrossfilter.dimension(function (d) {
+        return d.create_day;
+    });
+    var dataGroupByCreateDay = dataDimensionByCreateDay.group(function (createData) {
+        return createData;
+    });
+
+    IntelligentTuningStatisticalExportCrossFilterUtil.resultByCrossfilter = dataGroupByCreateDay.reduce(reduceAdd1, reduceRemove1, reduceInitial1).all();
+}
+
+/**********************************
+ * @funcname IntelligentTuningStatisticalExportCrossFilterUtil.handler
+ * @funcdesc 处理数据，默认按日期拼接方案派单数、方案受理数、执行成功数、成功解决数
+ * @param
+ * @return {datatype}
+ * @author laijunbao
+ * @create 2018-10-25-0025 14:58
+ * @modifier
+ * @modify
+ ***********************************/
+IntelligentTuningStatisticalExportCrossFilterUtil.chart2handler = function (create_day,city,country,mktcenter) {
+    IntelligentTuningStatisticalExport.chart2Xdata = [];
+
+    var dataByLastCreateDay = IntelligentTuningStatisticalExportCrossFilterUtil.filterHandler(create_day,city,country,mktcenter);
+
+    var chart2Crossfilter = crossfilter(dataByLastCreateDay);
+
+    var dataDimensionByCity = null;
+    if(city == null){
+        dataDimensionByCity = chart2Crossfilter.dimension(function (d) {
+            return d.city;
+        });
+    }
+    else{
+        dataDimensionByCity = chart2Crossfilter.dimension(function (d) {
+            return d.country;
+        });
+    }
+
+    var dataGroupByCity = dataDimensionByCity.group(function (type) {
+        return type;
+    });
+
+    IntelligentTuningStatisticalExportCrossFilterUtil.chart2resultByCrossfilter = dataGroupByCity.reduce(reduceAdd1, reduceRemove1, reduceInitial1).all();
+
+    IntelligentTuningStatisticalExport.chart2DataObjArrs = [];
+    IntelligentTuningStatisticalExportCrossFilterUtil.chart2resultByCrossfilter.forEach(function (d) {
+        IntelligentTuningStatisticalExport.chart2Xdata.push(d.key);
+        // var chart2DataObj = {};
+        // chart2DataObj['area'] = d.key;
+        // chart2DataObj['task_create_count'] = d.task_create_count;
+        // chart2DataObj['accept_count'] = d.accept_count;
+        // chart2DataObj['execute_count'] = d.execute_count;
+        // chart2DataObj['resolve_count'] = d.resolve_count;
+        // IntelligentTuningStatisticalExport.chart2DataObjArrs.push(chart2DataObj)
+    });
+
+}
+
+function reduceAdd1(p, v) {
+    p.task_create_count += v.task_create_count;
+    p.accept_count += v.accept_count;
+    p.execute_count += v.execute_count;
+    p.resolve_count += v.resolve_count;
+    return p;
+};
+
+function reduceRemove1(p, v) {
+    p.task_create_count -= v.task_create_count;
+    p.accept_count -= v.accept_count;
+    p.execute_count -= v.execute_count;
+    p.resolve_count -= v.resolve_count;
+    return p;
+};
+
+function reduceInitial1() {
+    return {task_create_count: 0, accept_count: 0, execute_count: 0, resolve_count: 0};
+};
+
+
+/**********************************
+ * @funcname IntelligentTuningStatisticalExportCrossFilterUtil.filterHandler
+ * @funcdesc 根据传入的参数，过滤图表数据
+ * @param
+ * @return {datatype}
+ * @author laijunbao
+ * @create 2018-10-29-0029 14:48
+ * @modifier
+ * @modify
+ ***********************************/
+IntelligentTuningStatisticalExportCrossFilterUtil.filterHandler = function (create_day,city,country,mktcenter) {
+    // var argumentsArr = Array.prototype.slice.apply(arguments);
+    var returnData = [];
+    if(create_day != null && city != null && country != null && mktcenter != null){
+        returnData = IntelligentTuningStatisticalExport.chartDataArr.filter(function (d) {
+            return d.create_day == create_day && d.city == city && d.country == country && d.mktcenter == mktcenter;
+        })
+    }else if(create_day != null && city != null && country != null){
+        returnData = IntelligentTuningStatisticalExport.chartDataArr.filter(function (d) {
+            return d.create_day == create_day && d.city == city && d.country == country;
+        })
+    }else if(create_day != null && city){
+        returnData = IntelligentTuningStatisticalExport.chartDataArr.filter(function (d) {
+            return d.create_day == create_day && d.city == city;
+        })
+    }else if(create_day != null){
+        returnData = IntelligentTuningStatisticalExport.chartDataArr.filter(function (d) {
+            return d.create_day == create_day;
+        })
+    }else if(city != null){
+        returnData = IntelligentTuningStatisticalExport.chartDataArr.filter(function (d) {
+            return d.city == city;
+        })
+    }else if(country != null){
+        returnData = IntelligentTuningStatisticalExport.chartDataArr.filter(function (d) {
+            return d.country == country;
+        })
+    }else if(mktcenter != null){
+        returnData = IntelligentTuningStatisticalExport.chartDataArr.filter(function (d) {
+            return d.mktcenter == mktcenter;
+        })
+    }
+    else{
+        returnData = IntelligentTuningStatisticalExport.chartDataArr.filter(function (d) {
+            return d.create_day == IntelligentTuningStatisticalExport.vm.queryDayFormat;
+        })
+    }
+
+    return returnData;
+}

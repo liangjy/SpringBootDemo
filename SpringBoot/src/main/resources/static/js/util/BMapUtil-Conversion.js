@@ -56,11 +56,11 @@ bmapConversion.prototype.clickMap = function clickMap(e){
 		
 		var obj = [];
 		
-		var pointStr = parseFloat(point.lat).toFixed(6)+","+parseFloat(point.lng).toFixed(6);
+		var pointStr = parseFloat(point.lng).toFixed(6)+","+parseFloat(point.lat).toFixed(6);
 		var baidu = {key:"百度坐标",val:pointStr}
 		
 		var gpsPoint = GPSUtil.bd09_To_gps84(point.lat,point.lng);
-		var gpsPointStr = gpsPoint[0]+","+gpsPoint[1];
+		var gpsPointStr = gpsPoint[1]+","+gpsPoint[0];
 		var gps = {key:"GPS坐标",val:gpsPointStr}
 		obj.push(baidu);
 		obj.push(gps);

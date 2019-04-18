@@ -13,7 +13,7 @@ public class UserController {
         return "user";
     }
 
-    @RequestMapping("/gotoHome")
+    @RequestMapping("/gotoHomeV3")
     public String gotoHome(){
         return "IntelligentRoadTestV3/IntelligentRoadTestAnalysisV3";
     }
@@ -21,5 +21,10 @@ public class UserController {
     @RequestMapping("/gotoHomeV5")
     public String gotoHomeV5(){
         return "IntelligentRoadTestV5/IntelligentRoadTestAnalysisV5";
+    }
+
+    @RequestMapping("/gotoHomeI")
+    public String gotoHomeIntelligentTuning(){
+        return "IntelligentTuning/IntelligentTuning";
     }
 }

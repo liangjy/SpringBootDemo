@@ -1,11 +1,11 @@
 .btn-loadMore{
-	background: #3699E6;
+    background: #3699E6;
 }
 .btn-expData{
-	background: #00B0A2;
+    background: #00B0A2;
 }
 .btn-loadMore img{
-	margin: -3px 2px 0 0;
+    margin: -3px 2px 0 0;
 }
 .tbli{
     text-align: center;
@@ -20,16 +20,16 @@
     padding: 0 10px;
 }
 .loadbtn{
-	height: 30px;
-	line-height: 26px;
-	text-align: center;
-	color: #fff;
-	display: inline-block;
-	border: 0;
-	cursor: pointer;
-	border-radius: 5px;
-	padding: 0px 5px 0px 22px;
-	box-sizing: border-box;
+    height: 30px;
+    line-height: 26px;
+    text-align: center;
+    color: #fff;
+    display: inline-block;
+    border: 0;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 0px 5px 0px 22px;
+    box-sizing: border-box;
 }
 .pcbox_nr .pmore_1 .loadbtn {
     background: #3699E6 url(../../css/images/loadMore.png) no-repeat left;
@@ -42,10 +42,10 @@
     padding: 2px 5px 2px 25px;
 }
 .pcbox_nr .pmore_3 .loadbtn  {
-	background-color: #f0f0f0 ;
+    background-color: #f0f0f0 ;
 }
 .pcbox_nr .loadbtn:hover{
-	background-color: #0072ba;
+    background-color: #0072ba;
 }
 
 .pcbox_nr .pbt {
@@ -55,7 +55,7 @@
 .pcbox_nr .pbt .pbt_btn {
     width: 80px;
     height: 30px;
-	line-height: 30px;
+    line-height: 30px;
     text-align: center;
     color: #fff;
     display: inline-block;
@@ -72,46 +72,46 @@
 .nrp_up{ width:20px; height:16px; display:inline-block;}
 
 .noBottom{
-	border-left: 1px solid #dddddd;
-	border-right: 1px solid #dddddd;
+    border-left: 1px solid #dddddd;
+    border-right: 1px solid #dddddd;
 }
 
 .table tr th {
-  border-bottom: 1px solid #dddddd;
-  border-right: 1px solid #dddddd;
-  text-align: center;
-  font-weight: normal;
-  height: 20px;
-  
+    border-bottom: 1px solid #dddddd;
+    border-right: 1px solid #dddddd;
+    text-align: center;
+    font-weight: normal;
+    height: 20px;
+
 }
 .table tr td {
-  padding: 10px 6px;
-  border-left: 1px solid #dddddd;
-  white-space: nowrap;
+    padding: 10px 6px;
+    border-left: 1px solid #dddddd;
+    white-space: nowrap;
 }
 .table thead tr {
-  background: #E1E7EB !important;
+    background: #E1E7EB !important;
 }
 .table thead tr:first-child td{
-  border-bottom: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
 }
 .table thead tr:first-child td.noBottom{
-  border-bottom: 0 !important;; 
+    border-bottom: 0 !important;;
 }
 .table thead tr td.nowrap {
-  white-space: nowrap;
+    white-space: nowrap;
 }
 .table tr:nth-child(even) {
-  background: #F5F7F8;
+    background: #F5F7F8;
 }
 .table tbody tr:hover{
-  background: #E8F4FE;
+    background: #E8F4FE;
 }
 .table tbody tr.hoverTr{
-	background: #E8F4FE !important;
+    background: #E8F4FE !important;
 }
 .table tbody tr.loadTr{
-	background: #cdd7e0 !important;
+    background: #cdd7e0 !important;
 }
 .fixedDiv{
     float: left;
@@ -131,49 +131,57 @@
     margin-top: 0;
 }
 .table th,.table tr td{
-	padding: 0px !important; 
-	border: 0 !important;
-	border-left: 1px solid #dddddd !important;
+    padding: 0px !important;
+    border: 0 !important;
+    border-left: 1px solid #dddddd !important;
 }
 .alltd{
-	padding: 0px 5px;
-    height: 40px;
-    line-height: 40px;
+    padding: 0px 5px;
+    height: 25px;
+    line-height: 25px;
     border-top: 1px solid #ddd;
     z-index: 99;
+}
+.table thead tr:first-child .alltd{
+    height: 25px;
+    line-height: 25px;
+}
+.table thead .alltd{
+    height: 35px;
+    line-height: 35px;
 }
 .table-bordered {
     border-top: 0;
 }
 .scrollDiv .table tr th:first-child,.scrollDiv .table tr td:first-child{
-	border-left: 0px !important;
+    border-left: 0px !important;
 }
 .nr_paixu.down .alltd{
     background: #C6C6C6 !important;
 }
 .btnGroup{
-	text-align: center;
-	clear: both;
-	padding: 10px 0;
-	box-sizing: border-box;
+    text-align: center;
+    clear: both;
+    padding: 10px 0;
+    box-sizing: border-box;
 }
 .btnDiv{
-	display: inline-block;
-	margin: 0 10px;
+    display: inline-block;
+    margin: 0 10px;
 }
 .positionDiv{
-	position: relative;
-	height: 100%;
-	max-height: 100%;
-	overflow: auto;
+    position: relative;
+    height: 100%;
+    max-height: 100%;
+    overflow: auto;
 }
 .tableDivClass{
-	position: relative;
-	height: 100%;
+    position: relative;
+    height: 100%;
 }
 
 .tableWrap{
-	padding: 0;
+    padding: 0;
     margin-top: 0;
 }
 .normalTable{
@@ -185,13 +193,13 @@
 }
 
 
-/*定义滚动条高宽为0 适应某些电脑显示滚动条的问题*/
+/*å®šä¹‰æ»šåŠ¨æ¡é«˜å®½ä¸º0 é€‚åº”æŸäº›ç”µè„‘æ˜¾ç¤ºæ»šåŠ¨æ¡çš„é—®é¢˜*/
 .fixedDiv::-webkit-scrollbar {
-	width: 0px;
-	height: 0px;
+    width: 0px;
+    height: 0px;
 }
 .myPage{
-	height: 25px;
+    height: 25px;
     padding-top: 10px;
     clear: both;
 }
@@ -199,34 +207,34 @@
     float: left;
 }
 .page-info{
-	float: right;
+    float: right;
 }
 .page >div{
-	display: inline-block;
+    display: inline-block;
 }
 .page select,.page input[type=text]{
-	height: 24px !important;
-	margin: 0;
+    height: 24px !important;
+    margin: 0;
 }
 .page .page-page-list select{
-	width: 60px;
-	border: 1px solid #ECECEC;
+    width: 60px;
+    border: 1px solid #ECECEC;
 }
 .page .page-num{
-	width: 40px !important;
-	border: 1px solid #ECECEC;
-	height: 20px;
-	padding-left: 5px;
+    width: 40px !important;
+    border: 1px solid #ECECEC;
+    height: 20px;
+    padding-left: 5px;
 }
 .page .page-pagination{
-	border: 1px solid #ccc;
-	border-top: 0;
-	border-bottom: 0;
+    border: 1px solid #ccc;
+    border-top: 0;
+    border-bottom: 0;
     padding: 3px 10px;
     margin: 0 5px;
 }
 .page-load img{
-	vertical-align: top;
+    vertical-align: top;
 }
 .page span,.page-info span{
     background: none;
@@ -236,33 +244,33 @@
     font-size: 14px;
 }
 .page a{
-	width:14px;
-	height: 14px;
-	display:inline-block;
-	vertical-align: text-top;
+    width:14px;
+    height: 14px;
+    display:inline-block;
+    vertical-align: text-top;
 }
 .first-disabled{
-	background: url(../IntelligentRoadTest/images/111_03.png);
+    background: url(../IntelligentRoadTest/images/111_03.png);
 }
 .prev-disabled{
-	background: url(../IntelligentRoadTest/images/111_05.png);
+    background: url(../IntelligentRoadTest/images/111_05.png);
 }
 .first-active{
-	background: url(../IntelligentRoadTest/images/111_09_1.png);
+    background: url(../IntelligentRoadTest/images/111_09_1.png);
 }
 .prev-active{
-	background: url(../IntelligentRoadTest/images/111_07_1.png);
+    background: url(../IntelligentRoadTest/images/111_07_1.png);
 }
 .next-active{
-	background: url(../IntelligentRoadTest/images/111_07.png);
+    background: url(../IntelligentRoadTest/images/111_07.png);
 }
 .last-active{
-	background: url(../IntelligentRoadTest/images/111_09.png);
+    background: url(../IntelligentRoadTest/images/111_09.png);
 }
 .next-disabled{
-	background: url(../IntelligentRoadTest/images/111_05_1.png);
+    background: url(../IntelligentRoadTest/images/111_05_1.png);
 }
 .last-disabled{
-	background: url(../IntelligentRoadTest/images/111_03_1.png);
+    background: url(../IntelligentRoadTest/images/111_03_1.png);
 }
 

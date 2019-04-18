@@ -574,9 +574,17 @@ sectorStation.prototype.sectorLayer=function(resultData){
 					this.overlayEventListener(sectorPolygon);
 				}else{
 					sectorPolygon.bmap=this.map;
-					sectorPolygon.addEventListener("click",this.circleclick);
-					sectorPolygon.addEventListener("mousemove",this.circlemouse);
-				}					
+
+					if(this.senceName=='用户画像'){
+						if(singlePerception.printBaseFirst){
+                            sectorPolygon.addEventListener("mousemove",this.circleclick);
+						}else{
+                            sectorPolygon.addEventListener("mousemove",this.circlemouse);
+                        }
+					}else{
+                        sectorPolygon.addEventListener("click",this.circleclick);
+					}
+				}
 				this.map.addOverlay(sectorPolygon);
 				this.RSRPSectorChe.push(sectorPolygon);
 				var circle=new BMap.Circle(point,3,{fillColor:this.circleColor,strokeWeight:1});
@@ -607,11 +615,20 @@ sectorStation.prototype.sectorLayer=function(resultData){
 				}else{
 					circle.bmap=this.map;
 					circle2.bmap=this.map;
-					circle.addEventListener("click", this.circleclick);
-                    circle.addEventListener("mousemove",this.circlemouse);
-					circle2.addEventListener('click', this.circleclick);
-                    circle2.addEventListener("mousemove",this.circlemouse);
-				}			
+
+                    if(this.senceName=='用户画像'){
+                        if(singlePerception.printBaseFirst){
+                            circle.addEventListener("mousemove",this.circleclick);
+                            circle2.addEventListener("mousemove",this.circleclick);
+						}else{
+                            circle.addEventListener("mousemove",this.circlemouse);
+                            circle2.addEventListener("mousemove",this.circlemouse);
+						}
+                    }else{
+                        circle.addEventListener("click", this.circleclick);
+                        circle2.addEventListener('click', this.circleclick);
+					}
+				}
 				this.RSRPStationChe.push(circle);
 				this.map.addOverlay(circle);
 				this.RSRPStationChe.push(circle2);
@@ -641,6 +658,7 @@ sectorStation.prototype.circlemouse=function(e){
     	title:title
     };
 	var statn_id=p.statn_id;
+	var statn_name=p.statn_name;
 	var bac_id=p.bsc_id;
 	var city_name=p.city_name;
 	var cell_id=p.cell_id;
@@ -649,7 +667,7 @@ sectorStation.prototype.circlemouse=function(e){
 	if(singlePerception.basestaStatus.length>0&&singlePerception.IsMouseOver){
 		for(var i=0;i<singlePerception.basestaStatus.length;i++){
 			//如果在数组里查找到相等的基站id
-			if(statn_id==singlePerception.basestaStatus[i].base_statn_id){
+			if(statn_id==singlePerception.basestaStatus[i].base_statn_id&&p.faultType==singlePerception.basestaStatus[i].faultType){
 				var obj=singlePerception.basestaStatus[i];
 				var status='';
 				if(obj.fault==1){
@@ -671,7 +689,7 @@ sectorStation.prototype.circlemouse=function(e){
                 if(obj.cleartime!=null||obj.cleartime!=undefined){
 					cleartime=obj.cleartime.Format("yyyyMMdd HH:mm:ss");
 				}
-				text="基站名称:"+obj.base_statn_id+"<br/>距离（米）:"+obj.distance+"<br/>故障状态:"+status+"<br/>故障发生时间:"+dateString+"<br/>故障派单时间:"+dreptime+"<br/>电子运维单号:"+obj.ifaultticketid+"<br/>故障恢复时间:"+cleartime;
+				text="基站名称:"+obj.base_statn_name+"<br/>距离（米）:"+obj.distance+"<br/>故障状态:"+status+"<br/>故障发生时间:"+dateString+"<br/>故障派单时间:"+dreptime+"<br/>电子运维单号:"+obj.ifaultticketid+"<br/>故障恢复时间:"+cleartime;
             	break;
 			}
 		}
@@ -679,13 +697,19 @@ sectorStation.prototype.circlemouse=function(e){
             var tempPoint = new BMap.Point(p.lng, p.lat);
             var centerPoint =new BMap.Point(singlePerception.centerPointCache["lon"], singlePerception.centerPointCache["lat"]);
             var  distance  =  singlePerception.complainAreaMap.getDistance(centerPoint, tempPoint).toFixed(2);
-            text="基站名称:"+statn_id+"<br/>距离（米）:"+distance+"<br/>故障状态:无故障<br/>故障发生时间:"+""+"<br/>故障派单时间:"+""+"<br/>电子运维单号:"+""+"<br/>故障恢复时间:";
+            text="基站名称:"+statn_name+"<br/>距离（米）:"+distance+"<br/>故障状态:无故障<br/>故障发生时间:"+""+"<br/>故障派单时间:"+""+"<br/>电子运维单号:"+""+"<br/>故障恢复时间:";
 		}
         infoWindow = new BMap.InfoWindow(text,opts);// 创建信息窗口对象
         this.bmap.openInfoWindow(infoWindow,p); //开启信息窗口
 	}else{
 		//不显示弹框
-		return;
+		// return;
+        var tempPoint = new BMap.Point(p.lng, p.lat);
+        var centerPoint =new BMap.Point(singlePerception.centerPointCache["lon"], singlePerception.centerPointCache["lat"]);
+        var  distance  =  singlePerception.complainAreaMap.getDistance(centerPoint, tempPoint).toFixed(2);
+        text="基站名称:"+statn_name+"<br/>距离（米）:"+distance+"<br/>故障状态:无故障<br/>故障发生时间:"+""+"<br/>故障派单时间:"+""+"<br/>电子运维单号:"+""+"<br/>故障恢复时间:";
+        infoWindow = new BMap.InfoWindow(text,opts);// 创建信息窗口对象
+        this.bmap.openInfoWindow(infoWindow,p); //开启信息窗口
 	}
 }
 
@@ -788,7 +812,9 @@ sectorStation.prototype.circleclick=function(e){
             }
         }
 
-        this.bmap.openInfoWindow(infoWindow,p); //开启信息窗口
+        setTimeout(function () {
+            this.bmap.openInfoWindow(infoWindow,p); //开启信息窗口
+        }.bind(this),1000)
     }
 }
 
@@ -976,9 +1002,9 @@ sectorStation.prototype.sectorShow=function(data){
 	var sectorChePoint = null;
 	var circleChePoint = null;
 	var stationChePoint = null;
-	if(that.alreadySector && that.NetTypeChe==that.selectNetType && that.selectCity==that.cityChe &&
-		that.selectDistrict==that.districtChe && that.regonChe==that.regon && that.bandChe==that.band &&
-		that.factoryChe==that.factory && that.indoorChe==that.indoor && that.selectTime == that.selectTimeOld && !that.isClickSearch &&
+	if(that.alreadySector &&　that.NetTypeChe==that.selectNetType　 && that.selectCity==that.cityChe &&
+		that.selectDistrict==that.districtChe &&　that.regonChe==that.regon &&　that.bandChe==that.band &&　
+		that.factoryChe==that.factory &&　that.indoorChe==that.indoor &&　that.selectTime == that.selectTimeOld && !that.isClickSearch &&
 		((that.selecMarketbase!= "全营服中心" && that.selecMarketbase!=null &&
 		that.lastTimeSelecMarketbase==that.selecMarketbase) || PointswAndne)
 	){//选了营服		

@@ -1,5 +1,3 @@
-var BMapUtil = {};
-
 
 //入口方法，初始化变量
 function measureDistance(bMapObj , finlishFunction){
@@ -55,16 +53,16 @@ measureDistance.prototype.clickMap = function clickMap(e){
 	var point = e.point;
 	if(that.isUseTool){
 		if(that.startPoint!=null){
-				that.endPoint = point;
-				var distince1 =parseInt( this.getDistance(that.startPoint, that.endPoint));
-				that.distince = that.distince + distince1;				
+		    that.endPoint = point;
+		    var distince1 =parseInt( this.getDistance(that.startPoint, that.endPoint));
+		    that.distince = that.distince + distince1;
 			var startXY = this.pointToPixel(that.startPoint);
 					
 			var endXY = this.pointToPixel(that.endPoint);//两个点位于第二象限，需要进行坐标轴转换
 			var pe = new BMap.Pixel(endXY.x-startXY.x,endXY.y-startXY.y);
-			
+
 			//原地点击，调用鼠标双击事件
-			  if(pe.x==0&&pe.y==0){
+			  if(distince1 == 0 || (pe.x==0&&pe.y==0)){
 				  //console.log(that.prototype);
 				  measureDistance.prototype.dblclickMap(e);
 				  return;

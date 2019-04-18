@@ -1,0 +1,1735 @@
+textarea{
+    width: 100%;
+    height: 100%;
+    resize:none;
+    box-sizing: border-box;
+}
+input[type='button']{
+    padding: 0;
+    border: 0;
+}
+.pc_listb{
+    width: 100%;
+    height: 100%;
+}
+.main-content {
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.contentWrap {
+    width: 420px;
+    /* height: 100%; */
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+.mapDiv {
+    border: 1px solid #e6eaeb;
+    box-shadow: 0px 0px 8px #d9d7d6;
+    box-sizing: border-box;
+    position: relative;
+    height: 100%;
+}
+.mapWrap,.spiltScreenWrap{
+    width: 100%;
+    height: 100%;
+}
+.baiduMapDiv,.baiduMap{
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.spiltScreen{
+    width: 100%;
+    height: 50%;
+    position:  relative;
+    border-top: 1px solid #3285ff;
+}
+.spiltScreenMap{
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+#spiltScreen1{
+    border-bottom: 1px solid #1b91ff;
+}
+.topDiv {
+    width: 100%;
+    height: 0;
+    position: absolute;
+    top: 10px;
+    text-align: center;
+    box-sizing: border-box;
+}
+.searchDiv {
+    width: 100%;
+    position: absolute;
+    display: inline-block;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 10px #fff;
+    box-sizing:  border-box;
+    padding: 6px;
+}
+.searchBox {
+    position: relative;
+    width: 100%;
+    /* height: 50px; */
+    /* padding: 6px; */
+    /* box-shadow: 0 0 20px #fff; */
+    box-sizing: border-box;
+}
+
+.searchBox .textBox {
+    width: 348px;
+    height: 36px;
+    margin: 0px -4px 0 0;
+    border: 0;
+    padding-left: 60px;
+    border-radius: 0;
+    outline: 0;
+    box-sizing: border-box;
+}
+
+.btn-boxSelection {
+    position: absolute;
+    display: inline-block;
+    width: 62px;
+    height: 36px;
+    padding: 0 5px;
+    border-radius: 0;
+    background: #fff;
+    border-left: 1px solid #ddd;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.btn-search img {
+    margin-top: -3px;
+    width: 35px;
+}
+
+.clearText,.search_loading {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 90px;
+    border-right: 1px solid #ddd;
+    height: 28px;
+    padding-right: 6px;
+}
+.chartTotal {
+    position: absolute;
+    top: 4px;
+    left: 300px;
+    height: 28px;
+}
+.searchBox .triangle{
+    border-color: #000 transparent transparent transparent;
+    margin: 5px 0 0 3px;
+}
+.clearText img,.search_loading img,.chartTotal img {
+    margin-top: 5px;
+}
+
+.logoImg {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 36px;
+    text-align: center;
+    padding: 5px 0px;
+    background: #EFEFEF;
+    box-sizing: border-box;
+}
+
+.logoImg img {
+    height: 25px;
+}
+.rightBar {
+    position: absolute;
+    z-index: 99;
+    top: 10px;
+    right: 70px;
+    margin-right: 10px;
+    display: inline-block;
+    height: 36px;
+}
+
+.triangle {
+    display: inline-block;
+    vertical-align: middle;
+    width: 0px;
+    height: 0px;
+    border-width: 4px 4px 0px 4px;
+    border-style: solid;
+    border-color: #fff transparent transparent transparent;
+    margin: -2px 5px 0 0;
+}
+
+.dateDiv {
+    display: inline-block;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+.rightBar > li {
+    float: left;
+    position: relative;
+    z-index: 999;
+    line-height: 36px;
+    padding: 0 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px #fff;
+}
+.rightBar > li:last-child{
+    border-right: 0;
+}
+.rightBar > li img {
+    height: 22px;
+}
+.startTime, .dateBox {
+    display: inline-block;
+    min-width: 66px;
+    height: 100%;
+    text-align: center;
+    border: 0;
+    cursor: pointer;
+    color: #fff;
+}
+
+.startTime {
+    padding-left: 18px;
+    background: transparent url(../IntelligentTuning/images/nor_calendar.png) no-repeat left;
+}
+
+.dateBox {
+    margin-left: -5px;
+}
+.panelWrap {
+    width: 420px;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    z-index: 13;
+    box-sizing: border-box;
+}
+
+.panelDiv {
+    display: none;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.rowDiv {
+    padding: 3px;
+}
+
+.rowDiv > li {
+    height: 80px;
+    padding: 3px;
+    float: left;
+    width: 33.33%;
+    box-sizing: border-box;
+}
+.rowDiv > li.bg-col4{
+    width: 25%;
+}
+.rowDiv > li > a {
+    display: block;
+    height: 100%;
+    background-color: #666;
+    text-align: center;
+}
+.rowDiv > li > a:hover {
+    background-color: #444;
+}
+.rowDiv > li img {
+    height: 30px;
+    padding: 10px 0;
+}
+
+.rowDiv > li span {
+    color: #fff;
+    display: block;
+}
+.listInfo {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    z-index: 11;
+    width: 100%;
+    height: 100%;
+    display: none;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+.listWrapInfo{
+    width: 100%;
+    height: 100%;
+}
+.listDiv {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    box-sizing: border-box;
+}
+.logoList{
+    position: absolute;
+    left: 0;
+    top: 10px;
+    z-index: 2;
+    width:  50px;
+    height: 100%;
+    padding: 10px 5px;
+    box-sizing:  border-box;
+    background-color: #666;
+    overflow:  hidden;
+    box-shadow: 0 0 10px #fff;
+}
+.showLogoName{
+    text-align: center;
+    cursor:  pointer;
+    background-color: #444;
+    box-sizing:  border-box;
+    border-radius: 4px;
+}
+.logoList li{
+    height: 35px;
+    line-height: 35px;
+    margin: 20px 0px;
+    padding: 0 5px;
+    color: #fff;
+    box-sizing:  border-box;
+    cursor: pointer;
+    position: relative;
+    white-space:  nowrap;
+    background-color: #444;
+    border-radius: 4px;
+    /* overflow:  hidden; */
+}
+.logoList li.active,.logoList li:hover{
+    background-color: #088eff;
+}
+.logoList li.active:before,.logoList li:hover:before{
+    /*content: '';
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    right: -5px;
+    top: 8px;
+    border-width: 5px 0px 5px 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent #088eff;*/
+}
+.logoList li img{
+    height: 20px;
+    padding: 2px 5px;
+}
+@font-face {
+    font-family: 'icomoon';
+    src:  url('../IntelligentTuning/fonts/icomoon.eot?z5bvyg');
+    src:  url('../IntelligentTuning/fonts/icomoon.eot?z5bvyg#iefix') format('embedded-opentype'),
+    url('../IntelligentTuning/fonts/icomoon.ttf?z5bvyg') format('truetype'),
+    url('../IntelligentTuning/fonts/icomoon.woff?z5bvyg') format('woff'),
+    url('../IntelligentTuning/fonts/icomoon.svg?z5bvyg#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon_"], [class*=" icon_"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    padding: 2px 5px;
+    vertical-align: middle;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon_img2:before {
+    content: "\e904";
+    color: #d4237a;
+}
+.icon_img3:before {
+    content: "\e900";
+    color: #f865e3;
+}
+.icon_img4:before {
+    content: "\e903";
+    color: #d81e06;
+}
+.icon_img5:before {
+    content: "\e901";
+    color: #2aa515;
+}
+.icon_img6:before {
+    content: "\e902";
+    color: #1c7fc4;
+}
+.icon_img7:before {
+    content: "\e905";
+    color: #4df1e3;
+}
+.logoList li.active i:before,.logoList li:hover i:before{
+    color: #fff;
+}
+.logoList li span{
+    margin-left: 6px;
+}
+.listContent{
+    width: 100%;
+    float: left;
+    height: 100%;
+    padding-top: 35px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.listWrap,.listDivWrap {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    overflow-x: hidden;
+    box-sizing:  border-box;
+}
+.listWrap{
+    position:  relative;
+    width: 420px;
+    padding: 10px 10px 10px 60px;
+    background-color: rgba(0, 0, 0, 0.3);
+    color:  #fff;
+    overflow:  hidden;
+}
+.backList,.backListDiv {
+    width: 60px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    background-color: #fff;
+    cursor: pointer;
+    position:  absolute;
+    top: -54px;
+    left: 420px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.backList:hover,.backListDiv:hover {
+    color: #F75A5A;
+}
+.listTopUl {
+    width: 100%;
+    position: relative;
+    border-bottom: 1px solid #ddd;
+    /*border-left: 1px solid #ddd;*/
+    margin-top: -35px;
+    background-color: #666;
+}
+
+.listDiv .listTopUl > li {
+    width: 30%;
+    float: left;
+    border: 0;
+    cursor: pointer;
+    text-align: center;
+    margin: 0;
+    position: static;
+    padding: 8px 0;
+    box-sizing: border-box;
+}
+#showMetroList .showListWrap .listTopUl > li{
+    width: 50%;
+}
+
+.listDiv .listTopUl > #poorAreaSelectCity,.listDiv .listTopUl #sectorCitySelect,.listDiv .listTopUl > li:first-child {
+    width: 40%;
+}
+
+.listDiv .listTopUl .select-name {
+    border-right: 1px solid #ddd;
+}
+.listDiv .listTopUl > li:nth-child(2) .select-name > span:first-child,.listDiv .listTopUl > li:nth-child(3) .select-name span:first-child{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    width: 75px;
+    vertical-align: middle;
+}
+.listDiv .listTopUl > li:last-child .select-name {
+    border-right: 0;
+}
+
+.listDiv .listTopUl .triangle {
+    margin-left: 5px;
+}
+
+.select-info {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 38px;
+    z-index: 10;
+    width: 100%;
+    color: #000;
+    background-color: #fff;
+    box-shadow: 0px 0px 3px 1px #d9d7d6;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.classify .select-info{
+    padding: 0 10px;
+}
+
+.threeLevel {
+    background: #fff;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    /* padding-bottom: 60px; */
+    position: relative;
+    width: 100%;
+    height: 350px;
+    padding-left: 6px;
+    box-sizing: border-box;
+    text-align:  left;
+}
+
+.threeLevel li {
+    line-height: 28px;
+    padding: 0 5px;
+    box-sizing: border-box;
+    /*text-align:  center;*/
+}
+.threeLevel > li {
+    display: inline-block;
+    line-height: 30px;
+    padding: 0 6px !important;
+    border: 0;
+}
+
+.threeLevel li a {
+    text-decoration: none;
+    color: #777;
+}
+.threeLevel ul.districtName > li{
+    position: relative;
+}
+.threeLevel ul.districtName > li > a{
+    background: url(../IntelligentRoadTest/images/selectCity.png) no-repeat right;
+    padding-right: 30px !important;
+    margin: 0 !important;
+    max-width: 100%;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.threeLevel ul.districtName > li > a:hover,.threeLevel .districtName li > .selected {
+    color: #fff;
+    background-color: #71cbf2;
+}
+
+.threeLevel .districtName > li > a {
+    display: inline-block;
+    padding-left: 6px;
+    width: 102px;
+}
+
+.threeLevel .selectedCity > a,.threeLevel > li > a:hover,.yfcenterName > li > a:hover,.threeLevel .yfcenterName .selected a {
+    color: #71cbf2
+}
+
+.threeLevel ul.districtName {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    width: 98%;
+    height: 240px;
+    overflow: auto;
+    overflow-x: hidden;
+    padding-top: 10px;
+    border-top: 1px dashed #ddd;
+    background-color: #fff;
+    display: none;
+}
+.threeLevel ul.yfcenterName{
+    position: absolute;
+    top: 0;
+    left: 110px;
+    width: 68%;
+    height: auto;
+    padding: 0;
+    border-top: 0;
+    background-color: #fff;
+    display: none;
+    white-space: normal;
+    z-index: 999;
+    overflow-x: hidden;
+}
+
+.threeLevel > ul li {
+    display: inline-block;
+    padding: 0 8px !important;
+    border-bottom: 0;
+}
+.threeLevel .yfcenterName li{
+    display: inline-block;
+}
+.listDiv .listTopUl > li.recomendSort,.listDiv .listTopUl > li.classifyWrap{
+    position: relative;
+}
+.listDiv .listTopUl > li.classifyWrap .select-info{
+    width: 100%;
+    min-width: auto;
+    white-space: nowrap;
+    left: auto;
+    top: 35px;
+    padding: 0px;
+    margin: 0;
+}
+.recomendSort .select-info{
+    width: 100%;
+    min-width: auto;
+    white-space: nowrap;
+    left: auto;
+    top: 38px;
+    right: -2px;
+    padding: 0px;
+}
+
+.flexRow {
+    margin: 8px 0;
+    width: 100%;
+    clear: both;
+    overflow: auto;
+}
+
+.flexRow > .selected,.flexCol:hover {
+    color: #4CAAF4;
+}
+.flexRow > .flexCol:first-child:hover{
+    color: #000;
+}
+.flexCol {
+    float: left;
+    line-height: 22px;
+    font-size: 13px;
+    width: 25%;
+    min-height: 22px;
+}
+.flexCol2{
+    float: left;
+    line-height: 22px;
+    font-size: 13px;
+    width: 25%;
+    min-height: 22px;
+}
+
+.classify .flexCol:first-child {
+    font-weight: 700;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.listDiv .sortUl li {
+    text-align: center;
+    border: 0;
+    padding: 5px;
+}
+
+.sortUl li.selected, .sortUl li:hover {
+    color: #199ED8;
+}
+
+
+.listDivWrap{
+    padding: 10px 0 80px 0;
+    overflow:  hidden;
+}
+
+.listWrap:hover,.listDivWrap:hover {
+
+}
+.listUL {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    overflow-x: hidden;
+    background-color: #666;
+}
+
+.listUL:hover {
+    overflow: auto;
+}
+
+.listDiv ul li.listLiClick {
+    cursor: pointer;
+}
+
+.listDiv .listUL li {
+    margin: 0 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+    position: relative;
+    border-radius: 2px;
+}
+
+.listDiv ul li:last-child {
+    border-bottom: 0;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.listDiv ul.listUL > li:hover {
+    background-color: #000;
+}
+
+.listDiv ul:first-child li.listLiClick:hover,
+.listDiv ul:first-child li.listLiClick:hover .bold {
+    /*color: #199ED8;*/
+}
+.listUL li > .colDiv {
+    line-height: 22px;
+    min-height: 22px;
+    padding-left: 30px;
+    position: relative;
+    clear: both;
+}
+
+.listUL li > .colDiv > span {
+    word-break: break-all;
+}
+
+.numSpan {
+    display: inline-block;
+    width: 20px;
+    height: 30px;
+    text-align: center;
+    background: url(../IntelligentRoadTest/images/bg_num.png) no-repeat;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 100;
+    margin-right: 10px;
+    position: absolute;
+    left: 5px;
+    top: 4px;
+    font-weight:bold;
+}
+
+.numSpan2 {
+    display: inline-block;
+    width: 20px;
+    height: 30px;
+    text-align: center;
+    background: url(../IntelligentRoadTest/images/markeRq.png) no-repeat;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 10px;
+    position: absolute;
+    left: 5px;
+    top: 4px;
+    font-weight:bold;
+}
+.listUL li:hover .numSpan {
+    background: url(../IntelligentRoadTest/images/maker2.png) no-repeat;
+}
+.dtNumSpan {
+    background: #ed533f;
+    color: #fff;
+    border-radius: 3px;
+    position: absolute;
+    width: 20px;
+    height: 32px;
+    text-align: center;
+    line-height: 32px;
+    font-size: 14px;
+    font-weight: bold;
+    position: absolute;
+    left: 5px;
+    top: 4px;
+    /* box-shadow: 0px 0px 5px 1px #99999963; */
+}
+.dtNumSpan::after {
+    content: "";
+    position: absolute;
+    top: 12px;
+    right: -10px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent #ed533f;
+}
+.listUL li:hover .dtNumSpan{
+    background: #0072ba;
+}
+.listUL li:hover .dtNumSpan::after{
+    border-color: transparent transparent transparent #0072ba;
+}
+.yfcenter {
+    color: #46b4f5;
+    /*position: absolute;
+    right: 0;
+    top: 0;*/
+}
+.blueColor{
+    color: #46b4f5;
+}
+.rightImg{
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.rightImg > span{
+    margin-right: 10px;
+}
+
+.rentenCellName {
+    color: #fff;
+}
+
+
+
+.pageWrap {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    padding-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: -80px;
+    background-color:  #666;
+}
+
+.page .page-page-list select {
+    width: 40px;
+}
+
+.page {
+    float: none;
+    padding: 10px 0;
+}
+
+.page-info {
+    text-align: center;
+    float: none;
+    clear: both;
+}
+
+.page >div{
+    display: inline-block;
+}
+.page select,.page input[type=text]{
+    height: 20px !important;
+    margin: 0;
+    padding:  0;
+}
+.page .page-page-list select{
+    width: 60px;
+    border: 1px solid #ECECEC;
+}
+.page .page-num{
+    width: 40px !important;
+    border: 1px solid #ECECEC;
+    height: 20px;
+    padding-left: 5px;
+}
+.page .page-pagination{
+    border: 1px solid #ccc;
+    border-top: 0;
+    border-bottom: 0;
+    padding: 3px 10px;
+    margin: 0 5px;
+}
+.page-load img{
+    vertical-align: top;
+}
+.page span,.page-info span{
+    background: none;
+    padding: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    font-size: 14px;
+}
+.page a{
+    width:14px;
+    height: 14px;
+    display:inline-block;
+    vertical-align: text-top;
+}
+.first-disabled{
+    background: url(../IntelligentRoadTest/images/111_03.png);
+}
+.prev-disabled{
+    background: url(../IntelligentRoadTest/images/111_05.png);
+}
+.first-active{
+    background: url(../IntelligentRoadTest/images/111_09_1.png);
+}
+.prev-active{
+    background: url(../IntelligentRoadTest/images/111_07_1.png);
+}
+.next-active{
+    background: url(../IntelligentRoadTest/images/111_07.png);
+}
+.last-active{
+    background: url(../IntelligentRoadTest/images/111_09.png);
+}
+.next-disabled{
+    background: url(../IntelligentRoadTest/images/111_05_1.png);
+}
+.last-disabled{
+    background: url(../IntelligentRoadTest/images/111_03_1.png);
+}
+
+.detailList{
+    display:  none;
+    width: 100%;
+    height: 100% !important;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+.detailListDiv{
+    height: 100%;
+    padding-top: 70px;
+    box-sizing:  border-box;
+}
+.infoHeader{
+    width:  100%;
+    height: 70px;
+    background-color: #666;
+    color: #fff;
+    padding: 5px 15px;
+    box-sizing:  border-box;
+    margin-top: -70px;
+}
+
+.brDiv{
+    line-height: 20px;
+    height: 20px;
+    clear: both;
+}
+.brDiv .colDiv{
+    float: left;
+    width: 25%;
+}
+.infoBody{
+    height: 100%;
+    padding: 10px 10px 0 10px;
+    overflow-y: auto;
+    overflow-x:  hidden;
+    box-sizing:  border-box;
+    clear: both;
+}
+.infoDiv{
+    margin-bottom: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+.infoTitle{
+    background-color: #666;
+    color: #fff;
+    line-height: 40px;
+    padding: 0 10px;
+    cursor: pointer;
+}
+.infoCotent{
+    background-color: #fff;
+    max-height: 315px;
+    overflow: auto;
+}
+.detailListDiv table{
+    width: 100%;
+}
+#nrCellDiv{
+    padding-left: 400px;
+    box-sizing: border-box;
+}
+.infoCotent .fixedTable{
+    float: left;
+    width: 400px;
+    margin-left: -400px;
+}
+.infoCotent .scrollTable{
+    width: 100%;
+    overflow: auto;
+}
+.infoCotent table thead th{
+    background-color: #F3F3F4;
+    border: 1px solid #ddd;
+    height: 40px;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+.infoCotent table thead th{
+    /* border-right: 0; */
+}
+.infoCotent table td{
+    text-align: center;
+    border: 1px solid #ddd;
+    padding: 8px;
+    height: 42px;
+    box-sizing:  border-box;
+    white-space: nowrap;
+}
+.infoCotent table td{
+    /* border-right: 0; */
+}
+.infoHeader table tr td{
+    line-height: 20px;
+    height: 20px;
+    padding: 0;
+}
+.infoCotent .tableDashed thead th,.infoCotent .tableDashed td{
+    background-color: #fff;
+    /* border: 0; */
+    /* border-bottom: 1px dashed #ddd; */
+}
+.infoCotent .tableDashed thead th, .infoCotent .tableDashed .splitTr td{
+    border: 0;
+}
+#planRecordDiv{
+    padding: 5px 10px;
+}
+.planRecordTable tr td {
+    border: 0;
+    text-align: left;
+    padding:  0;
+    height: 20px;
+}
+.clickBlueText,.editText .disable-input,.btn-problem{
+    color: #0883df;
+    cursor: pointer;
+}
+.clickBlueText:hover,.editText .disable-input:hover,.btn-problem:hover,#planRecordTbody .cell_name:hover{
+    text-decoration: underline;
+}
+.editText button{
+    margin-left: 10px;
+}
+.disable-input{
+    border: 0;
+    width: 300px;
+    text-align:  center;
+    text-overflow:  ellipsis;
+    overflow:  hidden;
+}
+.chartWrap{
+    position: relative;
+}
+.chartDiv {
+    /*display: none;*/
+    width: 100%;
+    height: 180px;
+}
+.chartTitle{
+    padding: 10px;
+    clear: both;
+}
+.chartTitle li{
+    float: left;
+    width: 14.27%;
+    padding-right: 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.chartTitle li:last-child{
+    padding-right: 0;
+}
+.chartTitle li div{
+    background-color: #aaa;
+    color: #fff;
+    border-radius: 5px;
+    line-height: 35px;
+    text-align: center;
+    position:  relative;
+}
+.chartTitle li.active div{
+    background-color: #6AB5FF;
+    color: #fff;
+}
+.chartTitle li div img{
+    height: 20px;
+}
+.redCircle{
+    display: none;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    background-color:  red;
+}
+.tabInfoTitle{
+    padding: 10px 0 0 10px;
+    border-bottom: 1px solid #ddd;
+}
+.tabInfoTitle li{
+    float: left;
+    background-color: #f2f2f2;
+    color: #333;
+    padding: 5px 10px;
+    text-align: center;
+    margin-right: 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.tabInfoTitle li.active{
+    background-color: #F5B34C;
+    color: #fff;
+}
+.listBottom{
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 10px #fff;
+    cursor: pointer;
+    text-align: center;
+}
+.dataUpdateTime{
+    float: right;
+    display: inline-block;
+}
+.searchText{
+    display: none;
+}
+.showListInfo{
+    color: #fff;
+    float: left;
+    line-height: 40px;
+}
+.btn_contrast,.btn_mapLine{
+    background-color: #ff9900;
+    color: #fff;
+    padding: 3px 5px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btnGroup button{
+    margin-right: 5px;
+}
+.btnGroup button img{
+    margin-right: 5px;
+}
+.checkboxGroup{
+    display: inline-block;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    vertical-align: middle;
+}
+.checkboxGroup li{
+    display:  inline-block;
+    float: left;
+    padding: 0 10px;
+    margin: 2px;
+    width: 20px;
+    height: 15px;
+    line-height:  15px;
+}
+.checkboxGroup li:first-child{
+    border-right: 1px dashed #aaa;
+}
+.sureText{
+    border: 0;
+}
+.sureText li:first-child{
+    border-right: 0;
+}
+.btn_mapLine img{
+    width: 10px;
+    margin-right: 5px;
+}
+.rotateImg{
+    transform: rotate(180deg);
+}
+
+.circleTip, .circleTipLeft{
+    display: none;
+    background: #fff;
+    color: #000;
+    border-radius: 2px;
+    position: absolute;
+    z-index: 1000;
+    text-align: center;
+    line-height: 20px;
+    padding: 5px 8px;
+    font-size: 14px;
+    white-space: nowrap;
+    box-shadow: 0 0 8px 0 rgba(0,0,0,.5);
+}
+.circleTipLeft{
+    text-align:left;
+    height:auto;
+    width: auto;
+}
+.circleTip:after, .circleTip:before {
+    content: "";
+    width: 0;
+    height: 0;
+    bottom: -15px;
+    right: 45%;
+    position: absolute;
+    border: 7px solid transparent;
+    border-top: 8px solid rgba(51,51,51,.2);
+}
+.circleTip:after {
+    bottom: -14px;
+    border: 7px solid transparent;
+    border-top: 8px solid #fff;
+}
+.circleTipLeft:after, .circleTipLeft:before {
+    content: "";
+    width: 0;
+    height: 0;
+    top: 45%;
+    left: 0;
+    margin-left: -33px;
+    margin-top: -7px;
+    position: absolute;
+    border: 15px solid transparent;
+    border-right: 16px solid rgba(51,51,51,.2);
+}
+.circleTipLeft:after {
+    margin-left: -31px;
+    border: 15px solid transparent;
+    border-right: 16px solid #fff;
+}
+.btn-copy{
+    background-color: #199ED8;
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    width: 50px;
+    margin-left: 10px;
+}
+.coordinateType {
+    background-color: #fff;
+    color: #000;
+    display: none;
+    position: absolute;
+    width: 110px;
+    top: 42px;
+    right: -5px;
+    z-index: 100;
+    box-shadow: 0px 2px 20px #000;
+}
+.boxSelectionUl {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    display: none;
+    position: absolute;
+    width: 181px;
+    bottom: 30px;
+    left: -10px;
+    z-index: 100;
+}
+.coordinateType li,.boxSelectionUl li{
+    padding: 8px 10px;
+    cursor: pointer;
+}
+.coordinateType li:hover,.coordinateType li.active{
+    background-color: #3285ff;
+    color: #fff;
+}
+.boxSelectionUl li:hover,.boxSelectionUl li.active{
+    background-color: rgb(142, 168, 224);
+    color: #fff;
+}
+.boxSelectionImg{
+    cursor: pointer;
+}
+.colorBar {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: #435D76;
+    padding: 4px 0;
+}
+
+.colorBar > li {
+    float: left;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    color: #FFFFFF;
+    font-size: 12px;
+}
+
+.colorBar li.map-w {
+    margin-left: 10px;
+    margin-right: 10px;
+    /*min-width: 212px;*/
+    position:  relative;
+}
+
+.colorBar .map-w-i {
+    width: 100px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+li .txt-color {
+    color:#3285ff !important;
+}
+
+.search-result{
+    width: 408px;
+    background-color: #fff;
+    box-shadow: -1px 1px 8px 1px #d9d7d6;
+    position: absolute;
+    top: 50px;
+    padding: 5px 0;
+    height: auto;
+    max-height: 310px;
+    overflow: auto;
+    z-index: 15;
+}
+.search-result li{
+    line-height: 30px;
+    min-height: 30px;
+    margin: 0 10px;
+    background: url(../IntelligentRoadTest/images/bg_search.png) no-repeat 3px center;
+    padding-left: 25px;
+    text-align: left;
+    cursor: pointer;
+}
+.search-result li:hover {
+    background-color: #f4f4f4;
+}
+.search-result li > span{
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    vertical-align: middle;
+}
+.search-result li > span:nth-child(1){
+    width: 48%;
+}
+.search-result > li > span:nth-child(2){
+    width: 32%;
+}
+.search-result > li > span:nth-child(3){
+    color: #C5C7C6;
+    width: 20%;
+}
+.mktcenter-selected-gt{
+    display:none;
+}
+.mktcenter-selected{
+    display:none;
+}
+.AllCity{
+    display: none !important;
+}
+.bold{
+    white-space: nowrap;
+}
+.cell_name{
+    display:  inline-block;
+    width: 90%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align:  middle;
+}
+.infoCotent .cell_name{
+    width: 180px;
+}
+.listUL .cell_name{
+    width: 210px;
+}
+#planRecordTbody .cell_name{
+    width: 260px;
+}
+#colorLegen {
+    /* display: none; */
+}
+.link-tyly,.link-detail{
+    margin: 5px 2px;
+    color: #3285ff;
+    background-color: #e0e0e0;
+    text-align: center;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 70px;
+    cursor: pointer;
+}
+.grey{
+    background-color:#CCC !important;
+}
+
+
+.BMap_noprint .BMap-btn{
+    display: inline-block;
+    box-shadow: rgba(0, 0, 0, 0.35) 2px 2px 3px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 10px 10px;
+    height: 36px;
+    font-weight: bold;
+    font-size: 12px;
+    font-family: arial, sans-serif;
+    text-align: center;
+    cursor: pointer;
+    border: 0;
+    border-radius: 0;
+    box-sizing:  border-box;
+    position:  relative;
+}
+.inSightSectorSelect,.BMapSelect{
+    display: none;
+    position:  absolute;
+    top: 45px;
+    width: 100%;
+    text-align:  center;
+    box-shadow: 0 0 10px #fff;
+}
+.BMap-select{
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    height: 36px;
+    line-height: 36px;
+    padding-left: 18px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #fff;
+}
+.BMapSelect > div{
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    line-height: 36px;
+    cursor: pointer;
+}
+.inSightSectorSelect{
+    width: 90px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    line-height: 36px;
+    left: 0;
+}
+.inSightSectorSelect > div{
+    cursor: pointer;
+    text-align: left;
+    padding: 0 10px;
+}
+.inSightSectorSelect > div:hover,.inSightSectorSelect > div.active,.BMapSelect > div:hover,.BMap_noprint .BMap-active{
+    background-color: rgb(142, 168, 224);
+    color: white;
+    font-weight: bold;
+}
+.inSightSectorImg:after,.BMap-select:after {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    width: 0px;
+    height: 0px;
+    border-width: 4px 4px 0px 4px;
+    border-style: solid;
+    border-color: #fff transparent transparent transparent;
+    margin: -2px 5px 0 5px;
+}
+.utilBackgroundColor {
+    background-color: #0faca5 !important;
+}
+
+.highLightLi{
+    background: #000;
+}
+
+.flexBox{
+    display: flex;
+    padding: 5px 10px;
+}
+.flexDiv{
+    flex: 1;
+    line-height: 20px;
+}
+@media screen and (max-width: 1366px){
+    .chartTitle li {
+        font-size: 12px;
+        white-space: nowrap;
+    }
+}
+@media screen and (max-height: 768px){
+    .classify .select-info {
+        padding: 0 10px;
+        max-height: 400px;
+        overflow: auto;
+    }
+}
+#boxSelection.active{
+    background-color: #0072BA;
+}
+.progressBarDiv{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 36px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.progressLegen{
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 0%;
+    height: 28px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.ulDetailInfo > li{
+    padding: 0 10px;
+}
+.dateSplit{
+    text-align: center;
+    position: relative;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+}
+.dateSplit:after{
+    content:"";
+    border-top: 1px dashed #ddd;
+    width: 100%;
+    height: 1px;
+    display: block;
+    position: absolute;
+    top: 14px;
+    z-index: 1;
+}
+.dateSplit > div.inline{
+    position: relative;
+    z-index: 2;
+}
+.dateSplit > div.inline .nameInfo{
+    background-color: #fff;
+    padding: 0 10px;
+}
+.posiitionRight{
+    position: absolute;
+    right: 0;
+    top: 2px;
+    z-index: 2;
+    background-color: #fff;
+    padding: 0 10px;
+    height: 20px;
+    line-height: 20px;
+}
+.cellInfoTitle,.specialInfoWrap .rowDiv{
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+}
+.cellInfoTitle{
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+.ulDetailInfo .colDiv{
+    float: left;
+    width: 25%;
+    height: 30px;
+    text-align:  center;
+}
+.specialInfoWrap .colDiv:nth-child(3){
+    width: 50%;
+}
+.specialInfoWrap .rowDiv {
+    border-bottom: 1px dashed #ddd;
+}
+.specialInfoWrap .rowDiv:last-child {
+    border-bottom: 0;
+}
+.chartGauge .chartDiv{
+    display: block;
+    float: left;
+    width: 20%;
+}
+.chartLegend{
+    text-align: center;
+}
+.chartLegend li{
+    display: inline-block;
+    line-height: 20px;
+    margin-right: 10px;
+}
+.chartLegend li .legendColor{
+    display: inline-block;
+    width: 25px;
+    height: 15px;
+    background-color: #91c7ae;
+    border-radius: 5px;
+    vertical-align: text-bottom;
+}
+.chartLegend li:nth-child(2) .legendColor{
+    background-color: #c23531;
+}
+.chartLegend li:nth-child(3) .legendColor{
+    background-color: #63869e;
+}
+.chartGaugeDay{
+    float: left;
+    width: 20%;
+    text-align: center;
+}
+.date-picker-wrapper{
+    z-index: 11;
+}
+#planInfo{
+    padding: 10px;
+}
+.table-border0{
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+}
+.infoCotent .table-border0 tr td{
+    border: 0;
+    text-align: left;
+    width: 25%;
+    height: 30px;
+    padding: 5px 8px;
+}
+
+#badCellAnalysisDiv{
+    max-height: 380px;
+    overflow-x: hidden;
+}
+.tabUl ul{
+    /* padding: 0 5px; */
+    width: 100%;
+}
+.tabUl ul li{
+    display: inline-block;
+    width: 14.2%;
+    height: 40px;
+    text-align: center;
+    padding: 5px;
+    box-sizing: border-box;
+}
+.zcColumn-type{
+    float:  left;
+    width: 12.5%;
+    padding-left:  5px;
+    box-sizing:  border-box;
+}
+.zcColumn-circle{
+    float:  left;
+    width: 87.5%;
+    overflow: auto;
+    white-space:  nowrap;
+}
+.zcColumn-type ul li{
+    float: none;
+    width: 100%;
+}
+.tabUl ul li div{
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    line-height: 30px;
+    background-color: #F2F2F2;
+    border: 1px solid #f2f2f2;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.tabUl ul li:hover div,.tabUl ul li.clicked div{
+    background-color: #d0f5ff;
+    border: 1px solid #0099ff;
+    border-radius: 2px;
+}
+.tabUl ul li span{
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+}
+.tabUl ul li span.circleRed{
+    background-color: #FF0000;
+}
+.tabUl ul li span.circleGreen{
+    background-color: #00CC00;
+}
+/*.tabUl ul li span:hover{
+    background-color: #d0f5ff;
+    border: 1px solid #0099ff;
+    box-sizing: border-box;
+    cursor: default;
+}*/
+.showContent{
+    display: none;
+    padding: 0 10px;
+    position: relative;
+    clear:  both;
+}
+.locationDiv{
+    text-align: right;
+}
+.btn-location {
+    background: #ff9900;
+    width: 100px;
+    height: 25px;
+    line-height: 25px;
+}
+
+.myTabContent{
+    clear: both;
+    border: 0;
+    min-height: auto;
+}
+.myTabPan{
+    display: none;
+}
+#badCellAnalysisDiv table td {
+    padding: 4px;
+    line-height: 24px;
+    height: 24px;
+}
+.wrap_Dialog{
+    display: none;
+}
+.tab_li_Dialog{
+    padding-left: 10px;
+}
+#leg_Dialog {
+    position: absolute;
+    top: 54px;
+    left: 8%;
+}
+.myTabContent .greyColor{
+    color: #ccc !important;
+}
+#badCellAnalysisDiv .chartDiv{
+    height: 350px;
+}
+
+.helpInfo{
+    display: none;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 480px;
+    height: 800px;
+    background-color: #666;
+    color: #fff;
+    box-shadow: 0px 1px 2px 1px rgba(0,0,0,.2);
+}
