@@ -35,8 +35,8 @@ public class DataQueryServiceImpl implements DataQueryService{
     @Resource(name = "alarmJdbcTemplate")
     public JdbcTemplate alarmJdbcTemplate;//告警库mysql数据源jdbc模板
     
-//    @Resource(name = "PostgreSQLJdbcTemplate")
-//   	public JdbcTemplate postgreSQLJdbcTemplate;//postgreSQL数据源jdbc模板
+    @Resource(name = "postgreSQLJdbcTemplate")
+   	public JdbcTemplate postgreSQLJdbcTemplate;//postgreSQL数据源jdbc模板
 //    
 //    @Resource(name = "GDSSqlServerJdbcTemplate")
 //   	public JdbcTemplate GDSSqlServerJdbcTemplate;//gds的sql server数据源jdbc模板
@@ -240,7 +240,6 @@ public class DataQueryServiceImpl implements DataQueryService{
     		
     	}
     	else if(database==6){
-    		/**
     		//PostgreSQL的查询
     		final List<String> cloumnLabel= new ArrayList<String>();//cloumns
     		final List<String> cloumnType= new ArrayList<String>();//types
@@ -290,7 +289,6 @@ public class DataQueryServiceImpl implements DataQueryService{
             System.out.println("查询结束时间："+sdf.format(jdbcEndQueryDate));
 			System.out.println("PostgreSQL结果集长度："+resultList.size());
 			System.out.println("PostgreSQL Jdbc查询处理总时间:"+(jdbcEndQueryDate.getTime()-jdbcStartQueryDate.getTime())+"毫秒");
-			**/
     	}else if(database==7){
     		Properties hbaseProperties = PropertiesUtil.getPropertiesByFileName("Hbase.properties");
     		String isUserThrift = hbaseProperties.getProperty("isUseThrift");

@@ -44,5 +44,21 @@ public class DataSourceConfig {
 		System.out.println("初始化alarmJdbcTemplate");
 	    return new JdbcTemplate(dataSource);
 	}
+
+
+	@Bean(name = "postgreSQLDataSource")
+	@Qualifier("postgreSQLDataSource")
+	@ConfigurationProperties(prefix="spring.datasource.postgreSQL")
+	public DataSource postgreSQLSQLDataSource() {
+		System.out.println("初始化postgreSQLDataSource");
+		return DataSourceBuilder.create().build();
+	}
+
+	@Bean(name = "postgreSQLJdbcTemplate")
+	@Qualifier("postgreSQLJdbcTemplate")
+	public JdbcTemplate postgreSQLJdbcTemplate(@Qualifier("postgreSQLDataSource") DataSource dataSource) {
+		System.out.println("初始化postgreSQLJdbcTemplate");
+		return new JdbcTemplate(dataSource);
+	}
 	
 }

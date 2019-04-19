@@ -135,6 +135,13 @@
 			<artifactId>jstl</artifactId>
 		</dependency>
 
+		<!-- postgrep -->
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>8.4-704.jdbc3</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
