@@ -16,10 +16,6 @@
 <script type="text/javascript"  src="../js/My97DatePicker/WdatePicker.js"></script>
 <link type="text/css" rel="stylesheet" href="../js/My97DatePicker/skin/default/datepicker.css" />
 <!--通用工具  -->
-
-
-
-
 <link rel="stylesheet" href="../css/jquery-ui.css">
 <link rel="stylesheet" href="../css/leanModal.css">
 <link rel="stylesheet" href="../css/mian.css">
