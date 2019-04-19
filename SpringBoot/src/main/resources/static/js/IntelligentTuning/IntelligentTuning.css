@@ -200,7 +200,7 @@ input[type='button']{
 .startTime, .dateBox {
     display: inline-block;
     min-width: 66px;
-    height: 100%;
+    /*height: 100%;*/
     text-align: center;
     border: 0;
     cursor: pointer;
@@ -992,6 +992,7 @@ input[type='button']{
     line-height: 20px;
     height: 20px;
     padding: 0;
+    color: #fff;
 }
 .infoCotent .tableDashed thead th,.infoCotent .tableDashed td{
     background-color: #fff;
