@@ -1,0 +1,195 @@
+/**
+ * 原主页面js。暂且放这里
+ */
+
+$(function() {
+
+	// 系统时间
+	show_cur_times();
+	setInterval("show_cur_times()", 1000);
+	reloadResource();
+
+	noce.getEachart();
+	// nav 切换
+	$(".tree a[id]").click(function() {
+		$("#win_4_loading").hide();
+		var _self = $(this);
+		var id = _self.attr("id");
+
+		if (id == "monitor") {
+			if (monitor.timer != null) {
+				clearInterval(monitor.timer);// 清理定时器
+				monitor.timer = null;
+			}
+			monitor.timerFunction();
+			monitor.timer = setInterval("monitor.timerFunction()", monitor.t); // 定时器设置
+		} else {
+			if (monitor.timer != null) {
+				clearInterval(monitor.timer);// 清理定时器
+				monitor.timer = null;
+			}
+		}
+
+		if (id == "menuHelper") {
+			return false;
+		}
+		console.log("load " + _self.html());
+		if ($("#pc_listb_" + id).length > 0) {
+			showIndexList.$root =  $("#pc_listb_" + id);
+			showIndexList.backAppId = id+"_DIV";
+			showIndexList.backId = id+"_showIndexList";
+			noce.appId = id;
+			// 关闭进度条，取消查询
+			progressbar.canelFunction();
+			noce.ajax("pages_index_Index_loadONEMENU.action", "appName=" + _self.html());
+			$(".tree li").removeClass("selected");
+			$(".pc_listb[id]").removeClass("down");
+			$("#pc_listb_" + id).addClass("down");
+			noce.init();
+		}
+
+		// return false;
+	});
+	/*
+	 * //内容导航切换 $(".pcbox_nr .tab li").click(function(){ var idx =
+	 * $(this).index(); $(this).addClass("down").siblings().removeClass("down");
+	 * $(this).parent().parent().siblings(".tabbox").children(".tbli").eq(idx).show().siblings().hide();
+	 * });
+	 */
+
+	// 打开选项窗口
+	$(".tcx_btn, .tcx_btn_12").click(function(e) {
+		var bwin = $(this).siblings(".bwin");
+		var dis = bwin.css("display");
+		$(".bwin").hide();
+		if (dis == "none") {
+			bwin.fadeIn(200);
+		} else {
+			closeBwin();
+		}
+		;
+		e.stopPropagation();
+	});
+
+	// 隐藏条件选项，查询时候显示
+	$(".conditon").hide();
+
+	$(".bwin").click(function(e) {
+		e.stopPropagation();
+	});
+	$("body,.tcx_btn_close").click(function() {
+		closeBwin();
+	});
+	function closeBwin() {
+		$(".bwin").fadeOut(200);
+	}
+	;
+});
+
+// 判断服务器资源是否更新 
+function reloadResource() {
+	var lastFreshTime = localStorage.lastFreshTime;
+	console.log("***本地最后访问时间" + lastFreshTime);
+	// var severStartTime = $("#severStartTime").val();
+	// console.log("***测试2266");
+	console.log("***服务器最后启动时间" + severStartTime);
+	if (typeof lastFreshTime == "undefined" || lastFreshTime < severStartTime) {
+		console.log("***服务器已更新，reload");
+		$.ajax({
+			type : "GET",
+			async : false,
+			url : "pages_index_Index_getServerTime.action",
+			dataType : "json",
+			success : function(data) {
+				console.log("****获取服务器当前时间" + data[0]);
+				localStorage.lastFreshTime = data[0];
+			    location.reload(true);
+			}
+		});
+	} else {
+		console.log("****调用本地缓存");
+	}
+}
+
+
+// 生成时间
+function show_cur_times() {
+	// 获取当前日期
+	var date_time = new Date();
+	// 定义星期
+	var week;
+	// switch判断
+	switch (date_time.getDay()) {
+	case 1:
+		week = "星期一";
+		break;
+	case 2:
+		week = "星期二";
+		break;
+	case 3:
+		week = "星期三";
+		break;
+	case 4:
+		week = "星期四";
+		break;
+	case 5:
+		week = "星期五";
+		break;
+	case 6:
+		week = "星期六";
+		break;
+	default:
+		week = "星期天";
+		break;
+	}
+
+	// 年
+	var year = date_time.getFullYear();
+	// 判断小于10，前面补0
+	if (year < 10) {
+		year = "0" + year;
+	}
+
+	// 月
+	var month = date_time.getMonth() + 1;
+	// 判断小于10，前面补0
+	if (month < 10) {
+		month = "0" + month;
+	}
+
+	// 日
+	var day = date_time.getDate();
+	// 判断小于10，前面补0
+	if (day < 10) {
+		day = "0" + day;
+	}
+
+	// 时
+	var hours = date_time.getHours();
+	// 判断小于10，前面补0
+	if (hours < 10) {
+		hours = "0" + hours;
+	}
+
+	// 分
+	var minutes = date_time.getMinutes();
+	// 判断小于10，前面补0
+	if (minutes < 10) {
+		minutes = "0" + minutes;
+	}
+
+	// 秒
+	var seconds = date_time.getSeconds();
+	// 判断小于10，前面补0
+	if (seconds < 10) {
+		seconds = "0" + seconds;
+	}
+
+	// 拼接年月日时分秒
+	var date_str = year + "年" + month + "月" + day + "日 " + hours + ":" + minutes + ":" + seconds + " " + week;
+
+	// 显示在id为showtimes的容器里
+	document.getElementById("showtimes").innerHTML = date_str;
+}
+
+// 设置1秒调用一次show_cur_times函数

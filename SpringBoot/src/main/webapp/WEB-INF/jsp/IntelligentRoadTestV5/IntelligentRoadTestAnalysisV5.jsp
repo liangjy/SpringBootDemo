@@ -1,6 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 		 pageEncoding="utf-8"%>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+<!--jQuery插件  -->
+<link type="text/css" rel="stylesheet" href="../css/jquery-ui.css" />
+<link type="text/css" rel="stylesheet" href="../css/mian.css" />
+<script type="text/javascript"  src="../js/jquery-1.12.3.js"></script>
+<script type="text/javascript"  src="../js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript"  src="../js/jquery-ui.js"></script>
+<script type="text/javascript"  src="../js/jquery.ui.datepicker-zh-CN.js"></script>
+
+
+<!--弹窗插件结束  -->
+<script type="text/javascript"  src="../js/My97DatePicker/WdatePicker.js"></script>
+<link type="text/css" rel="stylesheet" href="../js/My97DatePicker/skin/default/datepicker.css" />
+<!--通用工具  -->
+
+
+
+
 <link rel="stylesheet" href="../css/jquery-ui.css">
 <link rel="stylesheet" href="../css/leanModal.css">
 <link rel="stylesheet" href="../css/mian.css">

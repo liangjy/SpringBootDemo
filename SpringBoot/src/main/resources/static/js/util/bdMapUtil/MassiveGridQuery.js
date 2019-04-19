@@ -12,7 +12,7 @@ class MassiveGridQuery {
         this.city = (option.city == undefined || option.city == '全省') ? null:option.city;
         this.district = (option.district == undefined) ? null:option.district;
         this.mktcenter = (option.mktcenter == undefined) ? null:option.mktcenter;
-        this.currentMapLeftTopPoint = null;
+
         /*if(!noceUtil.isUndefined(option.city)){
             if(this._checkArea(option.city,option.district,option.mktcenter)){
                 if(option.city != '全省'){
@@ -110,7 +110,6 @@ class MassiveGridQuery {
         this._GridResultArr = [];
         this.mapMoveendNotResponding = false;//不响应地图移动结束事件
         this._map.addEventListener('moveend',this._mapMoveendEvent.bind(this));
-        this._map.addEventListener('zoomend',this._mapZoomendEvent.bind(this));
 
     }
 
@@ -435,16 +434,11 @@ class MassiveGridQuery {
     }
 
     _mapMoveendEvent(event){
+        this.drawGrid = false;
         if(this.mapMoveendNotResponding == true){
             return;
         }
         this.reloadMassiveGrid();
-        console.log('组件中地图事件重新加载数据');
-    }
-
-    _mapZoomendEvent(event){
-        this.drawGrid = false;
-        this._mapMoveendEvent(event);
     }
 
     reloadMassiveGrid(){
@@ -461,10 +455,6 @@ class MassiveGridQuery {
         let bounds = this._map.getBounds();
         let sw = bounds.getSouthWest();//西南角
         let ne = bounds.getNorthEast();//东北角
-
-        if(this.currentMapLeftTopPoint == null){
-            this.currentMapLeftTopPoint = new BMap.Point(sw.lng,ne.lat);
-        }
 
         let gridLen = 100000;
         this._gridLevel = this.getGridLevelByZoom(this._zoom);
@@ -511,162 +501,6 @@ class MassiveGridQuery {
 
         let min_lat = latArr[0];
         let max_lat = latArr[latArr.length - 1];
-/*
-        let minLngNum = gridLngNum(min_lng, this._gridLevel);
-        let maxLngNum = gridLngNum(max_lng, this._gridLevel);
-        let minLatNum = gridLatNum(min_lat, this._gridLevel);
-        let maxLatNum = gridLatNum(max_lat, this._gridLevel);
-
-        //范围扩大一行一列之后，要将最大最小经纬度也要进行扩展
-        let minLngArr = gridLngNumToLng(minLngNum, this._gridLevel);//[minLng, midLng, maxLng];
-        let maxLngArr = gridLngNumToLng(maxLngNum, this._gridLevel);//[minLng, midLng, maxLng];
-        let minLatArr = gridLatNumToLat(minLatNum, this._gridLevel);//[minLat, midLat, maxLat];
-        let maxLatArr = gridLatNumToLat(maxLatNum, this._gridLevel);//[minLat, midLat, maxLat];
-        min_lng = minLngArr[0];
-        min_lat = minLatArr[0];
-        max_lng = maxLngArr[2];
-        max_lat = maxLatArr[2];
-
-        let gridLngNumToPixelLength = {};
-        for (let i = minLngNum; i <= maxLngNum; i++) {
-            //计算出当前经度编码和下一个经度编码的经纬度，转换像素后，再计算像素长度
-            let currentGrid = gridLngNumToLng(i,this._gridLevel);//[minLng, midLng, maxLng];
-            let nextGrid = gridLngNumToLng(i+1,this._gridLevel);
-            //当前这个栅格的最大最小经纬度，左下角点和右下角点的像素长度，就认为是当前这个栅格经度编码的像素长度
-            let leftButtomPoint = new BMap.Point(currentGrid[0], min_lat);
-            let rightButtomPoint = new BMap.Point(nextGrid[0], min_lat);
-            let leftButtomPixel = this._map.pointToPixel(leftButtomPoint);
-            let rightButtomPixel = this._map.pointToPixel(rightButtomPoint);
-
-            let gridWidth = rightButtomPixel.x - leftButtomPixel.x;
-            gridLngNumToPixelLength[i] = gridWidth
-        }
-        let gridLatNumToPixelLength = {};
-        //从上往下遍历
-        for (let i = maxLatNum; i >= minLatNum; i--) {
-            //计算出当前经度编码和下一个经度编码的经纬度，转换像素后，再计算像素长度
-            let currentGrid = gridLatNumToLat(i, this._gridLevel);//[minLat, midLat, maxLat];
-            let nextGrid = gridLatNumToLat((i-1), this._gridLevel);
-            //当前这个栅格的最大最小经纬度，左下角点和右下角点的像素长度，就认为是当前这个栅格经度编码的像素长度
-            let leftTopPoint = new BMap.Point(min_lng, currentGrid[0]);
-            let leftButtomPoint = new BMap.Point(min_lng, nextGrid[0]);
-            let leftButtomPixel = this._map.pointToPixel(leftButtomPoint);
-            let leftTopPixel = this._map.pointToPixel(leftTopPoint);
-            let gridHeight = leftButtomPixel.y - leftTopPixel.y;
-            gridLatNumToPixelLength[i] = gridHeight
-        }*/
-
-        let leftTopStartPoint = new BMap.Point(min_lng, max_lat);
-        let leftTopStartPixel = this._map.pointToPixel(leftTopStartPoint);
-        /*this.boundsMatrix = {
-            boundsLngNumWidth:gridLngNumToPixelLength,
-            boundsLatNumHeight:gridLatNumToPixelLength,
-            boundsSouthWestPixel:leftTopStartPixel,
-        }*/
-        this.boundsNum = {
-            /*minLngNum:minLngNum,
-            maxLngNum:maxLngNum,
-            minLatNum:minLatNum,
-            maxLatNum:maxLatNum,*/
-            leftTopStartPixel:leftTopStartPixel,
-            sw:sw,
-            ne:ne,
-        }
-
-        this.mapCenter = this._map.getCenter();
-        this.boundSize = this._map.getSize();
-
-        this.gridLen = gridLen;
-    }
-
-    loadMassiveGridImg(){
-        let ajaxStartTime = new Date();
-        if(this.reloadGridAjax){
-            this.reloadGridAjax.abort();
-        }
-        let thisObj = this;
-        this.reloadGridAjax = $.ajax({
-            type:'post',
-            data:{
-                polygon: this.polygon,
-                bounds: this.mapBounds,
-                mapLevel: this._zoom,
-                divisionBand: this.divisionBand,
-                bandType: JSON.stringify(this.bandType),
-                gridType: this.gridType,
-                timeType: this.timeType,
-                dataType: this.dataType,
-                day: this.day,
-                valueInteval: JSON.stringify(this.valueInterval),
-                city: this.city,
-                district:this.district,
-                mktcenter:this.mktcenter,
-                // boundsMatrix:JSON.stringify(this.boundsMatrix),
-                opacity:this.opacity,
-                gridLevel:this._gridLevel,
-                notCount:JSON.stringify(this.notCount),
-                boundSize:JSON.stringify(this.boundSize),
-                mapCenter:JSON.stringify(this.mapCenter),
-            }, //参数
-            dataType:'json',
-            url: "/NOCE/portal/pages_batchGrid_BatchGrid_getGridDataImg.action",
-            success: function(data) {
-                let startTime = new Date();
-                thisObj._gridImgBase = [];
-                if (data){
-                    if(data.status == 'success'){
-                        if(Array.isArray(data.result)){
-                            for(let i=0;i<data.result.length;i++){
-                                let img=new Image();
-                                img.src=data.result[i].dataImage;
-                                img.imgX = data.result[i].x;
-                                img.imgY = data.result[i].y;
-                                thisObj._gridImgBase.push(img);
-                            }
-                        }
-                        console.log('大范围栅格图片获取成功：'+data.message);
-                    }else if(data.status == 'failure'){
-                        console.log('大范围栅格图片获取失败：'+data.result);
-                    }
-                }
-                thisObj.currentMapLeftTopPoint = new BMap.Point(thisObj.boundsNum.sw.lng,thisObj.boundsNum.ne.lat);
-                thisObj.drawGrid = true;
-                thisObj.drawGridToMap();
-                let endTime = new Date();
-                // console.log('回调耗时：'+(endTime.getTime() - startTime.getTime()));
-                console.log('请求总耗时：'+(endTime.getTime() - ajaxStartTime.getTime()));
-            },
-            error:function(data){
-                console.log('gridQueryError');
-                // alert('响应失败！');
-            }
-        });
-    }
-
-    loadMassiveGridResultList(){
-        if(this.reloadGridAjax){
-            this.reloadGridAjax.abort();
-        }
-
-        let polygonPointArr = this.mapBounds.split('@');
-        let lngArr = [];
-        let latArr = [];
-        for (let i = 0; i < polygonPointArr.length; i++) {
-            let p = polygonPointArr[i].split(',');
-            lngArr.push(parseFloat(p[0]));
-            latArr.push(parseFloat(p[1]));
-        }
-        lngArr.sort(function (a,b){
-            return a-b;
-        });
-        latArr.sort(function (a,b){
-            return a-b;
-        });
-        let min_lng = lngArr[0];
-        let max_lng = lngArr[lngArr.length - 1];
-
-        let min_lat = latArr[0];
-        let max_lat = latArr[latArr.length - 1];
 
         let minLngNum = gridLngNum(min_lng, this._gridLevel);
         let maxLngNum = gridLngNum(max_lng, this._gridLevel);
@@ -675,9 +509,9 @@ class MassiveGridQuery {
 
         //范围扩大一行一列之后，要将最大最小经纬度也要进行扩展
         let minLngArr = gridLngNumToLng(minLngNum, this._gridLevel);//[minLng, midLng, maxLng];
-        let maxLngArr = gridLngNumToLng(maxLngNum, this._gridLevel);//[minLng, midLng, maxLng];
-        let minLatArr = gridLatNumToLat(minLatNum, this._gridLevel);//[minLat, midLat, maxLat];
-        let maxLatArr = gridLatNumToLat(maxLatNum, this._gridLevel);//[minLat, midLat, maxLat];
+        let maxLngArr = gridLngNumToLng(maxLngNum, this._gridLevel, gridLen);//[minLng, midLng, maxLng];
+        let minLatArr = gridLatNumToLat(minLatNum, this._gridLevel, gridLen);//[minLat, midLat, maxLat];
+        let maxLatArr = gridLatNumToLat(maxLatNum, this._gridLevel, gridLen);//[minLat, midLat, maxLat];
         min_lng = minLngArr[0];
         min_lat = minLatArr[0];
         max_lng = maxLngArr[2];
@@ -719,34 +553,98 @@ class MassiveGridQuery {
             boundsLatNumHeight:gridLatNumToPixelLength,
             boundsSouthWestPixel:leftTopStartPixel,
         }
+    }
 
-        if(this.boundsNum.sw && this.boundsNum.ne){
-            this.boundsNum['minLngNum'] = minLngNum;
-            this.boundsNum['maxLngNum'] = maxLngNum;
-            this.boundsNum['minLatNum'] = minLatNum;
-            this.boundsNum['maxLatNum'] = maxLatNum;
+    loadMassiveGridImg(){
+        let ajaxStartTime = new Date();
+        if(this.reloadGridAjax){
+            this.reloadGridAjax.abort();
         }
-        let nextGridPixelX = this.boundsNum.leftTopStartPixel.x;
-        let nextGridPixelY = this.boundsNum.leftTopStartPixel.y;
+        let thisObj = this;
+        this.reloadGridAjax = $.ajax({
+            type:'post',
+            data:{
+                polygon: this.polygon,
+                bounds: this.mapBounds,
+                mapLevel: this._zoom,
+                divisionBand: this.divisionBand,
+                bandType: JSON.stringify(this.bandType),
+                gridType: this.gridType,
+                timeType: this.timeType,
+                dataType: this.dataType,
+                day: this.day,
+                valueInteval: JSON.stringify(this.valueInterval),
+                city: this.city,
+                district:this.district,
+                mktcenter:this.mktcenter,
+                boundsMatrix:JSON.stringify(this.boundsMatrix),
+                opacity:this.opacity,
+                gridLevel:this._gridLevel,
+                notCount:JSON.stringify(this.notCount),
+            }, //参数
+            dataType:'json',
+            url: "/NOCE/portal/pages_batchGrid_BatchGrid_getGridDataImg.action",
+            success: function(data) {
+                let startTime = new Date();
+                thisObj._gridImgBase = [];
+                if (data){
+                    if(data.status == 'success'){
+                        if(Array.isArray(data.result)){
+                            for(let i=0;i<data.result.length;i++){
+                                let img=new Image();
+                                img.src=data.result[i].dataImage;
+                                img.imgX = data.result[i].x;
+                                img.imgY = data.result[i].y;
+                                thisObj._gridImgBase.push(img);
+                            }
+                        }
+                        console.log('大范围栅格图片获取成功：'+data.message);
+                    }else if(data.status == 'failure'){
+                        console.log('大范围栅格图片获取失败：'+data.result);
+                    }
+
+                }
+                thisObj.drawGrid = true;
+                thisObj.drawGridToMap();
+                let endTime = new Date();
+                // console.log('回调耗时：'+(endTime.getTime() - startTime.getTime()));
+                console.log('请求总耗时：'+(endTime.getTime() - ajaxStartTime.getTime()));
+            },
+            error:function(data){
+                console.log('gridQueryError');
+                // alert('响应失败！');
+            }
+        });
+    }
+
+    loadMassiveGridResultList(){
+        let ajaxStartTime = new Date();
+        if(this.reloadGridAjax){
+            this.reloadGridAjax.abort();
+        }
+
+        let nextGridPixelX = leftTopStartPixel.x;
+        let nextGridPixelY = leftTopStartPixel.y;
         let beforeW = 0;
         this.gridNumToPixelLength = {};
-        for(let i = this.boundsNum.minLngNum; i <= this.boundsNum.maxLngNum; i++){
+        for(let i = minLngNum; i <= maxLngNum; i++){
             let w = this.boundsMatrix.boundsLngNumWidth[i];
             if($.isNumeric(beforeW) && beforeW > 0){
                 nextGridPixelX += beforeW;
             }else{
                 nextGridPixelX += w;
             }
-            nextGridPixelY = this.boundsNum.leftTopStartPixel.y;
+            nextGridPixelY = leftTopStartPixel.y;
             let beforeH = 0;
-            for(let j = this.boundsNum.maxLatNum; j >= this.boundsNum.minLatNum; j--){
-                let currentGridNum = i*this.gridLen + j;
+            for(let j = maxLatNum; j >= minLatNum; j--){
+                let currentGridNum = i*gridLen + j;
                 let h = this.boundsMatrix.boundsLatNumHeight[j];
                 if($.isNumeric(beforeH) && beforeH > 0){
                     nextGridPixelY += beforeH;
                 }else{
                     nextGridPixelY += h;
                 }
+
 
                 this.gridNumToPixelLength[currentGridNum] = {
                     x:nextGridPixelX,
@@ -779,12 +677,10 @@ class MassiveGridQuery {
                 city: this.city,
                 district:this.district,
                 mktcenter:this.mktcenter,
-                // boundsMatrix:JSON.stringify(this.boundsMatrix),
+                boundsMatrix:JSON.stringify(this.boundsMatrix),
                 opacity:this.opacity,
                 gridLevel:this._gridLevel,
                 notCount:JSON.stringify(this.notCount),
-                boundSize:JSON.stringify(this.boundSize),
-                mapCenter:JSON.stringify(this.mapCenter),
             },
             success: function (data) {
                 let handleLngLatNum = new Date();
@@ -800,7 +696,7 @@ class MassiveGridQuery {
                     thisObj._GridResultArr = [];
                     console.log("查询失败原因:返回数据不正确");
                 }
-                thisObj.currentMapLeftTopPoint = new BMap.Point(thisObj.boundsNum.sw.lng,thisObj.boundsNum.ne.lat);
+
                 let handleTime = new Date();
                 thisObj.drawGrid = true;
                 thisObj.drawGridToMap();
@@ -851,25 +747,15 @@ class MassiveGridQuery {
         }
         ctx.beginPath();
         let gridLen = 100000;
-        if (this._gridLevel <= 10) {
+        if (batchGrid.GridLevel <= 10) {
             gridLen = 1000000;
         }
         let startTime = new Date();
-        let pointOffset = null;
-        if(this.currentMapLeftTopPoint){
-            pointOffset = this._map.pointToPixel(this.currentMapLeftTopPoint);
-        }
-        console.log('拖动后的偏移量',pointOffset);
-
         if(this.showType == 'image'){
             if(this._gridImgBase.length > 0){
                 for(let i=0;i<this._gridImgBase.length;i++){
                     if(this._gridImgBase[i].src.startsWith('data:image/png;base64')){
-                        if(pointOffset){
-                            ctx.drawImage(this._gridImgBase[i],this._gridImgBase[i].imgX+pointOffset.x,this._gridImgBase[i].imgY+pointOffset.y);
-                        }else{
-                            ctx.drawImage(this._gridImgBase[i],this._gridImgBase[i].imgX,this._gridImgBase[i].imgY);
-                        }
+                        ctx.drawImage(this._gridImgBase[i],this._gridImgBase[i].imgX,this._gridImgBase[i].imgY);
                     }
                 }
             }
@@ -882,14 +768,10 @@ class MassiveGridQuery {
                 ctx.fillStyle = batchGrid.getColorByLevel(parseInt(batchGrid.GridResultArr[i][1]));;
                 ctx.fillRect(leftTopPixel.x, leftTopPixel.y, rightButtomPixel.x - leftTopPixel.x, rightButtomPixel.y - leftTopPixel.y);*/
 
+
                 ctx.fillStyle = this.getColorByLevel(parseInt(this._GridResultArr[i][1]));
                 let gridParam = this.gridNumToPixelLength[this._GridResultArr[i][0]];
-                if(pointOffset){
-                    ctx.fillRect(gridParam.x+pointOffset.x, gridParam.y+pointOffset.y, gridParam.w, gridParam.h);
-                }else{
-                    ctx.fillRect(gridParam.x, gridParam.y, gridParam.w, gridParam.h);
-                }
-
+                ctx.fillRect(gridParam.x, gridParam.y, gridParam.w, gridParam.h);
             }
         }
         let endTime = new Date();

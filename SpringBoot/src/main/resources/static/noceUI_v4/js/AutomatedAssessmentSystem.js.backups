@@ -1,0 +1,126 @@
+
+var defualtMeunConfig = {
+	"专题分析" : "top100HotspotTendency"
+};// key:value
+
+$(function() {
+	$('.header-nav-list').click(function() {
+		var index = $(this).index();
+		var menuName = $(this).text();
+		defualtMeunConfig[menuName];
+		$('.header-nav-list').eq(index).addClass('on').siblings().removeClass('on');
+		$('.content-left').eq(index).show().siblings().hide();
+		//上面是进行菜单切换
+		
+		var $contentLeft = $('.content-left').eq(index);
+		
+		if ($contentLeft.find('.tree li a.on').length < 1) {  //这是说还没有选中菜单的时候吗??
+			console.log($contentLeft.find('.tree li a').text());
+			// 是否有配置
+			//if (typeof (defualtMeunConfig[menuName]) != "undefind") {
+			if (typeof (defualtMeunConfig[menuName]) != "undefined") {
+				$("#" + defualtMeunConfig[menuName]).click();
+			} else {
+				// 没有配置默认第一个菜单选中
+				var $muen = $contentLeft.find('.tree li a:first');
+				console.log($muen.attr("id"));
+				if ($muen.attr("id") == "menu") {
+					$muen.parents("li").find("ul  li a:first").click();
+				} else {
+					$muen.click();
+				}
+			}
+		} else {
+			console.log($contentLeft.find('.tree li a.on').text());  //这里打印的是当前点击的大菜单下面选中的小菜单
+			
+			//liuchao  2016年6月29日
+			//$contentLeft.find('.tree li a.on').click();
+		}
+		setTimeout(function() {
+			if ($("div.pc_listb:visible").attr("id") == "pc_listb_hotspotZoneAnalyze") {
+				$("div.pc_listb:visible").find("div.bwin").first().hide();
+			} else {
+				$("div.pc_listb:visible").find("div.bwin").first().show();
+			}
+		}, 1000);
+	});
+	$('.tree li a').click(function() {
+		var $contentLeft = $(this).parents('.content-left');
+		$contentLeft.find('.tree li a').removeClass('on');
+		$(this).addClass('on');
+	});
+
+	
+	var h1 = $(window).height();
+	var h2 = $('.top-bar').height();
+	var h3 = $('.header').height();
+	var h4 = $('.footer').height();
+	$('.content-left,.content-right').css('height', (h1 - h2 - h3 - h4 - 11));
+	
+	
+	$(window).resize(function() {
+		var h1 = $(window).height();
+		var h2 = $('.top-bar').height();
+		var h3 = $('.header').height();
+		var h4 = $('.footer').height();
+		
+		//$('.content-left,.content-right').css('height', (h1 - h2 - h3 - h4 - 11));
+	
+		//liuchao
+		/*$('#topIcon').css('top', h2 + h3 + 10);
+		
+		if ($('.header').is(":hidden")) {
+			
+			$('#topIcon').css('top', h2-7);
+			
+			$('.content-left,.content-right').css('height', (h1 - h2  - h4 - 5));
+		} else {
+			
+			$('#topIcon').css('top', h2 + h3 + 10);
+			
+			$('.content-left,.content-right').css('height', (h1 - h2 - h3 - h4 - 11));
+		}*/
+		
+		//将上面的改成下面的:将顶部全部隐藏。到时候还得换回来，一群傻逼玩意儿
+		/*$('#topIcon').css('top', h2 + h3 + 10);
+		
+		if ($('.header').is(":hidden")) {
+			
+			$('#topIcon').css('top', 7);
+			
+			$('.content-left,.content-right').css('height', (h1 - h4));
+		} else {
+			
+			$('#topIcon').css('top', h2 + h3 + 10);
+			
+			$('.content-left,.content-right').css('height', (h1 - h2 - h3 - h4 - 11));
+		}*/
+		
+		//还得改一次。将底部也隐藏
+		$('#topIcon').css('top', h2 + h3 + 10);
+		
+		if ($('.header').is(":hidden")) {
+			
+			$('#topIcon').css('top', 7);
+			
+			$('.content-left,.content-right').css('height', (h1));
+		} else {
+			
+			$('#topIcon').css('top', h2 + h3 + 10);
+			
+			$('.content-left,.content-right').css('height', (h1 - h2 - h3 - h4 - 11));
+		}
+		//liuchao  end
+	});
+
+	// default events
+	// $('.content-left').eq(0).find('.tree li a:first').click();
+	$('.content-left').each(function(i) {
+		var $this = $(this);
+		if ($this.find('ul.tree').html().trim() == "") {
+			$('.header-nav-list').eq(i).hide();
+		}
+	});
+
+	$('.pcbox_nr .ptb table').addClass('table table-bordered');
+});
