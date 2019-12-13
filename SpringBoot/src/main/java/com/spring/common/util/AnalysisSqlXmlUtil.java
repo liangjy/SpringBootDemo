@@ -13,9 +13,11 @@ import org.dom4j.io.SAXReader;
 public class AnalysisSqlXmlUtil {
 	private static AnalysisSqlXmlUtil instance = new AnalysisSqlXmlUtil();
 	private static Map<String,String> sqlMap;
-	
+
 	private AnalysisSqlXmlUtil(){
 		String FilePath = WebUtil.getWebRoot() + File.separatorChar+"sqlTempLate";
+		System.out.println("读取sql模板文件路径--------"+FilePath);
+//		System.out.println("从resource中获取到的--------"+sqlPath);
         sqlMap = new HashMap<String,String>();
         traverseFolder2(FilePath);
 	}

@@ -15,6 +15,7 @@ public class Main {
 
         String boundSPolygon = "113.02031620000001,23.0181846@113.5212698,23.0181846@113.5212698,23.2523294@113.02031620000001,23.2523294";
         int gridLevel = 40;
+        Date startTime = new Date();
         String[] boundsPointArr = boundSPolygon.split("@");
         List<Double> lngList = new ArrayList<>();
         List<Double> latList = new ArrayList<>();
@@ -86,6 +87,8 @@ public class Main {
 
         Point leftTopStartPoint = new Point(min_lng, max_lat);
         Pixel leftTopStartPixel = PointToPixel.PointToPixel(leftTopStartPoint,zoom,center,boundsSize);
+        Date endTime = new Date();
+        System.out.println("计算经纬度矩阵时间："+(endTime.getTime() - startTime.getTime()));
         /*Map<String,Object> boundsMatrix = new HashMap<>();
         boundsMatrix.put("boundsLngNumWidth",gridLngNumToPixelLength);
         boundsMatrix.put("boundsLatNumHeight",gridLatNumToPixelLength);
